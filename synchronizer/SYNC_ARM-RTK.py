@@ -110,8 +110,7 @@ class ArmParser:
     def drop_last_badhalls(self):
         badhall_tol = 3 # [s]
         seconds_to_drop = 100 # [s]
-        
-#        bad = self.circle_bad
+
         badhalls_index = self.arm_badhalls.index.astype(int).tolist()
         badhalls_index = [i - 1 for i,x in enumerate(badhalls_index) if x == 0]
         badhalls_last = self.arm_badhalls.iloc[badhalls_index]
