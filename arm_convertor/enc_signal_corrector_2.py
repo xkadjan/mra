@@ -61,19 +61,22 @@ def fix_enc(enc,err_clusters,distance):
     return enc
 
 def replace_times(enc):
-    bad_times = enc.loc[(np.array(enc.index[abs(enc.round_diff)>0.01])-1).tolist()]
-    bad_times["time_diff_corr"] = (bad_times.num_corr_diff_round / bad_times.num_corr_diff * bad_times.time_diff) - bad_times.time_diff
-    bad_times["time"] = bad_times.time + bad_times.time_diff_corr
+    enc["round_diff"] = enc.num_corr_diff - enc.num_corr_diff_round
     
-    times = np.array([enc.index.tolist(),enc.time]).T
-    times_corr = np.array([bad_times.index.tolist(),bad_times.time]).T
+    locator = enc.index[abs(enc.round_diff)>0.01]
+    bt = enc.loc[(np.array(locator) - 1).tolist()] # renamed: bad_times -> bt
+
+    bt["time"] = bt.time + (bt.num_corr_diff_round / bt.num_corr_diff * bt.time_diff) - bt.time_diff
+    
+    times = np.array([enc.index.tolist(), enc.time]).T
+    times_corr = np.array([bt.index.tolist(), bt.time]).T
     
     for corr in range(len(times_corr)):
         for orig in range(len(times)):
             if times_corr[corr][0] == times[orig][0]:
                 times[orig][1] = times_corr[corr][1]
     
-    enc["time"] = pd.Series(times.T[1],index=times.T[0].astype(int))
+    enc["time"] = pd.Series(times.T[1], index=times.T[0].astype(int))
     
     return enc
 
@@ -116,9 +119,8 @@ def ENC_signal_corrector(sensorENC):
     
     err_clusters = get_clusters(outsiders,enc)
     bound_points = enc.loc[np.concatenate((err_clusters), axis=0)]
-    enc = fix_enc(enc,err_clusters,distance)
-       
-    enc["round_diff"] = enc.num_corr_diff - enc.num_corr_diff_round
+    
+    enc = fix_enc(enc,err_clusters,distance)      
     enc = replace_times(enc)
     
     # =============================================================================
