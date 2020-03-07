@@ -94,7 +94,6 @@ def ENC_signal_corrector(sensorENC):
 # MAIN
 # =============================================================================
 #    enc_copy = enc.copy(deep=True)
-#    enc = pd.DataFrame(sensorENC[["ENCnum","ENCtime"]])
     enc = pd.DataFrame({'time': sensorENC.ENCtime,'num': sensorENC.ENCnum})
 
     enc["num_original"] = enc.num
@@ -104,7 +103,6 @@ def ENC_signal_corrector(sensorENC):
     enc["time_diff"] = enc.time.diff()                          #[s]
     enc = enc.dropna()
     
-    enc["dist_diff"] = abs(enc.num_diff) * distance             #[m]   
     enc["dist_diff"] = enc.num_diff * distance                  #[m]       
     enc["speed"] = enc.dist_diff / enc.time_diff                #[m/s]
     
@@ -131,7 +129,6 @@ def ENC_signal_corrector(sensorENC):
     enc_f["time_diff"] = enc_f.time.diff()                       #[s]
     enc_f = enc_f.dropna()
     
-    enc_f["dist_diff"] = abs(enc_f.num_diff) * distance          #[m]   
     enc_f["dist_diff"] = enc_f.num_diff * distance               #[m]       
     enc_f["speed"] = enc_f.dist_diff / enc_f.time_diff           #[m/s]
     
