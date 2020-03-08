@@ -63,13 +63,6 @@ def fix_enc(enc,err_clusters,distance):
 
 def replace_times(enc):
     enc["round_diff_abs"] = abs(enc.num_corr_diff - enc.num_corr_diff_round)
-    
-# nutne pocitat shodnotou n-1 (nejspis):
-#   v1:    
-#    locator = enc.index[enc.round_diff > 0.01]
-#    bt = enc.loc[(np.array(locator) - 1).tolist()] # renamed: bad_times -> bt
-    
-#   v2 (spatny indexing):
     enc["round_diff_abs"] = enc.round_diff_abs.shift(periods=-1,fill_value=0)
     bt = enc[enc.round_diff_abs > 0.01]   # renamed: bad_times -> bt
 
@@ -129,9 +122,11 @@ def ENC_signal_corrector(sensorENC):
     
     enc = fix_enc(enc,err_clusters,distance)      
     enc = replace_times(enc)
-    
+       
     # =============================================================================
-    enc_f = enc[["time","num"]]
+    enc_f = enc[["time","num"]]   
+    enc_f = enc_f[enc_f.num.diff() != 0]
+    
     enc_f["num_diff"] = enc_f.num.diff()
     
     enc_f["time"] = enc_f.time                                   #[s]
