@@ -61,10 +61,15 @@ def fix_enc(enc,err_clusters,distance):
     return enc
 
 def replace_times(enc):
-    enc["round_diff"] = enc.num_corr_diff - enc.num_corr_diff_round
+    enc["round_diff_abs"] = abs(enc.num_corr_diff - enc.num_corr_diff_round)
     
-    locator = enc.index[abs(enc.round_diff)>0.01]
+# nutne pocitat shodnotou n-1 (nejspis):
+#   v1:    
+    locator = enc.index[enc.round_diff > 0.01]
     bt = enc.loc[(np.array(locator) - 1).tolist()] # renamed: bad_times -> bt
+    
+#   v2 (spatny indexing):
+#    bt = enc[enc.round_diff_abs > 0]   # renamed: bad_times -> bt
 
     bt["time"] = bt.time + (bt.num_corr_diff_round / bt.num_corr_diff * bt.time_diff) - bt.time_diff
     
