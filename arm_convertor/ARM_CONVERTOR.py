@@ -20,7 +20,7 @@ artifical_angle_offset = 15#novatel-rtk
 #artifical_angle_offset = 5#novatel-valeo
 
 rate_hz = 20
-dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\TO_PROCESS"
+dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\TO_PROCESS\used"
 #dir = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\arm_data\TO_PROCESS"
 
 folders_list = [x[0] for x in os.walk(dir)]
@@ -70,7 +70,7 @@ for measurement_dir in folders_list[1:]:
 #        print(" - created file: " + path)
         
         ff += 1
-        plt.arm_plot(f,ff,arm_final,arm_synced,sensorHALL,sensorHALL_orig,sensorENC,title,dir,peaks)
+#        plt.arm_plot(f,ff,arm_final,arm_synced,sensorHALL,sensorHALL_orig,sensorENC,title,dir,peaks)
         print(" - ARM_CONVERTOR - done")          
 #        except:
 #            print(" - an exception occurred")
