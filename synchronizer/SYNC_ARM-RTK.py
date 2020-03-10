@@ -14,9 +14,9 @@ import sync_plotting as plot
 class ArmParser:
     
     def __init__(self,dir_arm,prefix):
-        self.ENC_resolution = 2500
-        self.enc_tol = 1
-        self.badhall_tol = 3 # [s]
+        self.ENC_resolution = 2500 # [-]
+        self.enc_tol = 1           # [-]
+        self.badhall_tol = 3       # [s]
         self.seconds_to_drop = 100 # [s]
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
         self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
