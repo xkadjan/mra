@@ -47,7 +47,7 @@ def fix_enc(enc,err_clusters,distance):
     
     enc["dist_corr_diff"] = enc.speed_corr * enc.time_diff       #[m]
     enc["num_corr_diff"] = enc.dist_corr_diff / distance         #[-]   
-    enc["num_corr_diff_round"] = round(enc.num_corr_diff)        #[-] 
+    enc["num_corr_diff_round"] = (enc.num_corr_diff)        #[-] 
     
     diff = enc.num_corr_diff_round.tolist() #sum with firt zero
     diff[0] = 0
@@ -89,7 +89,7 @@ def ENC_signal_corrector(sensorENC):
     circle = 2 * np.pi * radius
     distance = circle / points
     
-    kernel_size = 5
+    kernel_size = 15
     atol = 0.05
 
 # =============================================================================
@@ -149,7 +149,7 @@ def ENC_signal_corrector(sensorENC):
     fig, ax = plt.subplots(figsize=[12.2, 3])
     rcParams["font.family"] = "Arial"
 
-    ax.plot(enc.time, enc.speed, '.g',linestyle='dashed',linewidth=0.5, markersize=4)
+#    ax.plot(enc.time, enc.speed, '.g',linestyle='dashed',linewidth=0.5, markersize=4)
     ax.plot(enc.time, enc.speed_cvl, '.r',linestyle='dashed',linewidth=0.5, markersize=2)
     ax.plot(outsiders.time, outsiders.speed, 'or', markersize=5)
     ax.plot(bound_points.time, bound_points.speed, 'ob', markersize=5)
