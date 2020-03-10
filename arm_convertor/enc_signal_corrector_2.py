@@ -125,7 +125,7 @@ def ENC_signal_corrector(sensorENC):
        
     # =============================================================================
     enc_f = enc[["time","num"]]   
-    enc_f = enc_f[enc_f.num.diff() != 0]
+#    enc_f = enc_f[enc_f.num.diff() != 0]  #first ment of errasing of zeros
     
     enc_f["num_diff"] = enc_f.num.diff()
     
@@ -135,6 +135,8 @@ def ENC_signal_corrector(sensorENC):
     
     enc_f["dist_diff"] = enc_f.num_diff * distance               #[m]       
     enc_f["speed"] = enc_f.dist_diff / enc_f.time_diff           #[m/s]
+    
+    enc_f = enc_f[enc_f.num.diff() != 0]   #actual ment of errasing of zeros
     
     enc_f["time"] = enc_f.time * 1000000
     enc["time"] = enc.time * 1000000
