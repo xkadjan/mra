@@ -42,22 +42,21 @@ def fix_enc(enc,err_clusters,distance):
         
         polynomial = np.poly1d(np.polyfit(bound_points_time, bound_points_speed, 1))
         for point in range(err_clusters[cluster][0],err_clusters[cluster][1]-1):
-#            speed_corr[point-1]  = polynomial(enc.iloc[point].time)
-            speed_corr[point]  = polynomial(enc.iloc[point].time)   # proc n-1??? ..... nakonec se zda chyba zde, nekde dal bude n-1
+            speed_corr[point]  = polynomial(enc.iloc[point].time)
     enc["speed_corr"] = speed_corr
     
     enc["dist_corr_diff"] = enc.speed_corr * enc.time_diff       #[m]
     enc["num_corr_diff"] = enc.dist_corr_diff / distance         #[-]   
     enc["num_corr_diff_round"] = round(enc.num_corr_diff)        #[-] 
     
-    diff = enc.num_corr_diff_round.tolist()
+    diff = enc.num_corr_diff_round.tolist() #sum with firt zero
     diff[0] = 0
     for sample in range(1,len(diff)):
-        diff[sample] = diff[sample] + diff[sample-1]
+        diff[sample] = diff[sample-1] + diff[sample]
     enc["num_corr_sum"] = diff
 
     clockwise = np.mean(enc["speed_cvl"]) > 0    
-    enc["num"] = enc.num.iloc[0] + enc.num_corr_sum * (((clockwise*-1)+0.5)*2)   # ..... az sem je to hnus, ale melo by to byt dobre
+    enc["num"] = enc.num.iloc[0] + enc.num_corr_sum * (((clockwise*-1)+0.5)*2)
     
     return enc
 
@@ -136,7 +135,7 @@ def ENC_signal_corrector(sensorENC):
     enc_f["dist_diff"] = enc_f.num_diff * distance               #[m]       
     enc_f["speed"] = enc_f.dist_diff / enc_f.time_diff           #[m/s]
     
-    enc_f = enc_f[enc_f.num.diff() != 0]   #actual ment of errasing of zeros
+    enc_f = enc_f[enc_f.num.diff() != 0]   #actual placement of errasing of zeros
     
     enc_f["time"] = enc_f.time * 1000000
     enc["time"] = enc.time * 1000000
