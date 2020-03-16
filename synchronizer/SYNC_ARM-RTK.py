@@ -15,7 +15,7 @@ class ArmParser:
     
     def __init__(self,dir_arm,prefix):
         self.ENC_resolution = 2500 # [-]
-        self.enc_tol = 3           # [-]
+        self.enc_tol = 1           # [-]
         self.badhall_tol = 3       # [s]
         self.seconds_to_drop = 100 # [s]
         
@@ -29,8 +29,8 @@ class ArmParser:
         self.arm_async = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
         self.arm_badhalls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
         self.arm_halls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
-        self.arm_peaks = pd.DataFrame(columns=['sample_index', 'utc_time', 'raw_speed_diff'])
-        
+        self.arm_peaks = pd.DataFrame(columns=['sample_index', 'utc_time', 'raw_speed_diff'])       
+
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
 
@@ -45,6 +45,7 @@ class ArmParser:
         for file in self.arm_halls_paths:
             self.parse_halls(file)
         self.arm_halls = self.arm_halls.reset_index()
+        self.arm_halls = self.add_meas_num(self.arm_halls)
         for file in self.arm_peaks_paths:
             self.parse_peaks(file)
 
@@ -92,12 +93,12 @@ class ArmParser:
         print(' - arm peaks loading done, ' + str(len(peaks)) + ' peak signals')
 
     def get_bad_cicles(self):
-        arm_halls_index = self.arm_halls.hall_index.astype(int).tolist()
+        arm_halls_index = self.arm_halls['index'].astype(int).tolist()
         arm_halls_enc = self.arm_halls.enc_err.astype(int).tolist()
         arm_halls_time = self.arm_halls.utc_time.tolist()        
         circle_bad,circle_good = [],[]
         for row in range(len(arm_halls_index)):
-            if arm_halls_index[row] != 1:
+            if arm_halls_index[row] != 0:
                 error = abs(arm_halls_enc[row])
                 if error >= self.enc_tol:                  
                     circle_bad.append([row,arm_halls_enc[row],error,arm_halls_time[row-1],arm_halls_time[row]])
@@ -108,9 +109,12 @@ class ArmParser:
         self.circle_good = pd.DataFrame(circle_good,columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(circle_bad,columns=["row","enc","error","time_start","time_end"])
         
+        print('circle_good: ' + str(len(self.circle_good)))
+        print('circle_bad: ' + str(len(self.circle_bad)))
+        
         self.drop_last_badhalls()
         
-    def drop_last_badhalls(self):
+    def drop_last_badhalls(self):       
         badhalls_index = self.arm_badhalls.index.astype(int).tolist()
         badhalls_index = [i - 1 for i,x in enumerate(badhalls_index) if x == 0]
         badhalls_last = self.arm_badhalls.iloc[badhalls_index]
@@ -122,6 +126,16 @@ class ArmParser:
                 last_to_drop.time_end = last_to_drop.time_start + self.seconds_to_drop
                 self.circle_bad = self.circle_bad.append(last_to_drop)
         self.circle_bad = self.circle_bad.reset_index()
+    
+    def add_meas_num(self,arm_halls):
+        measurement, meas = 0, []
+        for i,hall in arm_halls.iterrows():
+            if hall['index'] == 0:
+                print(hall.hall_index)
+                measurement += 1
+            meas.append(measurement)
+        arm_halls.insert(2,'meas',meas)
+        return arm_halls
 
 
 class RtkParser:
@@ -185,8 +199,8 @@ class RtkParser:
 #  DEFINITIONS       
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
-#dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200201_enctol-2"
-dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\TO_PROCESS"
+dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200309"
+#dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\TO_PROCESS"
 
 output_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\enu"
 output_dir = os.path.join(dir_arm,'output')
