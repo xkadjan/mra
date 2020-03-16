@@ -122,7 +122,7 @@ def filter_HALL_artifacts(ENC_resolution,sensorHALL,sensorENC):
     ##        %R_modus = mode(R(:));
     for x in range(np.shape(eval_f)[0]):
         for y in range(np.shape(eval_f)[1]):
-            if not np.isnan(R[x][y]) and R[x][y] >= 0 and R[x][y] <= 5:
+            if not np.isnan(R[x][y]) and R[x][y] >= 0 and R[x][y] <= 3:
                 row_col.append([x,y])     
     values = []
     for i in range(len(row_col)):
