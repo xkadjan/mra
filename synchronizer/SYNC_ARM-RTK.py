@@ -15,9 +15,10 @@ class ArmParser:
     
     def __init__(self,dir_arm,prefix):
         self.ENC_resolution = 2500 # [-]
-        self.enc_tol = 1           # [-]
+        self.enc_tol = 3           # [-]
         self.badhall_tol = 3       # [s]
         self.seconds_to_drop = 100 # [s]
+        
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
         self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
         self.arm_badhalls_paths = self.get_files(dir_arm,'badhalls',prefix)
@@ -193,7 +194,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'mix'        
+prefix = 'auto'        
 # =============================================================================
 # MAIN:
 # =============================================================================
