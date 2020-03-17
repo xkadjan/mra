@@ -16,7 +16,7 @@ class ArmParser:
     def __init__(self,dir_arm,prefix):
         self.ENC_resolution = 2500 # [-]
         self.enc_tol = 3           # [-]
-        self.badhall_tol = 3       # [s]
+        self.badhall_tol = 1       # [s]
         self.seconds_to_drop = 100 # [s]
         
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
@@ -29,10 +29,23 @@ class ArmParser:
         self.arm_async = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
         self.arm_badhalls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
         self.arm_halls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
-        self.arm_peaks = pd.DataFrame(columns=['sample_index', 'utc_time', 'raw_speed_diff'])       
-
+        self.arm_peaks = pd.DataFrame(columns=['sample_index', 'utc_time', 'raw_speed_diff'])
+        
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
+        
+    def get_files(self,dir,signal,prefix):
+        files = os.listdir(dir)
+        csvs = [i for i in files if '.csv' in i]
+        csvs = [i for i in csvs if not i.find(signal)]
+        csvs_paths = [os.path.join(dir, name) for name in csvs]
+        csvs_paths = [i for i in csvs_paths if prefix in i]
+        start_times = [float(i.split('_')[-2]) for i in csvs_paths]
+        # Sorting of paths:
+        csvs_paths = [[start_times[meas],csvs_paths[meas]] for meas in range(len(csvs_paths))]
+        csvs_paths.sort(key=lambda pair: pair[0])
+        csvs_paths = [csvs_paths[meas][1] for meas in range(len(csvs_paths))]
+        return csvs_paths
 
     def parse_slices(self):
 #        for file in self.arm_async_paths:
@@ -48,14 +61,6 @@ class ArmParser:
         self.arm_halls = self.add_meas_num(self.arm_halls)
         for file in self.arm_peaks_paths:
             self.parse_peaks(file)
-
-    def get_files(self,dir,signal,prefix):
-        files = os.listdir(dir)
-        csvs = [i for i in files if '.csv' in i]
-        csvs = [i for i in csvs if not i.find(signal)]
-        csvs_paths = [os.path.join(dir, name) for name in csvs]
-        csvs_paths = [i for i in csvs_paths if prefix in i]
-        return csvs_paths
      
     def parse_async(self,file):
         arm = pd.read_csv(file, sep=',', engine='python')
@@ -75,7 +80,6 @@ class ArmParser:
         arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0) 
         self.arm_20hz = self.arm_20hz.append(arm[["utc_time","east","north","up","raw_speed","raw_acc"]])
         print(' - arm 20hz loading done, ' + str(len(arm)) + ' points')
-#            arm_output.to_csv(os.path.join(output_dir, file.split('\\')[-1][:-4]+'_enu.csv'))
 
     def parse_badhalls(self,file):
         badhalls = pd.read_csv(file, sep=',', engine='python')
@@ -119,11 +123,13 @@ class ArmParser:
         badhalls_index = [i - 1 for i,x in enumerate(badhalls_index) if x == 0]
         badhalls_last = self.arm_badhalls.iloc[badhalls_index]
         gap_after_last_good = self.circle_good[self.circle_good.error == -1]
+        first_points = self.arm_20hz.loc[0]
+        first_points.utc_time.iloc[0] = 86400
 
         for i in range(len(badhalls_last)):
             if badhalls_last.utc_time.iloc[i] > gap_after_last_good.time_start.iloc[i] + self.badhall_tol: 
                 last_to_drop = gap_after_last_good.iloc[i]
-                last_to_drop.time_end = last_to_drop.time_start + self.seconds_to_drop
+                last_to_drop.time_end = first_points.iloc[i].utc_time    #last_to_drop.time_start + self.seconds_to_drop
                 self.circle_bad = self.circle_bad.append(last_to_drop)
         self.circle_bad = self.circle_bad.reset_index()
     
@@ -131,7 +137,6 @@ class ArmParser:
         measurement, meas = 0, []
         for i,hall in arm_halls.iterrows():
             if hall['index'] == 0:
-                print(hall.hall_index)
                 measurement += 1
             meas.append(measurement)
         arm_halls.insert(2,'meas',meas)
