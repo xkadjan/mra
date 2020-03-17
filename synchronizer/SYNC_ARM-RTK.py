@@ -16,7 +16,7 @@ class ArmParser:
     def __init__(self,dir_arm,prefix):
         self.ENC_resolution = 2500 # [-]
         self.enc_tol = 3           # [-]
-        self.badhall_tol = 1       # [s]
+        self.badhall_tol = 10      # [s]
         self.seconds_to_drop = 100 # [s]
         
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
@@ -33,6 +33,9 @@ class ArmParser:
         
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
+              
+#        self.arm_20hz = self.arm_20hz.reset_index()        # nefunguje!
+#        self.arm_20hz = arm.arm_20hz.drop(arm.arm_20hz.index[abs(arm.arm_20hz.raw_acc) < 0.001])
         
     def get_files(self,dir,signal,prefix):
         files = os.listdir(dir)
@@ -55,10 +58,13 @@ class ArmParser:
 
         for file in self.arm_badhalls_paths:
             self.parse_badhalls(file)
+            
         for file in self.arm_halls_paths:
             self.parse_halls(file)
+            
         self.arm_halls = self.arm_halls.reset_index()
         self.arm_halls = self.add_meas_num(self.arm_halls)
+        
         for file in self.arm_peaks_paths:
             self.parse_peaks(file)
      
@@ -141,6 +147,19 @@ class ArmParser:
             meas.append(measurement)
         arm_halls.insert(2,'meas',meas)
         return arm_halls
+    
+    def drop_bad_circles(self):
+        arm_20hz = self.arm_20hz.reset_index() 
+        circle_bad = self.circle_bad
+        
+        drop_ratio = len(arm.arm_20hz)
+        condition = pd.Series()
+        for slice_out in range(len(circle_bad)):
+            condition = (circle_bad.loc[slice_out].time_start < arm_20hz.utc_time) & (arm_20hz.utc_time < circle_bad.loc[slice_out].time_end) | condition
+        self.arm_20hz = arm_20hz.drop(condition.index[condition == True])
+        
+        drop_ratio = 100 - (len(self.arm_20hz) / drop_ratio * 100)
+        print("%.3f" % drop_ratio + ' % of points were dropped')
 
 
 class RtkParser:
@@ -213,13 +232,14 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'auto'        
+prefix = 'ped'        
 # =============================================================================
 # MAIN:
 # =============================================================================
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
 arm.get_bad_cicles()
+arm.drop_bad_circles()
 
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix) 
@@ -230,7 +250,7 @@ rtk.parse_slices(prefix)
 # =============================================================================
 pltr = plot.Plotter(arm, rtk)
 
-pltr.plot_arm(arm.arm_async,'arm_async','k')
+#pltr.plot_arm(arm.arm_async,'arm_async','k')
 pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
 pltr.plot_marks()
 
