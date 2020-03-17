@@ -15,7 +15,7 @@ class ArmParser:
     
     def __init__(self,dir_arm,prefix):
         self.ENC_resolution = 2500 # [-]
-        self.enc_tol = 1           # [-]
+        self.enc_tol = 3           # [-]
         self.badhall_tol = 3       # [s]
         self.seconds_to_drop = 100 # [s]
         
@@ -118,11 +118,11 @@ class ArmParser:
         badhalls_index = self.arm_badhalls.index.astype(int).tolist()
         badhalls_index = [i - 1 for i,x in enumerate(badhalls_index) if x == 0]
         badhalls_last = self.arm_badhalls.iloc[badhalls_index]
-        after_last_good = self.circle_good[self.circle_good.error == -1]
+        gap_after_last_good = self.circle_good[self.circle_good.error == -1]
 
         for i in range(len(badhalls_last)):
-            if badhalls_last.utc_time.iloc[i] > after_last_good.time_start.iloc[i] + self.badhall_tol: 
-                last_to_drop = after_last_good.iloc[0]
+            if badhalls_last.utc_time.iloc[i] > gap_after_last_good.time_start.iloc[i] + self.badhall_tol: 
+                last_to_drop = gap_after_last_good.iloc[i]
                 last_to_drop.time_end = last_to_drop.time_start + self.seconds_to_drop
                 self.circle_bad = self.circle_bad.append(last_to_drop)
         self.circle_bad = self.circle_bad.reset_index()
