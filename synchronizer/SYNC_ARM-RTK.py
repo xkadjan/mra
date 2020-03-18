@@ -14,10 +14,11 @@ import sync_plotting as plot
 class ArmParser:
     
     def __init__(self,dir_arm,prefix):
-        self.ENC_resolution = 2500 # [-]
-        self.enc_tol = 3           # [-]
-        self.badhall_tol = 10      # [s]
-        self.seconds_to_drop = 100 # [s]
+        self.ENC_resolution = 2500   # [-]
+        self.enc_tol = 3             # [-]
+        self.badhall_tol = 10        # [s]
+        self.seconds_to_drop = 100   # [s]
+        self.seconds_over_hall = 0.1 # [s]
         
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
         self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
@@ -52,7 +53,7 @@ class ArmParser:
 
     def parse_slices(self):
 #        for file in self.arm_async_paths:
-#            self.parse_async(file)      
+#            self.parse_async(file)
         for file in self.arm_20hz_paths:
             self.parse_20hz(file)
 
@@ -111,7 +112,7 @@ class ArmParser:
             if arm_halls_index[row] != 0:
                 error = abs(arm_halls_enc[row])
                 if error >= self.enc_tol:                  
-                    circle_bad.append([row,arm_halls_enc[row],error,arm_halls_time[row-1],arm_halls_time[row]])
+                    circle_bad.append([row,arm_halls_enc[row],error,arm_halls_time[row-1]-self.seconds_over_hall,arm_halls_time[row]+self.seconds_over_hall])
                 else:
                     circle_good.append([row,arm_halls_enc[row],error,arm_halls_time[row-1],arm_halls_time[row]])
             else:
