@@ -118,10 +118,6 @@ class ArmParser:
                 circle_good.append([row,arm_halls_enc[row],-1,arm_halls_time[row-1],arm_halls_time[row]])        
         self.circle_good = pd.DataFrame(circle_good,columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(circle_bad,columns=["row","enc","error","time_start","time_end"])
-        
-        print('circle_good: ' + str(len(self.circle_good)))
-        print('circle_bad: ' + str(len(self.circle_bad)))
-        
         self.drop_last_badhalls()
         
     def drop_last_badhalls(self):       
@@ -130,7 +126,7 @@ class ArmParser:
         badhalls_last = self.arm_badhalls.iloc[badhalls_index]
         gap_after_last_good = self.circle_good[self.circle_good.error == -1]
         first_points = self.arm_20hz.loc[0]
-        first_points.utc_time.iloc[0] = 86400
+        first_points['utc_time'].iat[0] = 86400
 
         for i in range(len(badhalls_last)):
             if badhalls_last.utc_time.iloc[i] > gap_after_last_good.time_start.iloc[i] + self.badhall_tol: 
