@@ -21,6 +21,7 @@ class ArmParser:
         self.acc_drop_tol = [0.001,10]  # [m*s-2]
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
+        self.last_len_20hz = 0
         
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
         self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
@@ -88,6 +89,7 @@ class ArmParser:
         arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0) 
         arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0) 
         self.arm_20hz = self.arm_20hz.append(arm[["utc_time","east","north","up","raw_speed","raw_acc"]])
+        self.last_len_20hz = len(self.arm_20hz)
         print(' - arm 20hz loading done, ' + str(len(arm)) + ' points')
 
     def parse_badhalls(self,file):
@@ -147,30 +149,34 @@ class ArmParser:
         arm_halls.insert(2,'meas',meas)
         return arm_halls
     
+    def print_drop_ratio(self,label):        
+        drop_ratio = 100 - (len(self.arm_20hz) / self.last_len_20hz * 100)
+        self.last_len_20hz = len(arm.arm_20hz)
+        print(label + ": %.3f" % drop_ratio + ' % of points were dropped')
+   
     def drop_bad_circles(self):
         arm_20hz = self.arm_20hz.reset_index() 
-        circle_bad = self.circle_bad
-        
-        drop_ratio = len(arm.arm_20hz)
+        circle_bad = self.circle_bad       
         condition = pd.Series()
         for slice_out in range(len(circle_bad)):
             condition = (circle_bad.loc[slice_out].time_start < arm_20hz.utc_time) & (arm_20hz.utc_time < circle_bad.loc[slice_out].time_end) | condition
         self.arm_20hz = arm_20hz.drop(condition.index[condition == True])
-        
-        drop_ratio = 100 - (len(self.arm_20hz) / drop_ratio * 100)
-        print("%.3f" % drop_ratio + ' % of points were dropped')
+        self.print_drop_ratio('drop_bad_circles')
         
     def drop_zero_speed(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_speed) < self.speed_drop_tol]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
+        self.print_drop_ratio('drop_zero_speed')
         
     def drop_zero_acc(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) < self.acc_drop_tol[0]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
+        self.print_drop_ratio('drop_zero_acc')
         
     def drop_limit_acc(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) > self.acc_drop_tol[1]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
+        self.print_drop_ratio('drop_limit_acc')
         
     def drop_peaks(self):
         times_to_drop = self.arm_peaks.utc_time.tolist()
@@ -178,7 +184,7 @@ class ArmParser:
         for time in times_to_drop:
             condition = (self.arm_20hz.utc_time == time) | condition
         self.arm_20hz = self.arm_20hz.drop(condition.index[condition == True])
-
+        self.print_drop_ratio('drop_peaks')
 
 class RtkParser:
     
@@ -250,7 +256,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'auto'        
+prefix = 'ped'        
 # =============================================================================
 # MAIN:
 # =============================================================================
