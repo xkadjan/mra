@@ -14,11 +14,12 @@ import sync_plotting as plot
 class ArmParser:
     
     def __init__(self,dir_arm,prefix):
-        self.ENC_resolution = 2500   # [-]
-        self.enc_tol = 3             # [-]
-        self.badhall_tol = 10        # [s]
-        self.seconds_to_drop = 100   # [s]
-        self.seconds_over_hall = 0.1 # [s]
+        self.ENC_resolution = 2500      # [-]
+        self.enc_tol = 3                # [-]
+        self.badhall_tol = 10           # [s]
+        self.acc_drop_tol = [0.001,10]  # [s-1]
+        self.seconds_to_drop = 100      # [s]
+        self.seconds_over_hall = 0.1    # [s]
         
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
         self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
@@ -157,6 +158,21 @@ class ArmParser:
         
         drop_ratio = 100 - (len(self.arm_20hz) / drop_ratio * 100)
         print("%.3f" % drop_ratio + ' % of points were dropped')
+        
+    def drop_zero_acc(self):
+        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) < self.acc_drop_tol[0]]
+        self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
+        
+    def drop_limit_acc(self):
+        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) > self.acc_drop_tol[1]]
+        self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
+        
+    def drop_peaks(self):
+        times_to_drop = self.arm_peaks.utc_time.tolist()
+        condition = pd.Series()
+        for time in times_to_drop:
+            condition = (self.arm_20hz.utc_time == time) | condition
+        self.arm_20hz = self.arm_20hz.drop(condition.index[condition == True])
 
 
 class RtkParser:
@@ -237,10 +253,13 @@ arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
 arm.get_bad_cicles()
 arm.drop_bad_circles()
+arm.drop_zero_acc()
+arm.drop_limit_acc()
+arm.drop_peaks()
 
-rtk = RtkParser(dir_rtk,fixed_height)
-rtk.parse_slices(prefix) 
-#rtk = []
+#rtk = RtkParser(dir_rtk,fixed_height)
+#rtk.parse_slices(prefix) 
+rtk = []
 
 # =============================================================================
 #    PLOTTING:
