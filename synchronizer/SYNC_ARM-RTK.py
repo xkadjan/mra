@@ -17,7 +17,8 @@ class ArmParser:
         self.ENC_resolution = 2500      # [-]
         self.enc_tol = 3                # [-]
         self.badhall_tol = 10           # [s]
-        self.acc_drop_tol = [0.001,10]  # [s-1]
+        self.speed_drop_tol = 0.01       # [m*s-1]
+        self.acc_drop_tol = [0.001,10]  # [m*s-2]
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
         
@@ -159,6 +160,10 @@ class ArmParser:
         drop_ratio = 100 - (len(self.arm_20hz) / drop_ratio * 100)
         print("%.3f" % drop_ratio + ' % of points were dropped')
         
+    def drop_zero_speed(self):
+        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_speed) < self.speed_drop_tol]
+        self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
+        
     def drop_zero_acc(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) < self.acc_drop_tol[0]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
@@ -245,7 +250,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'ped'        
+prefix = 'auto'        
 # =============================================================================
 # MAIN:
 # =============================================================================
@@ -253,13 +258,14 @@ arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
 arm.get_bad_cicles()
 arm.drop_bad_circles()
+arm.drop_zero_speed()
 arm.drop_zero_acc()
 arm.drop_limit_acc()
 arm.drop_peaks()
 
-#rtk = RtkParser(dir_rtk,fixed_height)
-#rtk.parse_slices(prefix) 
-rtk = []
+rtk = RtkParser(dir_rtk,fixed_height)
+rtk.parse_slices(prefix) 
+#rtk = []
 
 # =============================================================================
 #    PLOTTING:
@@ -270,10 +276,10 @@ pltr = plot.Plotter(arm, rtk)
 pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
 pltr.plot_marks()
 
-#pltr.plot_rtk(rtk.novatel,'novatel',"g")
-#pltr.plot_rtk(rtk.tersus,'tersus',"y")
-#pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
-#pltr.plot_rtk(rtk.ublox,'ublox',"m")
+pltr.plot_rtk(rtk.novatel,'novatel',"g")
+pltr.plot_rtk(rtk.tersus,'tersus',"y")
+pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
+pltr.plot_rtk(rtk.ublox,'ublox',"m")
 ##
 
 
