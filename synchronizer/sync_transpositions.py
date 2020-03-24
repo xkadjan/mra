@@ -102,34 +102,3 @@ def bearing(wgs_1,wgs_2):
     # np.cos(np.deg2rad(lat1)) * np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.cos(
     #     dlon)))
     # return 360 + (bearing * 180 / np.pi)
-
-def get_points(sentences):
-    points = []
-    error_sentence = []
-    for sentence in range(len(sentences)):
-        sentences[sentence] = sentences[sentence].replace("GNGGA", "GPGGA")
-        sentences[sentence] = sentences[sentence].split(',')       
-        if 'E' in sentences[sentence] and len(sentences[sentence]) == 15:
-            E_index = sentences[sentence].index('E')            
-            utc = sentences[sentence][E_index-4]
-            lat = sentences[sentence][E_index-3]
-            lon = sentences[sentence][E_index-1]            
-            if len(sentences[sentence]) > 5:
-                status = int(sentences[sentence][E_index+1])
-            else:
-                status = 6                    # without status                 
-            try:
-                utc = get_seconds(utc)
-                lat = get_coordinate(lat)
-                lon = get_coordinate(lon)          
-                parameters = [utc,lat,lon,status]
-                points.append(parameters)
-            except:
-                error_sentence.append(sentence)
-                print('error in:', sentence)
-                continue
-        else:
-            print('stentence no.', sentence+1, 'is not complete')
-#        sentences.remove(sentences[sentence])
-    print('error senteces: ', error_sentence)
-    return points
