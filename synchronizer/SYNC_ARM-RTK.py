@@ -149,7 +149,7 @@ class ArmParser:
     def print_drop_ratio(self,label):        
         drop_ratio = 100 - (len(self.arm_20hz) / self.last_len_20hz * 100)
         self.last_len_20hz = len(arm.arm_20hz)
-        print(label + ": %.3f" % drop_ratio + ' % of points were dropped')
+        print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
    
     def drop_bad_circles(self):
         arm_20hz = self.arm_20hz.reset_index() 
@@ -228,7 +228,8 @@ class RtkParser:
             if f.mode == 'r':
                 log = f.read()
                 sentences = log.split('$')[1:]
-                rtk = pd.DataFrame(transpos.get_points(sentences)).astype(float)
+                label = file.split('\\')[-2:]
+                rtk = pd.DataFrame(self.get_points(sentences,label)).astype(float)
                 rtk.columns = ['utc_time','lat','lon','status']
                 rtk["height"] = self.fixed_height              
                 rtk.insert(len(rtk.count()), 'lat_in_rad', rtk.lat*np.pi/180, allow_duplicates=False)
@@ -237,8 +238,37 @@ class RtkParser:
                 enu = transpos.xyz2enu(xyz,wgs_ref)               
                 rtk["east"], rtk["north"], rtk["up"] = enu.T[0], enu.T[1], enu.T[2]
                 rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status']]
-                print(' - rtk loading done, ' + str(len(rtk)) + ' points')               
                 return rtk
+            
+    def get_points(self,sentences,label):
+        points = []
+        error_sentence,incomplete_sentence = [],[]
+        for sentence in range(len(sentences)):
+            sentences[sentence] = sentences[sentence].replace("GNGGA", "GPGGA")
+            sentences[sentence] = sentences[sentence].split(',')       
+            if 'E' in sentences[sentence] and len(sentences[sentence]) == 15:
+                E_index = sentences[sentence].index('E')            
+                utc = sentences[sentence][E_index-4]
+                lat = sentences[sentence][E_index-3]
+                lon = sentences[sentence][E_index-1]            
+                if len(sentences[sentence]) > 5:
+                    status = int(sentences[sentence][E_index+1])
+                else:
+                    status = 6                    # without status                 
+                try:
+                    utc = transpos.get_seconds(utc)
+                    lat = transpos.get_coordinate(lat)
+                    lon = transpos.get_coordinate(lon)          
+                    parameters = [utc,lat,lon,status]
+                    points.append(parameters)
+                except:
+                    error_sentence.append(sentence+1)
+                    continue
+            else:
+                incomplete_sentence.append(sentence+1)
+        drop_ratio = ((len(incomplete_sentence)+len(error_sentence)) / len(points) * 100)
+        print(" - " + label[0] + '-'+ label[1].split('_')[1].split('.')[0] + " %.3f" % drop_ratio + ' % of NMEAs were incomplete')
+        return points
      
     def drop_points_wo_arm(self,arm_df):
         self.novatel = self.drop_rtk_wo_arm(self.novatel,arm_df,'novatel')
@@ -266,6 +296,10 @@ class RtkParser:
                 if arm_row == len(times_of_arm)-1:
                     condition.append(True)   
         condition = pd.Series(condition)
+        
+        drop_ratio = 100 - (len(condition[condition == True]) / len(condition) * 100)
+        print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
+        
         return rtk_df.drop(condition.index[condition == True])
                       
 # =============================================================================
