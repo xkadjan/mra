@@ -17,7 +17,7 @@ class ArmParser:
         self.ENC_resolution = 2500      # [-]
         self.enc_tol = 3                # [-]
         self.badhall_tol = 10           # [s]
-        self.speed_drop_tol = 0.01       # [m*s-1]
+        self.speed_drop_tol = 0.01      # [m*s-1]
         self.acc_drop_tol = [0.001,10]  # [m*s-2]
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
@@ -37,10 +37,7 @@ class ArmParser:
         
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
-              
-#        self.arm_20hz = self.arm_20hz.reset_index()        # nefunguje!
-#        self.arm_20hz = arm.arm_20hz.drop(arm.arm_20hz.index[abs(arm.arm_20hz.raw_acc) < 0.001])
-        
+     
     def get_files(self,dir,signal,prefix):
         files = os.listdir(dir)
         csvs = [i for i in files if '.csv' in i]
@@ -87,7 +84,7 @@ class ArmParser:
         arm = arm.rename(columns={"Time": "utc_time", "Xarm": "east", "Yarm": "north"})               
         arm["up"] = 0
         arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0) 
-        arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0) 
+        arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0)
         self.arm_20hz = self.arm_20hz.append(arm[["utc_time","east","north","up","raw_speed","raw_acc"]])
         self.last_len_20hz = len(self.arm_20hz)
         print(' - arm 20hz loading done, ' + str(len(arm)) + ' points')
@@ -215,7 +212,7 @@ class RtkParser:
              
         for folder in folders:
             rtk_txts_paths = self.load_files(folder,'ublox')   
-            rtk.ublox = rtk.ublox.append(rtk.parse_rtk(rtk_txts_paths))         
+            rtk.ublox = rtk.ublox.append(rtk.parse_rtk(rtk_txts_paths))        
     
     def load_files(self,folder,rtk_type):    
         rtk_folder = os.path.join(self.dir_rtk, folder)
@@ -239,9 +236,37 @@ class RtkParser:
                 xyz = transpos.wgs2xyz(rtk[['lat_in_rad','lon_in_rad','height']].values)
                 enu = transpos.xyz2enu(xyz,wgs_ref)               
                 rtk["east"], rtk["north"], rtk["up"] = enu.T[0], enu.T[1], enu.T[2]
-                rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status']]                              
+                rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status']]
                 print(' - rtk loading done, ' + str(len(rtk)) + ' points')               
                 return rtk
+     
+    def drop_points_wo_arm(self,arm_df):
+        self.novatel = self.drop_rtk_wo_arm(self.novatel,arm_df,'novatel')
+        self.tersus = self.drop_rtk_wo_arm(self.tersus,arm_df,'tersus')
+        self.ashtech = self.drop_rtk_wo_arm(self.ashtech,arm_df,'ashtech')
+        self.ublox = self.drop_rtk_wo_arm(self.ublox,arm_df,'ublox')
+                   
+    def drop_rtk_wo_arm(self,rtk_df,arm_df,label):
+        print(' - points where is no arm reference will be droped from ' + label)
+        rtk_df = rtk_df.sort_values(by=['utc_time']).reset_index()       
+        times_of_arm = arm_df.utc_time.round(2).tolist()
+        times_of_rtk = rtk_df.utc_time.round(2).tolist()
+        condition = []
+        for rtk_row in range(len(times_of_rtk)):
+            rtk_time = times_of_rtk[rtk_row]
+            for arm_row in range(len(times_of_arm)):
+                arm_time = times_of_arm[arm_row]
+                if rtk_time <= arm_time:           
+                    if rtk_time == arm_time:
+                        condition.append(False)
+                        times_of_arm = times_of_arm[arm_row:]
+                    elif rtk_time < arm_time:
+                        condition.append(True)
+                    break
+                if arm_row == len(times_of_arm)-1:
+                    condition.append(True)   
+        condition = pd.Series(condition)
+        return rtk_df.drop(condition.index[condition == True])
                       
 # =============================================================================
 #  DEFINITIONS       
@@ -256,7 +281,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'ped'        
+prefix = 'auto'        
 # =============================================================================
 # MAIN:
 # =============================================================================
@@ -270,7 +295,9 @@ arm.drop_limit_acc()
 arm.drop_peaks()
 
 rtk = RtkParser(dir_rtk,fixed_height)
-rtk.parse_slices(prefix) 
+rtk.parse_slices(prefix)
+rtk.drop_points_wo_arm(arm.arm_20hz)
+
 #rtk = []
 
 # =============================================================================
