@@ -101,11 +101,13 @@ class Plotter:
         self.fig_3.show()
         
     def plot_utcSpeed(self,points_DF, rcv_name, rcv_color):
-        self.ax_4.plot(points_DF.utc_time, points_DF.raw_speed, rcv_color, marker=".", linewidth=0.2, alpha=1, markersize=1, label='raw_speed')
-        self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc, 'b', marker=".", linewidth=0.2, alpha=1, markersize=1, label='raw_acc')
+        self.ax_4.plot(points_DF.utc_time, points_DF.raw_speed, 'k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5, label='raw_speed[m/s]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc, 'k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5, label='raw_acc[m/s-2]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_speed, '-r', marker=".", linewidth=0.3, alpha=1, markersize=1.5, label='filtered_speed[m/s]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_acc, '-b', marker=".", linewidth=0.3, alpha=1, markersize=1.5, label='filtered_acc[m/s-2]')
         self.ax_4.set_title('Speed and acceleration in time', size=12, loc='left')
         self.ax_4.set_xlabel('time of day [s]',size=10)
-        self.ax_4.set_ylabel('speed [mps] / acceleration [mps-1]',size=10)
+        self.ax_4.set_ylabel('speed [mps] / acceleration [mps-2]',size=10)
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_4.minorticks_on()
