@@ -17,8 +17,8 @@ class ArmParser:
         self.ENC_resolution = 2500      # [-]
         self.enc_tol = 3                # [-]
         self.badhall_tol = 10           # [s]
-        self.speed_drop_tol = 0.01      # [m*s-1]
-        self.acc_drop_tol = [0.001,10]  # [m*s-2]
+        self.speed_drop_tol = 0.1       # [m*s-1]
+        self.acc_drop_tol = [0.01,10]   # [m*s-2]
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
         self.last_len_20hz = 0
@@ -161,12 +161,12 @@ class ArmParser:
         self.print_drop_ratio('drop_bad_circles')
         
     def drop_zero_speed(self):
-        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_speed) < self.speed_drop_tol]
+        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.cvl_speed) < self.speed_drop_tol]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
         self.print_drop_ratio('drop_zero_speed')
         
     def drop_zero_acc(self):
-        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) < self.acc_drop_tol[0]]
+        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.cvl_acc) < self.acc_drop_tol[0]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
         self.print_drop_ratio('drop_zero_acc')
         
@@ -182,6 +182,16 @@ class ArmParser:
             condition = (self.arm_20hz.utc_time == time) | condition
         self.arm_20hz = self.arm_20hz.drop(condition.index[condition == True])
         self.print_drop_ratio('drop_peaks')
+        
+    def filter_signal(self):
+        self.arm_20hz["cvl_speed"] = self.convolve_filter(self.arm_20hz.raw_speed,7)
+        self.arm_20hz["cvl_acc"] = self.convolve_filter(self.arm_20hz.raw_acc,33)
+        
+    def convolve_filter(self,signal,kernel_size):
+        kernel = (np.ones(kernel_size)/kernel_size).tolist()
+        cvl = np.zeros(len(signal))
+        cvl[int((kernel_size-kernel_size%2)/2):-int((kernel_size-kernel_size%2)/2)] = np.convolve(signal, kernel, mode='valid')
+        return cvl
 
 class RtkParser:
     
@@ -321,12 +331,14 @@ prefix = 'auto'
 # =============================================================================
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
+arm.filter_signal()
 arm.get_bad_cicles()
 arm.drop_bad_circles()
 arm.drop_zero_speed()
 arm.drop_zero_acc()
 arm.drop_limit_acc()
 arm.drop_peaks()
+
 
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix)
