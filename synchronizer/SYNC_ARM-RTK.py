@@ -12,7 +12,7 @@ import sync_transpositions as transpos
 import sync_plotting as plot
 
 class ArmParser:
-    
+
     def __init__(self,dir_arm,prefix):
         self.ENC_resolution = 2500      # [-]
         self.enc_tol = 3                # [-]
@@ -22,22 +22,22 @@ class ArmParser:
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
         self.last_len_20hz = 0
-        
+
         self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
         self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
         self.arm_badhalls_paths = self.get_files(dir_arm,'badhalls',prefix)
         self.arm_halls_paths = self.get_files(dir_arm,'halls',prefix)
         self.arm_peaks_paths = self.get_files(dir_arm,'peaks',prefix)
-        
+
         self.arm_20hz = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
         self.arm_async = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
         self.arm_badhalls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
         self.arm_halls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
         self.arm_peaks = pd.DataFrame(columns=['sample_index', 'utc_time', 'raw_speed_diff'])
-        
+
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
-     
+
     def get_files(self,dir,signal,prefix):
         files = os.listdir(dir)
         csvs = [i for i in files if '.csv' in i]
@@ -59,31 +59,31 @@ class ArmParser:
 
         for file in self.arm_badhalls_paths:
             self.parse_badhalls(file)
-            
+
         for file in self.arm_halls_paths:
             self.parse_halls(file)
-            
+
         self.arm_halls = self.arm_halls.reset_index()
         self.arm_halls = self.add_meas_num(self.arm_halls)
-        
+
         for file in self.arm_peaks_paths:
             self.parse_peaks(file)
-     
+
     def parse_async(self,file):
         arm = pd.read_csv(file, sep=',', engine='python')
         arm = arm[["Time","Xarm","Yarm"]]
         arm = arm.rename(columns={"Time": "utc_time", "Xarm": "east", "Yarm": "north"})
-        arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0)  
-        arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0) 
+        arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0)
+        arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0)
         self.arm_async = self.arm_async.append(arm)
         print(' - arm async loading done, ' + str(len(arm)) + ' points')
 
-    def parse_20hz(self,file):        
+    def parse_20hz(self,file):
         arm = pd.read_csv(file, sep=',', engine='python')
         arm = arm[["Time","Xarm","Yarm"]]
-        arm = arm.rename(columns={"Time": "utc_time", "Xarm": "east", "Yarm": "north"})               
+        arm = arm.rename(columns={"Time": "utc_time", "Xarm": "east", "Yarm": "north"})
         arm["up"] = 0
-        arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0) 
+        arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0)
         arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0)
         self.arm_20hz = self.arm_20hz.append(arm[["utc_time","east","north","up","raw_speed","raw_acc"]])
         self.last_len_20hz = len(self.arm_20hz)
@@ -93,12 +93,12 @@ class ArmParser:
         badhalls = pd.read_csv(file, sep=',', engine='python')
         self.arm_badhalls = self.arm_badhalls.append(badhalls[['hall_index', 'utc_time', 'enc_err']])
         print(' - arm bad halls loading done, ' + str(len(badhalls)) + ' hall signals')
-        
+
     def parse_halls(self,file):
         halls = pd.read_csv(file, sep=',', engine='python')#.values.tolist()
         self.arm_halls = self.arm_halls.append(halls[['hall_index', 'utc_time', 'enc_err']])
         print(' - arm halls loading done, ' + str(len(halls)) + ' hall signals')
-                    
+
     def parse_peaks(self,file):
         peaks = pd.read_csv(file, sep=',', engine='python')#.values.tolist()
         self.arm_peaks = self.arm_peaks.append(peaks[['sample_index', 'utc_time', 'raw_speed_diff']])
@@ -107,22 +107,22 @@ class ArmParser:
     def get_bad_cicles(self):
         arm_halls_index = self.arm_halls['index'].astype(int).tolist()
         arm_halls_enc = self.arm_halls.enc_err.astype(int).tolist()
-        arm_halls_time = self.arm_halls.utc_time.tolist()        
+        arm_halls_time = self.arm_halls.utc_time.tolist()
         circle_bad,circle_good = [],[]
         for row in range(len(arm_halls_index)):
             if arm_halls_index[row] != 0:
                 error = abs(arm_halls_enc[row])
-                if error >= self.enc_tol:                  
+                if error >= self.enc_tol:
                     circle_bad.append([row,arm_halls_enc[row],error,arm_halls_time[row-1]-self.seconds_over_hall,arm_halls_time[row]+self.seconds_over_hall])
                 else:
                     circle_good.append([row,arm_halls_enc[row],error,arm_halls_time[row-1],arm_halls_time[row]])
             else:
-                circle_good.append([row,arm_halls_enc[row],-1,arm_halls_time[row-1],arm_halls_time[row]])        
+                circle_good.append([row,arm_halls_enc[row],-1,arm_halls_time[row-1],arm_halls_time[row]])
         self.circle_good = pd.DataFrame(circle_good,columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(circle_bad,columns=["row","enc","error","time_start","time_end"])
         self.drop_last_badhalls()
-        
-    def drop_last_badhalls(self):       
+
+    def drop_last_badhalls(self):
         badhalls_index = self.arm_badhalls.index.astype(int).tolist()
         badhalls_index = [i - 1 for i,x in enumerate(badhalls_index) if x == 0]
         badhalls_last = self.arm_badhalls.iloc[badhalls_index]
@@ -131,12 +131,12 @@ class ArmParser:
         first_points['utc_time'].iat[0] = 86400
 
         for i in range(len(badhalls_last)):
-            if badhalls_last.utc_time.iloc[i] > gap_after_last_good.time_start.iloc[i] + self.badhall_tol: 
+            if badhalls_last.utc_time.iloc[i] > gap_after_last_good.time_start.iloc[i] + self.badhall_tol:
                 last_to_drop = gap_after_last_good.iloc[i]
                 last_to_drop.time_end = first_points.iloc[i].utc_time    #last_to_drop.time_start + self.seconds_to_drop
                 self.circle_bad = self.circle_bad.append(last_to_drop)
         self.circle_bad = self.circle_bad.reset_index()
-    
+
     def add_meas_num(self,arm_halls):
         measurement, meas = 0, []
         for i,hall in arm_halls.iterrows():
@@ -145,36 +145,36 @@ class ArmParser:
             meas.append(measurement)
         arm_halls.insert(2,'meas',meas)
         return arm_halls
-    
-    def print_drop_ratio(self,label):        
+
+    def print_drop_ratio(self,label):
         drop_ratio = 100 - (len(self.arm_20hz) / self.last_len_20hz * 100)
         self.last_len_20hz = len(arm.arm_20hz)
         print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
-   
+
     def drop_bad_circles(self):
-        arm_20hz = self.arm_20hz.reset_index() 
-        circle_bad = self.circle_bad       
+        arm_20hz = self.arm_20hz.reset_index()
+        circle_bad = self.circle_bad
         condition = pd.Series()
         for slice_out in range(len(circle_bad)):
             condition = (circle_bad.loc[slice_out].time_start < arm_20hz.utc_time) & (arm_20hz.utc_time < circle_bad.loc[slice_out].time_end) | condition
         self.arm_20hz = arm_20hz.drop(condition.index[condition == True])
         self.print_drop_ratio('drop_bad_circles')
-        
+
     def drop_zero_speed(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.cvl_speed) < self.speed_drop_tol]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
         self.print_drop_ratio('drop_zero_speed')
-        
+
     def drop_zero_acc(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.cvl_acc) < self.acc_drop_tol[0]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
         self.print_drop_ratio('drop_zero_acc')
-        
+
     def drop_limit_acc(self):
         indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) > self.acc_drop_tol[1]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
         self.print_drop_ratio('drop_limit_acc')
-        
+
     def drop_peaks(self):
         times_to_drop = self.arm_peaks.utc_time.tolist()
         condition = pd.Series()
@@ -182,11 +182,11 @@ class ArmParser:
             condition = (self.arm_20hz.utc_time == time) | condition
         self.arm_20hz = self.arm_20hz.drop(condition.index[condition == True])
         self.print_drop_ratio('drop_peaks')
-        
+
     def filter_signal(self):
         self.arm_20hz["cvl_speed"] = self.convolve_filter(self.arm_20hz.raw_speed,7)
         self.arm_20hz["cvl_acc"] = self.convolve_filter(self.arm_20hz.raw_acc,33)
-        
+
     def convolve_filter(self,signal,kernel_size):
         kernel = (np.ones(kernel_size)/kernel_size).tolist()
         cvl = np.zeros(len(signal))
@@ -194,44 +194,48 @@ class ArmParser:
         return cvl
 
 class RtkParser:
-    
+
     def __init__(self,dir_rtk,fixed_height):
         self.fixed_height = fixed_height
         self.dir_rtk = dir_rtk
-        self.rtk_folders = os.listdir(dir_rtk)  
+        self.rtk_folders = os.listdir(dir_rtk)
         self.novatel = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
         self.tersus = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
         self.ashtech = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
-        self.ublox = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])       
-        
+        self.ublox = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
+        self.novatel_ref = pd.DataFrame()
+        self.tersus_ref = pd.DataFrame()
+        self.ashtech_ref = pd.DataFrame()
+        self.ublox_ref = pd.DataFrame()
+
     def parse_slices(self,prefix):
-        
+
         folders = [i for i in self.rtk_folders if prefix in i]
-        
+
         for folder in folders:
-            rtk_txts_paths = rtk.load_files(folder,'novatel')  
-            rtk.novatel = self.novatel.append(rtk.parse_rtk(rtk_txts_paths)) 
-            
+            rtk_txts_paths = rtk.load_files(folder,'novatel')
+            rtk.novatel = self.novatel.append(rtk.parse_rtk(rtk_txts_paths))
+
         for folder in folders:
-            rtk_txts_paths = self.load_files(folder,'tersus')   
-            rtk.tersus = rtk.tersus.append(rtk.parse_rtk(rtk_txts_paths)) 
-            
+            rtk_txts_paths = self.load_files(folder,'tersus')
+            rtk.tersus = rtk.tersus.append(rtk.parse_rtk(rtk_txts_paths))
+
         for folder in folders:
-            rtk_txts_paths = self.load_files(folder,'ashtech')   
-            rtk.ashtech = rtk.ashtech.append(rtk.parse_rtk(rtk_txts_paths)) 
-             
+            rtk_txts_paths = self.load_files(folder,'ashtech')
+            rtk.ashtech = rtk.ashtech.append(rtk.parse_rtk(rtk_txts_paths))
+
         for folder in folders:
-            rtk_txts_paths = self.load_files(folder,'ublox')   
-            rtk.ublox = rtk.ublox.append(rtk.parse_rtk(rtk_txts_paths))        
-    
-    def load_files(self,folder,rtk_type):    
+            rtk_txts_paths = self.load_files(folder,'ublox')
+            rtk.ublox = rtk.ublox.append(rtk.parse_rtk(rtk_txts_paths))
+
+    def load_files(self,folder,rtk_type):
         rtk_folder = os.path.join(self.dir_rtk, folder)
         rtk_files = os.listdir(rtk_folder)
         rtk_txts = [i for i in rtk_files if '.txt' in i]
         rtk_txts = [i for i in rtk_files if rtk_type in i]
         rtk_txts_paths = [os.path.join(rtk_folder, name) for name in rtk_txts]
         return rtk_txts_paths
-        
+
     def parse_rtk(self,rtk_txts_paths):
         for file in rtk_txts_paths:
             f = open(file, "r")
@@ -241,34 +245,34 @@ class RtkParser:
                 label = file.split('\\')[-2:]
                 rtk = pd.DataFrame(self.get_points(sentences,label)).astype(float)
                 rtk.columns = ['utc_time','lat','lon','status']
-                rtk["height"] = self.fixed_height              
+                rtk["height"] = self.fixed_height
                 rtk.insert(len(rtk.count()), 'lat_in_rad', rtk.lat*np.pi/180, allow_duplicates=False)
-                rtk.insert(len(rtk.count()), 'lon_in_rad', rtk.lon*np.pi/180, allow_duplicates=False)               
+                rtk.insert(len(rtk.count()), 'lon_in_rad', rtk.lon*np.pi/180, allow_duplicates=False)
                 xyz = transpos.wgs2xyz(rtk[['lat_in_rad','lon_in_rad','height']].values)
-                enu = transpos.xyz2enu(xyz,wgs_ref)               
+                enu = transpos.xyz2enu(xyz,wgs_ref)
                 rtk["east"], rtk["north"], rtk["up"] = enu.T[0], enu.T[1], enu.T[2]
                 rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status']]
                 return rtk
-            
+
     def get_points(self,sentences,label):
         points = []
         error_sentence,incomplete_sentence = [],[]
         for sentence in range(len(sentences)):
             sentences[sentence] = sentences[sentence].replace("GNGGA", "GPGGA")
-            sentences[sentence] = sentences[sentence].split(',')       
+            sentences[sentence] = sentences[sentence].split(',')
             if 'E' in sentences[sentence] and len(sentences[sentence]) == 15:
-                E_index = sentences[sentence].index('E')            
+                E_index = sentences[sentence].index('E')
                 utc = sentences[sentence][E_index-4]
                 lat = sentences[sentence][E_index-3]
-                lon = sentences[sentence][E_index-1]            
+                lon = sentences[sentence][E_index-1]
                 if len(sentences[sentence]) > 5:
                     status = int(sentences[sentence][E_index+1])
                 else:
-                    status = 6                    # without status                 
+                    status = 6                    # without status
                 try:
                     utc = transpos.get_seconds(utc)
                     lat = transpos.get_coordinate(lat)
-                    lon = transpos.get_coordinate(lon)          
+                    lon = transpos.get_coordinate(lon)
                     parameters = [utc,lat,lon,status]
                     points.append(parameters)
                 except:
@@ -279,24 +283,30 @@ class RtkParser:
         drop_ratio = ((len(incomplete_sentence)+len(error_sentence)) / len(points) * 100)
         print(" - " + label[0] + '-'+ label[1].split('_')[1].split('.')[0] + " %.3f" % drop_ratio + ' % of NMEAs were incomplete')
         return points
-     
+
     def drop_points_wo_arm(self,arm_df):
-        self.novatel = self.drop_rtk_wo_arm(self.novatel,arm_df,'novatel')
-        self.tersus = self.drop_rtk_wo_arm(self.tersus,arm_df,'tersus')
-        self.ashtech = self.drop_rtk_wo_arm(self.ashtech,arm_df,'ashtech')
-        self.ublox = self.drop_rtk_wo_arm(self.ublox,arm_df,'ublox')
-                   
-    def drop_rtk_wo_arm(self,rtk_df,arm_df,label):
+        self.novatel = self.drop_according_time(self.novatel,arm_df,'novatel')
+        self.tersus = self.drop_according_time(self.tersus,arm_df,'tersus')
+        self.ashtech = self.drop_according_time(self.ashtech,arm_df,'ashtech')
+        self.ublox = self.drop_according_time(self.ublox,arm_df,'ublox')
+
+    def drop_points_wo_rtk(self,arm_df):
+        self.novatel_ref = self.drop_according_time(arm_df,self.novatel,'novatel_ref')
+        self.tersus_ref = self.drop_according_time(arm_df,self.tersus,'tersus_ref')
+        self.ashtech_ref = self.drop_according_time(arm_df,self.ashtech,'ashtech_ref')
+        self.ublox_ref = self.drop_according_time(arm_df,self.ublox,'ublox_ref')
+
+    def drop_according_time(self,dropped_df,reference_df,label):
         print(' - points where is no arm reference will be droped from ' + label)
-        rtk_df = rtk_df.sort_values(by=['utc_time']).reset_index()       
-        times_of_arm = arm_df.utc_time.round(2).tolist()
-        times_of_rtk = rtk_df.utc_time.round(2).tolist()
+        dropped_df = dropped_df.sort_values(by=['utc_time']).reset_index()
+        times_of_arm = reference_df.utc_time.round(2).tolist()
+        times_of_rtk = dropped_df.utc_time.round(2).tolist()
         condition = []
         for rtk_row in range(len(times_of_rtk)):
             rtk_time = times_of_rtk[rtk_row]
             for arm_row in range(len(times_of_arm)):
                 arm_time = times_of_arm[arm_row]
-                if rtk_time <= arm_time:           
+                if rtk_time <= arm_time:
                     if rtk_time == arm_time:
                         condition.append(False)
                         times_of_arm = times_of_arm[arm_row:]
@@ -304,16 +314,14 @@ class RtkParser:
                         condition.append(True)
                     break
                 if arm_row == len(times_of_arm)-1:
-                    condition.append(True)   
+                    condition.append(True)
         condition = pd.Series(condition)
-        
         drop_ratio = 100 - (len(condition[condition == True]) / len(condition) * 100)
         print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
-        
-        return rtk_df.drop(condition.index[condition == True])
-                      
+        return dropped_df.drop(condition.index[condition == True])
+
 # =============================================================================
-#  DEFINITIONS       
+#  DEFINITIONS
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
 dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200309"
@@ -325,7 +333,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'auto'        
+prefix = 'auto'
 # =============================================================================
 # MAIN:
 # =============================================================================
@@ -343,6 +351,8 @@ arm.drop_peaks()
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix)
 rtk.drop_points_wo_arm(arm.arm_20hz)
+rtk.drop_points_wo_rtk(arm.arm_20hz)
+
 
 #rtk = []
 
@@ -364,15 +374,15 @@ pltr.plot_rtk(rtk.ublox,'ublox',"m")
 
 
 # =============================================================================
-# 
+#
 # =============================================================================
 
 
 #
-##            
+##
 ##            rtk_output = rtk[["utc_time","east","north","up","status"]]
 ##            rtk_output.to_csv(os.path.join(output_dir, file.split('\\')[-1][:-4]+'_enu.csv'))
-#            
+#
 
 ### =============================================================================
 ### DEWESOFT:
@@ -386,23 +396,23 @@ pltr.plot_rtk(rtk.ublox,'ublox',"m")
 ##for file in dewesoft_csvs_paths:
 ###    dewesoft = pd.read_csv(file, sep=',', names=header , engine='python')#.values.tolist()
 ##    dewesoft = pd.read_csv(file, sep=';', engine='python')#.values.tolist()
-##    
+##
 ###    dewesoft["utc_time"] = dewesoft.utc_time % 86400
-##    
+##
 ###    dewesoft.insert(len(dewesoft.count()), 'lat_in_rad', dewesoft.lat*np.pi/180, allow_duplicates=False)
 ###    dewesoft.insert(len(dewesoft.count()), 'lon_in_rad', dewesoft.lon*np.pi/180, allow_duplicates=False)
-###    
+###
 ###    xyz = transpos.wgs2xyz(dewesoft[['lat_in_rad','lon_in_rad','height']].values)
 ###    enu = transpos.xyz2enu(xyz,wgs_ref)
-###    
+###
 ###    dewesoft["east"], dewesoft["north"], dewesoft["up"] = enu.T[0], enu.T[1], enu.T[2]
 ##    dewesoft = dewesoft[["utc_time","lat","lon","height","east","north","up"]]
 ##    print(' - dewesoft loading done, ' + str(len(dewesoft)) + ' points')
-##    
+##
 ##    dewesoft["east"] = dewesoft.east - 0.59
 ##    dewesoft["north"] = dewesoft.north - 0.588
-##    
+##
 ##    filename = file.split("\\")[-1][:-4]
 ##    plot.plot_EN(dewesoft, filename, "b")
 ##    plot.plot_utcE(dewesoft, filename, "b")
-# 
+#
