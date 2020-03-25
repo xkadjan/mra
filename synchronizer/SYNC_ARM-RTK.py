@@ -316,9 +316,23 @@ class RtkParser:
                 if arm_row == len(times_of_arm)-1:
                     condition.append(True)
         condition = pd.Series(condition)
-        drop_ratio = 100 - (len(condition[condition == True]) / len(condition) * 100)
+        drop_ratio = (len(condition[condition == True]) / len(condition) * 100)
         print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
         return dropped_df.drop(condition.index[condition == True])
+
+    def concate_arm_and_rtks(self):
+        novatel = self.concate_dfs(self.novatel_ref,self.novatel)
+        tersus = self.concate_dfs(self.tersus_ref,self.tersus)
+        ashtech = self.concate_dfs(self.ashtech_ref,self.ashtech)
+        ublox = self.concate_dfs(self.ublox_ref,self.ublox)
+        return novatel,tersus,ashtech,ublox
+
+    def concate_dfs(self,arm_df,rtk_df):
+        arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
+        arm_df = arm_df.rename(columns={"east": "arm_east", "north": "arm_north"})
+        rtk_df = rtk_df.reset_index()[['east','north','status']]
+        rtk_df = rtk_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
+        return pd.concat([arm_df, rtk_df], axis=1)
 
 # =============================================================================
 #  DEFINITIONS
@@ -347,11 +361,11 @@ arm.drop_zero_acc()
 arm.drop_limit_acc()
 arm.drop_peaks()
 
-
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix)
 rtk.drop_points_wo_arm(arm.arm_20hz)
 rtk.drop_points_wo_rtk(arm.arm_20hz)
+novatel,tersus,ashtech,ublox = rtk.concate_arm_and_rtks()
 
 
 #rtk = []
