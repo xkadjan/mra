@@ -114,7 +114,7 @@ class Arm_Processor(object):
         sensorENC = self.parse_sensor_data(arm, 1056, 1057)
         sensorENC.columns = ['ENCnum', 'ENCtime']
         print(" - ENC parsing - done" )
-        return fixtimesec,fixtimestring,sensorPPS,sensorHALL,sensorENC
+        return fixtimesec,fixtimestring,sensorPPS,sensorHALL.dropna(),sensorENC.dropna()
     
     def get_time_err(self,sensorPPS):
         ppsTdif = sensorPPS.PPStime.sub(sensorPPS.PPStime.shift(), fill_value=0)
@@ -155,9 +155,7 @@ class Arm_Processor(object):
     def arm_processor(self):
         arm = self.arm_extractor()         # load ASC data file
         fixtimesec,fixtimestring,sensorPPS,sensorHALL,sensorENC = self.arm_parser(arm)
-        sensorPPS, sensorPPSuError, sensorPPSuFixTime = self.get_time_err(sensorPPS)
-        sensorHALL = sensorHALL.dropna()
-        sensorENC = sensorENC.dropna()               
+        sensorPPS, sensorPPSuError, sensorPPSuFixTime = self.get_time_err(sensorPPS)            
         sensorENC["ENCnum"] = self.to_signed(sensorENC.ENCnum.tolist())
 
         sensorENC = ef.ENC_signal_corrector(sensorENC)

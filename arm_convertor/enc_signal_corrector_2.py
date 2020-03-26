@@ -42,38 +42,40 @@ def fix_enc(enc,err_clusters,distance):
         
         polynomial = np.poly1d(np.polyfit(bound_points_time, bound_points_speed, 1))
         for point in range(err_clusters[cluster][0],err_clusters[cluster][1]-1):
-            speed_corr[point-1]  = polynomial(enc.iloc[point].time)
+            speed_corr[point]  = polynomial(enc.iloc[point].time)
     enc["speed_corr"] = speed_corr
     
     enc["dist_corr_diff"] = enc.speed_corr * enc.time_diff       #[m]
     enc["num_corr_diff"] = enc.dist_corr_diff / distance         #[-]   
-    enc["num_corr_diff_round"] = round(enc.num_corr_diff)        #[-] 
+    enc["num_corr_diff_round"] = (enc.num_corr_diff)        #[-] 
     
-    clockwise = np.mean(enc["speed_cvl"]) > 0
-    diff = enc.num_corr_diff_round.tolist()
+    diff = enc.num_corr_diff_round.tolist() #sum with firt zero
     diff[0] = 0
     for sample in range(1,len(diff)):
-        diff[sample] = diff[sample] + diff[sample-1]
+        diff[sample] = diff[sample-1] + diff[sample]
     enc["num_corr_sum"] = diff
-    
+
+    clockwise = np.mean(enc["speed_cvl"]) > 0    
     enc["num"] = enc.num.iloc[0] + enc.num_corr_sum * (((clockwise*-1)+0.5)*2)
     
     return enc
 
 def replace_times(enc):
-    bad_times = enc.loc[(np.array(enc.index[abs(enc.round_diff)>0.01])-1).tolist()]
-    bad_times["time_diff_corr"] = (bad_times.num_corr_diff_round / bad_times.num_corr_diff * bad_times.time_diff) - bad_times.time_diff
-    bad_times["time"] = bad_times.time + bad_times.time_diff_corr
+    enc["round_diff_abs"] = abs(enc.num_corr_diff - enc.num_corr_diff_round)
+    enc["round_diff_abs"] = enc.round_diff_abs.shift(periods=-1,fill_value=0)
+    bt = enc[enc.round_diff_abs > 0.01]   # renamed: bad_times -> bt
+
+    bt["time"] = bt.time + (bt.num_corr_diff_round / bt.num_corr_diff * bt.time_diff) - bt.time_diff
     
-    times = np.array([enc.index.tolist(),enc.time]).T
-    times_corr = np.array([bad_times.index.tolist(),bad_times.time]).T
+    times = np.array([enc.index.tolist(), enc.time]).T
+    times_corr = np.array([bt.index.tolist(), bt.time]).T
     
     for corr in range(len(times_corr)):
         for orig in range(len(times)):
             if times_corr[corr][0] == times[orig][0]:
                 times[orig][1] = times_corr[corr][1]
     
-    enc["time"] = pd.Series(times.T[1],index=times.T[0].astype(int))
+    enc["time"] = pd.Series(times.T[1], index=times.T[0].astype(int))
     
     return enc
 
@@ -87,14 +89,13 @@ def ENC_signal_corrector(sensorENC):
     circle = 2 * np.pi * radius
     distance = circle / points
     
-    kernel_size = 5
+    kernel_size = 15
     atol = 0.05
 
 # =============================================================================
 # MAIN
 # =============================================================================
 #    enc_copy = enc.copy(deep=True)
-#    enc = pd.DataFrame(sensorENC[["ENCnum","ENCtime"]])
     enc = pd.DataFrame({'time': sensorENC.ENCtime,'num': sensorENC.ENCnum})
 
     enc["num_original"] = enc.num
@@ -104,7 +105,6 @@ def ENC_signal_corrector(sensorENC):
     enc["time_diff"] = enc.time.diff()                          #[s]
     enc = enc.dropna()
     
-    enc["dist_diff"] = abs(enc.num_diff) * distance             #[m]   
     enc["dist_diff"] = enc.num_diff * distance                  #[m]       
     enc["speed"] = enc.dist_diff / enc.time_diff                #[m/s]
     
@@ -118,22 +118,24 @@ def ENC_signal_corrector(sensorENC):
     
     err_clusters = get_clusters(outsiders,enc)
     bound_points = enc.loc[np.concatenate((err_clusters), axis=0)]
-    enc = fix_enc(enc,err_clusters,distance)
-       
-    enc["round_diff"] = enc.num_corr_diff - enc.num_corr_diff_round
-    enc = replace_times(enc)
     
+    enc = fix_enc(enc,err_clusters,distance)      
+    enc = replace_times(enc)
+       
     # =============================================================================
-    enc_f = enc[["time","num"]]
+    enc_f = enc[["time","num"]]   
+#    enc_f = enc_f[enc_f.num.diff() != 0]  #first ment of errasing of zeros
+    
     enc_f["num_diff"] = enc_f.num.diff()
     
     enc_f["time"] = enc_f.time                                   #[s]
     enc_f["time_diff"] = enc_f.time.diff()                       #[s]
     enc_f = enc_f.dropna()
     
-    enc_f["dist_diff"] = abs(enc_f.num_diff) * distance          #[m]   
     enc_f["dist_diff"] = enc_f.num_diff * distance               #[m]       
     enc_f["speed"] = enc_f.dist_diff / enc_f.time_diff           #[m/s]
+    
+    enc_f = enc_f[enc_f.num.diff() != 0]   #actual placement of errasing of zeros
     
     enc_f["time"] = enc_f.time * 1000000
     enc["time"] = enc.time * 1000000
@@ -147,7 +149,7 @@ def ENC_signal_corrector(sensorENC):
     fig, ax = plt.subplots(figsize=[12.2, 3])
     rcParams["font.family"] = "Arial"
 
-    ax.plot(enc.time, enc.speed, '.g',linestyle='dashed',linewidth=0.5, markersize=4)
+#    ax.plot(enc.time, enc.speed, '.g',linestyle='dashed',linewidth=0.5, markersize=4)
     ax.plot(enc.time, enc.speed_cvl, '.r',linestyle='dashed',linewidth=0.5, markersize=2)
     ax.plot(outsiders.time, outsiders.speed, 'or', markersize=5)
     ax.plot(bound_points.time, bound_points.speed, 'ob', markersize=5)
