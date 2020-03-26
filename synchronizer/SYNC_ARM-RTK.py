@@ -193,6 +193,13 @@ class ArmParser:
         cvl[int((kernel_size-kernel_size%2)/2):-int((kernel_size-kernel_size%2)/2)] = np.convolve(signal, kernel, mode='valid')
         return cvl
 
+    def slice_times(self,slice_times):
+        self.arm_20hz = self.arm_20hz[(self.arm_20hz.utc_time > slice_times[0]) & (self.arm_20hz.utc_time < slice_times[1])]
+        self.arm_async = self.arm_async[(self.arm_async.utc_time > slice_times[0]) & (self.arm_async.utc_time < slice_times[1])]
+        self.arm_badhalls = self.arm_badhalls[(self.arm_badhalls.utc_time > slice_times[0]) & (self.arm_badhalls.utc_time < slice_times[1])]
+        self.arm_halls = self.arm_halls[(self.arm_halls.utc_time > slice_times[0]) & (self.arm_halls.utc_time < slice_times[1])]
+        self.arm_peaks = self.arm_peaks[(self.arm_peaks.utc_time > slice_times[0]) & (self.arm_peaks.utc_time < slice_times[1])]
+
 class RtkParser:
 
     def __init__(self,dir_rtk,fixed_height):
@@ -334,6 +341,12 @@ class RtkParser:
         rtk_df = rtk_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
         return pd.concat([arm_df, rtk_df], axis=1)
 
+    def slice_times(self,slice_times):
+        self.novatel = self.novatel[(self.novatel.utc_time > slice_times[0]) & (self.novatel.utc_time < slice_times[1])]
+        self.tersus = self.tersus[(self.tersus.utc_time > slice_times[0]) & (self.tersus.utc_time < slice_times[1])]
+        self.ashtech = self.ashtech[(self.ashtech.utc_time > slice_times[0]) & (self.ashtech.utc_time < slice_times[1])]
+        self.ublox = self.ublox[(self.ublox.utc_time > slice_times[0]) & (self.ublox.utc_time < slice_times[1])]
+
 # =============================================================================
 #  DEFINITIONS
 # =============================================================================
@@ -348,11 +361,17 @@ wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
 prefix = 'auto'
+
+if prefix == 'auto': slice_times = [0,90000]
+if prefix == 'car': slice_times = [71805,76000]
+if prefix == 'ped': slice_times = [0,90000]
+
 # =============================================================================
 # MAIN:
 # =============================================================================
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
+arm.slice_times(slice_times)
 arm.filter_signal()
 arm.get_bad_cicles()
 arm.drop_bad_circles()
@@ -363,9 +382,13 @@ arm.drop_peaks()
 
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix)
+rtk.slice_times(slice_times)
 rtk.drop_points_wo_arm(arm.arm_20hz)
 rtk.drop_points_wo_rtk(arm.arm_20hz)
 novatel,tersus,ashtech,ublox = rtk.concate_arm_and_rtks()
+
+
+
 
 
 #rtk = []
