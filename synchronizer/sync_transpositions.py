@@ -38,10 +38,10 @@ def wgs2xyz(wgs):
     return xyz
 
 def xyz2enu(xyz,wgs_ref,method = 'def'):
-    
+
     wgs_ref = np.array([wgs_ref])
     wgs_ref[0,[0,1]] = wgs_ref[0,[0,1]]*np.pi/180
-    
+
     if method == 'ECEF':
         xyz_ref = wgs2ECEF(wgs_ref)
     else:
@@ -55,6 +55,7 @@ def xyz2enu(xyz,wgs_ref,method = 'def'):
                   [-np.cos(wgs_ref[0,1])*np.sin(wgs_ref[0,0]), -np.sin(wgs_ref[0,1])*np.sin(wgs_ref[0,0]),np.cos(wgs_ref[0,0])],
                   [np.cos(wgs_ref[0,1])*np.cos(wgs_ref[0,0]), np.sin(wgs_ref[0,1])*np.cos(wgs_ref[0,0]),np.sin(wgs_ref[0,0])]])
     enu = np.dot(xyz,R.T)
+    enu.T[1] = enu.T[1]*(-1)
     return enu
 
 def wgs2ECEF(wgs):

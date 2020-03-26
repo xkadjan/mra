@@ -332,14 +332,16 @@ class RtkParser:
         tersus = self.concate_dfs(self.tersus_ref,self.tersus)
         ashtech = self.concate_dfs(self.ashtech_ref,self.ashtech)
         ublox = self.concate_dfs(self.ublox_ref,self.ublox)
-        return novatel,tersus,ashtech,ublox
+        return [novatel,tersus,ashtech,ublox]
 
     def concate_dfs(self,arm_df,rtk_df):
         arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
         arm_df = arm_df.rename(columns={"east": "arm_east", "north": "arm_north"})
         rtk_df = rtk_df.reset_index()[['east','north','status']]
         rtk_df = rtk_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
-        return pd.concat([arm_df, rtk_df], axis=1)
+        arm_rtk_df = pd.concat([arm_df, rtk_df], axis=1)
+        arm_rtk_df = arm_rtk_df[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
+        return arm_rtk_df
 
     def slice_times(self,slice_times):
         self.novatel = self.novatel[(self.novatel.utc_time > slice_times[0]) & (self.novatel.utc_time < slice_times[1])]
@@ -347,11 +349,19 @@ class RtkParser:
         self.ashtech = self.ashtech[(self.ashtech.utc_time > slice_times[0]) & (self.ashtech.utc_time < slice_times[1])]
         self.ublox = self.ublox[(self.ublox.utc_time > slice_times[0]) & (self.ublox.utc_time < slice_times[1])]
 
+class Evaluator:
+
+    def __init__(self,rtk_list):
+        self.novatel = rtk_list[0]
+        self.tersus = rtk_list[1]
+        self.ashtech = rtk_list[2]
+        self.ublox = rtk_list[3]
+
 # =============================================================================
 #  DEFINITIONS
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
-dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200309"
+dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200326"
 #dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\TO_PROCESS"
 
 output_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\enu"
@@ -360,10 +370,10 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'auto'
+prefix = 'ped'
 
-if prefix == 'auto': slice_times = [0,90000]
-if prefix == 'car': slice_times = [71805,76000]
+if prefix == 'auto': slice_times = [57800,61500]
+if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 # =============================================================================
@@ -371,7 +381,7 @@ if prefix == 'ped': slice_times = [0,90000]
 # =============================================================================
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
-arm.slice_times(slice_times)
+#arm.slice_times(slice_times)
 arm.filter_signal()
 arm.get_bad_cicles()
 arm.drop_bad_circles()
@@ -382,14 +392,12 @@ arm.drop_peaks()
 
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix)
-rtk.slice_times(slice_times)
+#rtk.slice_times(slice_times)
 rtk.drop_points_wo_arm(arm.arm_20hz)
 rtk.drop_points_wo_rtk(arm.arm_20hz)
-novatel,tersus,ashtech,ublox = rtk.concate_arm_and_rtks()
+rtk_list = rtk.concate_arm_and_rtks()
 
-
-
-
+evl = Evaluator(rtk_list)
 
 #rtk = []
 
