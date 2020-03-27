@@ -166,7 +166,7 @@ class ArmParser:
         self.print_drop_ratio('drop_zero_speed')
 
     def drop_zero_acc(self):
-        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.cvl_acc) < self.acc_drop_tol[0]]
+        indexes_to_drop = self.arm_20hz.index[abs(self.arm_20hz.raw_acc) < self.acc_drop_tol[0]]
         self.arm_20hz = self.arm_20hz.drop(indexes_to_drop)
         self.print_drop_ratio('drop_zero_acc')
 
@@ -179,7 +179,7 @@ class ArmParser:
         times_to_drop = self.arm_peaks.utc_time.tolist()
         condition = pd.Series()
         for time in times_to_drop:
-            condition = (self.arm_20hz.utc_time == time) | condition
+            condition = ((self.arm_20hz.utc_time > time-0.1) & (self.arm_20hz.utc_time < time+0.1)) | condition
         self.arm_20hz = self.arm_20hz.drop(condition.index[condition == True])
         self.print_drop_ratio('drop_peaks')
 
@@ -352,10 +352,39 @@ class RtkParser:
 class Evaluator:
 
     def __init__(self,rtk_list):
-        self.novatel = rtk_list[0]
-        self.tersus = rtk_list[1]
-        self.ashtech = rtk_list[2]
-        self.ublox = rtk_list[3]
+        self.bounds_speed = [0,1,2.5,4,5.5,7,8.5,10]
+        self.bounds_acc = [-4,-3,-2,-1,0,1,2]
+
+        self.novatel = self.calculate_deviations(rtk_list[0])
+        self.tersus = self.calculate_deviations(rtk_list[1])
+        self.ashtech = self.calculate_deviations(rtk_list[2])
+        self.ublox = self.calculate_deviations(rtk_list[3])
+
+        self.novatel_by_speed = self.get_boxes(self.novatel,'cvl_speed',self.bounds_speed,'novatel')
+        self.tersus_by_speed = self.get_boxes(self.tersus,'cvl_speed',self.bounds_speed,'tersus')
+        self.ashtech_by_speed = self.get_boxes(self.ashtech,'cvl_speed',self.bounds_speed,'ashtech')
+        self.ublox_by_speed = self.get_boxes(self.ublox,'cvl_speed',self.bounds_speed,'ublox')
+
+        self.novatel_by_acc = self.get_boxes(self.novatel,'cvl_acc',self.bounds_acc,'novatel')
+        self.tersus_by_acc = self.get_boxes(self.tersus,'cvl_acc',self.bounds_acc,'tersus')
+        self.ashtech_by_acc = self.get_boxes(self.ashtech,'cvl_acc',self.bounds_acc,'ashtech')
+        self.ublox_by_acc = self.get_boxes(self.ublox,'cvl_acc',self.bounds_acc,'ublox')
+
+    def calculate_deviations(self,df):
+        df['diff_east'] = df.rtk_east - df.arm_east
+        df['diff_north'] = df.rtk_north - df.arm_north
+        df['deviation'] = np.sqrt(df['diff_east']**2 + df['diff_north']**2)
+        df['azimuth'] = np.rad2deg(np.arctan(df['diff_east']/df['diff_north']))
+        return df
+
+    def get_boxes(self,rtk,filter_by,bounds,label):
+        boxes = []
+        for box in range(1,len(bounds)):
+            df = rtk[(rtk[filter_by] > bounds[box-1]) & (rtk[filter_by] <= bounds[box])]
+            boxes.append(df)
+            print(label + ' by ' + filter_by + ': ' + str(bounds[box-1]) + ' - ' + str(bounds[box]) + '.....' + str(len(df)))
+        return boxes
+
 
 # =============================================================================
 #  DEFINITIONS
@@ -382,13 +411,14 @@ if prefix == 'ped': slice_times = [0,90000]
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
 #arm.slice_times(slice_times)
+arm.drop_peaks()
 arm.filter_signal()
 arm.get_bad_cicles()
 arm.drop_bad_circles()
 arm.drop_zero_speed()
 arm.drop_zero_acc()
 arm.drop_limit_acc()
-arm.drop_peaks()
+
 
 rtk = RtkParser(dir_rtk,fixed_height)
 rtk.parse_slices(prefix)
@@ -398,6 +428,8 @@ rtk.drop_points_wo_rtk(arm.arm_20hz)
 rtk_list = rtk.concate_arm_and_rtks()
 
 evl = Evaluator(rtk_list)
+
+
 
 #rtk = []
 
