@@ -390,7 +390,7 @@ class Evaluator:
 #  DEFINITIONS
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
-dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200326"
+dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200327"
 #dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\TO_PROCESS"
 
 output_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\enu"
@@ -399,7 +399,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'ped'
+prefix = 'auto'
 
 if prefix == 'auto': slice_times = [57800,61500]
 if prefix == 'car': slice_times = [71800,76000]
@@ -411,9 +411,10 @@ if prefix == 'ped': slice_times = [0,90000]
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
 #arm.slice_times(slice_times)
-arm.drop_peaks()
+#arm.drop_peaks()
 arm.filter_signal()
 arm.get_bad_cicles()
+arm.drop_peaks()
 arm.drop_bad_circles()
 arm.drop_zero_speed()
 arm.drop_zero_acc()
@@ -446,6 +447,11 @@ pltr.plot_rtk(rtk.novatel,'novatel',"g")
 pltr.plot_rtk(rtk.tersus,'tersus',"y")
 pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
 pltr.plot_rtk(rtk.ublox,'ublox',"m")
+
+pltr.plot_devs(evl.novatel,'novatel',"g")
+pltr.plot_devs(evl.tersus,'tersus',"y")
+pltr.plot_devs(evl.ashtech,'ashtech',"b")
+pltr.plot_devs(evl.ublox,'ublox',"m")
 ##
 
 
