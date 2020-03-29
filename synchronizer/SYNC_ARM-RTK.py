@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import sync_transpositions as transpos
 import sync_plotting as plot
+import scipy.signal
 
 class ArmParser:
 
@@ -19,6 +20,7 @@ class ArmParser:
         self.badhall_tol = 10           # [s]
         self.speed_drop_tol = 0.1       # [m*s-1]
         self.acc_drop_tol = [0.01,10]   # [m*s-2]
+        self.peak_drop_tol = 0.1        # [s]
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
         self.last_len_20hz = 0
@@ -43,7 +45,8 @@ class ArmParser:
         csvs = [i for i in files if '.csv' in i]
         csvs = [i for i in csvs if not i.find(signal)]
         csvs_paths = [os.path.join(dir, name) for name in csvs]
-        csvs_paths = [i for i in csvs_paths if prefix in i]
+        if not prefix == 'all':
+            csvs_paths = [i for i in csvs_paths if prefix in i]
         start_times = [float(i.split('_')[-2]) for i in csvs_paths]
         # Sorting of paths:
         csvs_paths = [[start_times[meas],csvs_paths[meas]] for meas in range(len(csvs_paths))]
@@ -121,6 +124,7 @@ class ArmParser:
         self.circle_good = pd.DataFrame(circle_good,columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(circle_bad,columns=["row","enc","error","time_start","time_end"])
         self.drop_last_badhalls()
+        self.arm_20hz = self.arm_20hz.reset_index()
 
     def drop_last_badhalls(self):
         badhalls_index = self.arm_badhalls.index.astype(int).tolist()
@@ -152,7 +156,7 @@ class ArmParser:
         print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
 
     def drop_bad_circles(self):
-        arm_20hz = self.arm_20hz.reset_index()
+        arm_20hz = self.arm_20hz#.reset_index()
         circle_bad = self.circle_bad
         condition = pd.Series()
         for slice_out in range(len(circle_bad)):
@@ -179,19 +183,24 @@ class ArmParser:
         times_to_drop = self.arm_peaks.utc_time.tolist()
         condition = pd.Series()
         for time in times_to_drop:
-            condition = ((self.arm_20hz.utc_time > time-0.1) & (self.arm_20hz.utc_time < time+0.1)) | condition
+            condition = ((self.arm_20hz.utc_time > time - self.peak_drop_tol) & (self.arm_20hz.utc_time < time + self.peak_drop_tol)) | condition
         self.arm_20hz = self.arm_20hz.drop(condition.index[condition == True])
         self.print_drop_ratio('drop_peaks')
 
     def filter_signal(self):
         self.arm_20hz["cvl_speed"] = self.convolve_filter(self.arm_20hz.raw_speed,7)
         self.arm_20hz["cvl_acc"] = self.convolve_filter(self.arm_20hz.raw_acc,33)
+#        self.arm_20hz["cvl_speed"] = self.savitzky_golay_filter(self.arm_20hz.raw_speed)
+#        self.arm_20hz["cvl_acc"] = self.savitzky_golay_filter(self.arm_20hz.raw_acc)
 
     def convolve_filter(self,signal,kernel_size):
         kernel = (np.ones(kernel_size)/kernel_size).tolist()
         cvl = np.zeros(len(signal))
         cvl[int((kernel_size-kernel_size%2)/2):-int((kernel_size-kernel_size%2)/2)] = np.convolve(signal, kernel, mode='valid')
         return cvl
+
+    def savitzky_golay_filter(self,signal):
+        return scipy.signal.savgol_filter(signal, 51, 3)
 
     def slice_times(self,slice_times):
         self.arm_20hz = self.arm_20hz[(self.arm_20hz.utc_time > slice_times[0]) & (self.arm_20hz.utc_time < slice_times[1])]
@@ -217,7 +226,10 @@ class RtkParser:
 
     def parse_slices(self,prefix):
 
-        folders = [i for i in self.rtk_folders if prefix in i]
+        if prefix == 'all':
+            folders = self.rtk_folders
+        else:
+            folders = [i for i in self.rtk_folders if prefix in i]
 
         for folder in folders:
             rtk_txts_paths = rtk.load_files(folder,'novatel')
@@ -399,7 +411,7 @@ output_dir = os.path.join(dir_arm,'output')
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
 fixed_height = 235.58
 
-prefix = 'auto'
+prefix = 'all'
 
 if prefix == 'auto': slice_times = [57800,61500]
 if prefix == 'car': slice_times = [71800,76000]
@@ -411,10 +423,9 @@ if prefix == 'ped': slice_times = [0,90000]
 arm = ArmParser(dir_arm,prefix)
 arm.parse_slices()
 #arm.slice_times(slice_times)
-#arm.drop_peaks()
-arm.filter_signal()
 arm.get_bad_cicles()
 arm.drop_peaks()
+arm.filter_signal()
 arm.drop_bad_circles()
 arm.drop_zero_speed()
 arm.drop_zero_acc()
@@ -427,10 +438,10 @@ rtk.parse_slices(prefix)
 rtk.drop_points_wo_arm(arm.arm_20hz)
 rtk.drop_points_wo_rtk(arm.arm_20hz)
 rtk_list = rtk.concate_arm_and_rtks()
-
+#
 evl = Evaluator(rtk_list)
-
-
+#
+#
 
 #rtk = []
 
@@ -452,8 +463,8 @@ pltr.plot_devs(evl.novatel,'novatel',"g")
 pltr.plot_devs(evl.tersus,'tersus',"y")
 pltr.plot_devs(evl.ashtech,'ashtech',"b")
 pltr.plot_devs(evl.ublox,'ublox',"m")
-##
-
+###
+#
 
 
 # =============================================================================
