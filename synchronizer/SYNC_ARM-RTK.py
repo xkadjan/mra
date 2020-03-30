@@ -367,6 +367,9 @@ class Evaluator:
         self.bounds_speed = [0,1,2.5,4,5.5,7,8.5,10]
         self.bounds_acc = [-4,-3,-2,-1,0,1,2]
 
+        self.rtk_names = ['novatel', 'tersus', 'ashtech', 'ublox']
+        self.results = pd.DataFrame(index=self.rtk_names)
+
     def get_deviations(self,rtk_list):
         self.novatel = self.calculate_deviations(rtk_list[0])
         self.tersus = self.calculate_deviations(rtk_list[1])
@@ -404,6 +407,7 @@ class Evaluator:
         self.tersus.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
         self.ashtech.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
         self.ublox.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
+        self.results.to_csv(os.path.join(csv_dir, 'whole.csv'))
 
     def csv_load(self,csv_dir):
         rtk_names = ['novatel_whole.csv','tersus_whole.csv','ashtech_whole.csv','ublox_whole.csv']
@@ -411,6 +415,60 @@ class Evaluator:
         for rtk_name in rtk_names:
             rtk_list.append(pd.read_csv(os.path.join(csv_dir, rtk_name), sep=',', engine='python'))
         return rtk_list
+
+    def evaluate(self):
+        µ_err = [self.get_accuracy(self.novatel),
+                 self.get_accuracy(self.tersus),
+                 self.get_accuracy(self.ashtech),
+                 self.get_accuracy(self.ublox)]
+        self.results.insert(self.results.columns.size,'µ_err',µ_err)
+
+        σ_err = [self.get_precision(self.novatel),
+                 self.get_precision(self.tersus),
+                 self.get_precision(self.ashtech),
+                 self.get_precision(self.ublox)]
+        self.results.insert(self.results.columns.size,'σ_err',σ_err)
+
+        RMS_err = [self.get_rms(self.novatel),
+                   self.get_rms(self.tersus),
+                   self.get_rms(self.ashtech),
+                   self.get_rms(self.ublox)]
+        self.results.insert(self.results.columns.size,'RMS_err',RMS_err)
+
+#        CEP_err = [self.get_cep(self.novatel),
+#                   self.get_cep(self.tersus),
+#                   self.get_cep(self.ashtech),
+#                   self.get_cep(self.ublox)]
+#        self.results.insert(self.results.columns.size,'CEP_err',CEP_err)
+
+        SSR_err = [self.get_ssr(self.novatel),
+                   self.get_ssr(self.tersus),
+                   self.get_ssr(self.ashtech),
+                   self.get_ssr(self.ublox)]
+        self.results.insert(self.results.columns.size,'SSR_err',SSR_err)
+
+        print("Whole measurements:")
+        print(self.results)
+
+    def get_accuracy (self,rtk):
+        # Accuracy (µerr) – sample mean of deviations from reference point (error offset)
+        return float(rtk.deviation.mean())
+
+    def get_precision(self,rtk):
+        # Precision (σerr) – standard deviation of error (stability of positioning)
+        return float(rtk.deviation.std())
+
+    def get_rms(self,rtk):
+        # RMS error (RMSerr) – value specified by the manufacturer (metric emphasizing large errors)
+        return float(np.sqrt(rtk.deviation.pow(2).mean()))
+
+    def get_cep(self,rtk):
+        # CEP
+        return 0
+
+    def get_ssr(self,rtk):
+        # System status ratio (SSR) – ability of the system to solve the problem of ambiguity integer phases
+        return float(len(rtk.status[rtk.status == 4])/len(rtk)*100)
 
 # =============================================================================
 #  DEFINITIONS
@@ -513,42 +571,15 @@ if not new_preproccess:
     rtk_list = evl.csv_load(csv_dir)
 evl.get_deviations(rtk_list)
 evl.get_make_boxes()
-evl.csv_print(csv_dir)
+
 
 pltr.plot_devs(evl.novatel,'novatel',"g")
 pltr.plot_devs(evl.tersus,'tersus',"y")
 pltr.plot_devs(evl.ashtech,'ashtech',"b")
 pltr.plot_devs(evl.ublox,'ublox',"m")
 
-#	1. Accuracy (µerr) – sample mean of deviations from reference point (error offset):
-#µ_err=1/n ∑_(i=1)^n▒d_i 	(1)
-
-
-#µ_err=1/n ∑_(i=1)^n▒d_i
-#
-#	where: n – data-set of measured samples; di – deviation from reference point at the
-#i index of a data-set, m.
-#
-#	2. Precision (σerr) – standard deviation of error (stability of positioning):
-#σ_err=√((∑_(i=1)^n▒〖〖(d〗_(i-) µ_err)〗^2 )/(n-1))	(2)
-#	where: n – data-set of measured samples; di – deviation from reference point at the
-#i index of a data-set; µerr – sample mean of deviations from reference point, m.
-#
-#	3. RMS error (RMSerr) – value specified by the manufacturer (metric emphasizing large errors):
-#〖RMS〗_err=√(1/n ∑_(i=1)^n▒〖d_i〗^2 )	(3)
-#	where: n – data-set of measured samples; di – deviation from reference point at the
-#i index of a data-set, m.
-#
-#	4. System status ratio (SSR) – ability of the system to solve the problem of
-#	ambiguity integer phases:
-#SSR=m/n*100	(4)
-#	where: n – data-set of measured samples; m – data-set of samples with solved ambiguity integer phases, %.
-#
-#	5. Number of satellites (µs) – the average value of the number of received GPS satellites:
-#µ_s=1/n ∑_(i=1)^n▒s_i 	(5)
-#	where: n – data-set of measured samples; s – number of received satellites at the
-#i index of a data-set, -.
-#+ CEP
+evl.evaluate()
+evl.csv_print(csv_dir)
 
 
 
