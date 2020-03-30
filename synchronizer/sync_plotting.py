@@ -11,9 +11,7 @@ import numpy as np
 
 class Plotter:
 #    ax: https://matplotlib.org/api/axes_api.html
-    def __init__(self, arm, rtk):
-        self.arm = arm
-#        self.rtk = rtk
+    def __init__(self):
         self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
         self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
         self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
@@ -40,18 +38,18 @@ class Plotter:
 
     #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    def plot_marks(self):
+    def plot_marks(self,arm):
         bold = 1
-        self.plot_MARK(self.fig_2, self.ax_2, self.arm.arm_badhalls,'arm_badhalls','y',bold,[self.arm.arm_20hz.east.min()-0.5,self.arm.arm_20hz.east.max()+0.5])
-        self.plot_MARK(self.fig_4, self.ax_4, self.arm.arm_badhalls,'arm_badhalls','y',bold,[-10,10])
+        self.plot_MARK(self.fig_2, self.ax_2, arm.arm_badhalls,'arm_badhalls','y',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5])
+        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_badhalls,'arm_badhalls','y',bold,[-10,10])
 
-        self.plot_MARK(self.fig_2, self.ax_2, self.arm.arm_halls,'arm_halls','k',bold,[self.arm.arm_20hz.east.min()-0.5,self.arm.arm_20hz.east.max()+0.5])
-        self.plot_MARK(self.fig_4, self.ax_4, self.arm.arm_halls,'arm_halls','k',bold,[-10,10])
+        self.plot_MARK(self.fig_2, self.ax_2, arm.arm_halls,'arm_halls','k',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5])
+        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_halls,'arm_halls','k',bold,[-10,10])
 
-        if len(self.arm.arm_peaks): self.plot_MARK(self.fig_2, self.ax_2, self.arm.arm_peaks,'arm_peaks','r',bold+1,[self.arm.arm_20hz.east.min()-1,self.arm.arm_20hz.east.max()+1])
-        if len(self.arm.arm_peaks): self.plot_MARK(self.fig_4, self.ax_4, self.arm.arm_peaks,'arm_peaks','r',bold+1,self.arm.arm_peaks.raw_speed_diff)
+        if len(arm.arm_peaks): self.plot_MARK(self.fig_2, self.ax_2, arm.arm_peaks,'arm_peaks','r',bold+1,[arm.arm_20hz.east.min()-1,arm.arm_20hz.east.max()+1])
+        if len(arm.arm_peaks): self.plot_MARK(self.fig_4, self.ax_4, arm.arm_peaks,'arm_peaks','r',bold+1,arm.arm_peaks.raw_speed_diff)
 
-        self.plot_bad_circles(self.arm.circle_bad)
+        self.plot_bad_circles(arm.circle_bad)
 
     def plot_MARK(self,fig, ax, marks, mark_type, rcv_color, bold, bounds):
         if len(bounds) == 2:
