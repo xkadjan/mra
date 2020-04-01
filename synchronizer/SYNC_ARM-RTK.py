@@ -398,6 +398,7 @@ class Evaluator:
         boxes = []
         for box in range(1,len(bounds)):
             df = rtk[(rtk[filter_by] > bounds[box-1]) & (rtk[filter_by] <= bounds[box])]
+            df = df.drop(columns=[s for s in df.columns.tolist() if "Unnamed" in s])
             boxes.append(df)
             print(label + ' by ' + filter_by + ': ' + str(bounds[box-1]) + ' - ' + str(bounds[box]) + '.....' + str(len(df)))
         return boxes
@@ -416,38 +417,27 @@ class Evaluator:
             rtk_list.append(pd.read_csv(os.path.join(csv_dir, rtk_name), sep=',', engine='python'))
         return rtk_list
 
-    def evaluate(self):
-        µ_err = [self.get_accuracy(self.novatel),
-                 self.get_accuracy(self.tersus),
-                 self.get_accuracy(self.ashtech),
-                 self.get_accuracy(self.ublox)]
+    def get_results(self):
+        self.evaluate([self.novatel,self.tersus,self.ashtech,self.ublox],"Whole measurements:")
+#        self.evaluate([self.novatel,self.tersus,self.ashtech,self.ublox],"Whole measurements:")
+
+
+    def evaluate(self,rtks,label):
+        µ_err,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[]
+
+        for rtk in rtks: µ_err.append(self.get_accuracy(rtk))
+        for rtk in rtks: σ_err.append(self.get_precision(rtk))
+        for rtk in rtks: RMS_err.append(self.get_rms(rtk))
+        for rtk in rtks: CEP_err.append(self.get_cep(rtk))
+        for rtk in rtks: SSR_err.append(self.get_ssr(rtk))
+
         self.results.insert(self.results.columns.size,'µ_err',µ_err)
-
-        σ_err = [self.get_precision(self.novatel),
-                 self.get_precision(self.tersus),
-                 self.get_precision(self.ashtech),
-                 self.get_precision(self.ublox)]
         self.results.insert(self.results.columns.size,'σ_err',σ_err)
-
-        RMS_err = [self.get_rms(self.novatel),
-                   self.get_rms(self.tersus),
-                   self.get_rms(self.ashtech),
-                   self.get_rms(self.ublox)]
         self.results.insert(self.results.columns.size,'RMS_err',RMS_err)
-
-#        CEP_err = [self.get_cep(self.novatel),
-#                   self.get_cep(self.tersus),
-#                   self.get_cep(self.ashtech),
-#                   self.get_cep(self.ublox)]
 #        self.results.insert(self.results.columns.size,'CEP_err',CEP_err)
-
-        SSR_err = [self.get_ssr(self.novatel),
-                   self.get_ssr(self.tersus),
-                   self.get_ssr(self.ashtech),
-                   self.get_ssr(self.ublox)]
         self.results.insert(self.results.columns.size,'SSR_err',SSR_err)
 
-        print("Whole measurements:")
+        print(label)
         print(self.results)
 
     def get_accuracy (self,rtk):
@@ -528,41 +518,6 @@ if new_preproccess:
     pltr.plot_rtk(rtk.ublox,'ublox',"m")
 
 # =============================================================================
-# ARM:
-# =============================================================================
-if new_preproccess:
-    arm = ArmParser(dir_arm,prefix)
-    arm.parse_slices()
-    #arm.slice_times(slice_times)
-    arm.get_bad_cicles()
-    arm.drop_peaks()
-    arm.filter_signal()
-    arm.drop_bad_circles()
-    arm.drop_zero_speed()
-    arm.drop_zero_acc()
-    arm.drop_limit_acc()
-
-    #pltr.plot_arm(arm.arm_async,'arm_async','k')
-    pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
-    pltr.plot_marks(arm)
-
-# =============================================================================
-# RTK
-# =============================================================================
-if new_preproccess:
-    rtk = RtkParser(dir_rtk,fixed_height)
-    rtk.parse_slices(prefix)
-    #rtk.slice_times(slice_times)
-    rtk.drop_points_wo_arm(arm.arm_20hz)
-    rtk.drop_points_wo_rtk(arm.arm_20hz)
-    rtk_list = rtk.concate_arm_and_rtks()
-
-    pltr.plot_rtk(rtk.novatel,'novatel',"g")
-    pltr.plot_rtk(rtk.tersus,'tersus',"y")
-    pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
-    pltr.plot_rtk(rtk.ublox,'ublox',"m")
-
-# =============================================================================
 # EVL
 # =============================================================================
 evl = Evaluator()
@@ -572,13 +527,12 @@ if not new_preproccess:
 evl.get_deviations(rtk_list)
 evl.get_make_boxes()
 
-
 pltr.plot_devs(evl.novatel,'novatel',"g")
 pltr.plot_devs(evl.tersus,'tersus',"y")
 pltr.plot_devs(evl.ashtech,'ashtech',"b")
 pltr.plot_devs(evl.ublox,'ublox',"m")
 
-evl.evaluate()
+evl.get_results()
 evl.csv_print(csv_dir)
 
 
