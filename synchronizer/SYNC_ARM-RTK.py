@@ -366,9 +366,10 @@ class Evaluator:
     def __init__(self):
         self.bounds_speed = [0,1,2.5,4,5.5,7,8.5,10]
         self.bounds_acc = [-4,-3,-2,-1,0,1,2]
-
-        self.rtk_names = ['novatel', 'tersus', 'ashtech', 'ublox']
-        self.results = pd.DataFrame(index=self.rtk_names)
+        self.labels_speed = self.get_labels(self.bounds_speed,'mps')
+        self.labels_acc = self.get_labels(self.bounds_acc,'mps-2')
+        self.labels_rtk = ['novatel', 'tersus', 'ashtech', 'ublox']
+        self.results = pd.DataFrame()
 
     def get_deviations(self,rtk_list):
         self.novatel = self.calculate_deviations(rtk_list[0])
@@ -392,16 +393,21 @@ class Evaluator:
         df['diff_north'] = df.rtk_north - df.arm_north
         df['deviation'] = np.sqrt(df['diff_east']**2 + df['diff_north']**2)
         df['azimuth'] = np.rad2deg(np.arctan(df['diff_east']/df['diff_north']))
-        return df
+        return df.drop(columns=[col for col in df.columns.tolist() if "Unnamed" in col])
 
     def get_boxes(self,rtk,filter_by,bounds,label):
         boxes = []
         for box in range(1,len(bounds)):
             df = rtk[(rtk[filter_by] > bounds[box-1]) & (rtk[filter_by] <= bounds[box])]
-            df = df.drop(columns=[s for s in df.columns.tolist() if "Unnamed" in s])
             boxes.append(df)
             print(label + ' by ' + filter_by + ': ' + str(bounds[box-1]) + ' - ' + str(bounds[box]) + '.....' + str(len(df)))
         return boxes
+
+    def get_labels(self,bounds,unit):
+        labels = []
+        for box in range(1,len(bounds)):
+            labels.append(str(bounds[box-1]) + '-' + str(bounds[box]) + unit)
+        return labels
 
     def csv_print(self,csv_dir):
         self.novatel.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
@@ -411,18 +417,26 @@ class Evaluator:
         self.results.to_csv(os.path.join(csv_dir, 'whole.csv'))
 
     def csv_load(self,csv_dir):
-        rtk_names = ['novatel_whole.csv','tersus_whole.csv','ashtech_whole.csv','ublox_whole.csv']
+        labels_rtk = ['novatel_whole.csv','tersus_whole.csv','ashtech_whole.csv','ublox_whole.csv']
         rtk_list = []
-        for rtk_name in rtk_names:
+        for rtk_name in labels_rtk:
             rtk_list.append(pd.read_csv(os.path.join(csv_dir, rtk_name), sep=',', engine='python'))
         return rtk_list
 
     def get_results(self):
-        self.evaluate([self.novatel,self.tersus,self.ashtech,self.ublox],"Whole measurements:")
-#        self.evaluate([self.novatel,self.tersus,self.ashtech,self.ublox],"Whole measurements:")
+        rtks = [self.novatel,self.tersus,self.ashtech,self.ublox]
+        self.evaluate(rtks,"WHOLE")
 
+        for speed in range(len(self.labels_speed)):
+            rtks = [self.novatel_by_speed[speed],self.tersus_by_speed[speed],self.ashtech_by_speed[speed],self.ublox_by_speed[speed]]
+            self.evaluate(rtks,self.labels_speed[speed])
+
+        for acc in range(len(self.labels_acc)):
+            rtks = [self.novatel_by_acc[acc],self.tersus_by_acc[acc],self.ashtech_by_acc[acc],self.ublox_by_acc[acc]]
+            self.evaluate(rtks,self.labels_acc[acc])
 
     def evaluate(self,rtks,label):
+        results = pd.DataFrame(index=self.labels_rtk)
         µ_err,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[]
 
         for rtk in rtks: µ_err.append(self.get_accuracy(rtk))
@@ -431,14 +445,15 @@ class Evaluator:
         for rtk in rtks: CEP_err.append(self.get_cep(rtk))
         for rtk in rtks: SSR_err.append(self.get_ssr(rtk))
 
-        self.results.insert(self.results.columns.size,'µ_err',µ_err)
-        self.results.insert(self.results.columns.size,'σ_err',σ_err)
-        self.results.insert(self.results.columns.size,'RMS_err',RMS_err)
-#        self.results.insert(self.results.columns.size,'CEP_err',CEP_err)
-        self.results.insert(self.results.columns.size,'SSR_err',SSR_err)
+        results.insert(results.columns.size,'set',label)
+        results.insert(results.columns.size,'µ_err',µ_err)
+        results.insert(results.columns.size,'σ_err',σ_err)
+        results.insert(results.columns.size,'RMS_err',RMS_err)
+#        results.insert(results.columns.size,'CEP_err',CEP_err)
+        results.insert(results.columns.size,'SSR_err',SSR_err)
 
-        print(label)
-        print(self.results)
+        self.results = self.results.append(results)
+        print('-'*60 + '\n' + str(label) + ': \n', results)
 
     def get_accuracy (self,rtk):
         # Accuracy (µerr) – sample mean of deviations from reference point (error offset)
