@@ -387,6 +387,12 @@ class Evaluator:
         self.ashtech = self.ashtech[self.ashtech.status == 4]
         self.ublox = self.ublox[self.ublox.status == 4]
 
+    def filter_sigma(self):
+        self.novatel = self.novatel[self.novatel.deviation < (3 * evl.get_precision(self.novatel))]
+        self.tersus = self.tersus[self.tersus.deviation < (3 * evl.get_precision(self.tersus))]
+        self.ashtech = self.ashtech[self.ashtech.deviation < (3 * evl.get_precision(self.ashtech))]
+        self.ublox = self.ublox[self.ublox.deviation < (3 * evl.get_precision(self.ublox))]
+
     def get_make_boxes(self):
         self.novatel_by_speed = self.get_boxes(self.novatel,'cvl_speed',self.bounds_speed,'novatel')
         self.tersus_by_speed = self.get_boxes(self.tersus,'cvl_speed',self.bounds_speed,'tersus')
@@ -419,11 +425,12 @@ class Evaluator:
             labels.append(str(bounds[box-1]) + ' - ' + str(bounds[box]) + ' ' + unit)
         return labels
 
-    def csv_print(self,csv_dir):
-        self.novatel.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
-        self.tersus.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
-        self.ashtech.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
-        self.ublox.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
+    def csv_print(self,csv_dir,new_preproccess):
+        if new_preproccess:
+            self.novatel.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
+            self.tersus.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
+            self.ashtech.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
+            self.ublox.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
         self.results_novatel.to_csv(os.path.join(csv_dir, 'results_novatel.csv'))
         self.results_tersus.to_csv(os.path.join(csv_dir, 'results_tersus.csv'))
         self.results_ashtech.to_csv(os.path.join(csv_dir, 'results_ashtech.csv'))
@@ -572,10 +579,10 @@ if not new_preproccess:
 evl.get_deviations(rtk_list)
 if only_fix:
     evl.filter_fix()
+evl.filter_sigma()
 evl.get_make_boxes()
 evl.get_results(only_fix)
-evl.csv_print(csv_dir)
-
+evl.csv_print(csv_dir,new_preproccess)
 
 pltr.plot_devs(evl.novatel,'novatel',"g")
 pltr.plot_devs(evl.tersus,'tersus',"y")
