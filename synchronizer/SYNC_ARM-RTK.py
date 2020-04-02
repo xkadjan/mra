@@ -366,10 +366,14 @@ class Evaluator:
     def __init__(self):
         self.bounds_speed = [0,1,2.5,4,5.5,7,8.5,10]
         self.bounds_acc = [-4,-3,-2,-1,0,1,2]
-        self.labels_speed = self.get_labels(self.bounds_speed,'mps')
-        self.labels_acc = self.get_labels(self.bounds_acc,'mps-2')
+        self.labels_speed = self.get_labels(self.bounds_speed,'m/s')
+        self.labels_acc = self.get_labels(self.bounds_acc,'m/s²')
         self.labels_rtk = ['novatel', 'tersus', 'ashtech', 'ublox']
         self.results = pd.DataFrame()
+        self.results_novatel = pd.DataFrame()
+        self.results_tersus = pd.DataFrame()
+        self.results_ashtech = pd.DataFrame()
+        self.results_ublox = pd.DataFrame()
 
     def get_deviations(self,rtk_list):
         self.novatel = self.calculate_deviations(rtk_list[0])
@@ -406,7 +410,7 @@ class Evaluator:
     def get_labels(self,bounds,unit):
         labels = []
         for box in range(1,len(bounds)):
-            labels.append(str(bounds[box-1]) + '-' + str(bounds[box]) + unit)
+            labels.append(str(bounds[box-1]) + ' - ' + str(bounds[box]) + ' ' + unit)
         return labels
 
     def csv_print(self,csv_dir):
@@ -414,7 +418,10 @@ class Evaluator:
         self.tersus.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
         self.ashtech.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
         self.ublox.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
-        self.results.to_csv(os.path.join(csv_dir, 'whole.csv'))
+        self.results_novatel.to_csv(os.path.join(csv_dir, 'results_novatel.csv'))
+        self.results_tersus.to_csv(os.path.join(csv_dir, 'results_tersus.csv'))
+        self.results_ashtech.to_csv(os.path.join(csv_dir, 'results_ashtech.csv'))
+        self.results_ublox.to_csv(os.path.join(csv_dir, 'results_ublox.csv'))
 
     def csv_load(self,csv_dir):
         labels_rtk = ['novatel_whole.csv','tersus_whole.csv','ashtech_whole.csv','ublox_whole.csv']
@@ -435,10 +442,13 @@ class Evaluator:
             rtks = [self.novatel_by_acc[acc],self.tersus_by_acc[acc],self.ashtech_by_acc[acc],self.ublox_by_acc[acc]]
             self.evaluate(rtks,self.labels_acc[acc])
 
+        self.get_rtks_results()
+
     def evaluate(self,rtks,label):
         results = pd.DataFrame(index=self.labels_rtk)
-        µ_err,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[]
+        samples,µ_err,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[],[]
 
+        for rtk in rtks: samples.append(self.get_samples(rtk))
         for rtk in rtks: µ_err.append(self.get_accuracy(rtk))
         for rtk in rtks: σ_err.append(self.get_precision(rtk))
         for rtk in rtks: RMS_err.append(self.get_rms(rtk))
@@ -446,6 +456,7 @@ class Evaluator:
         for rtk in rtks: SSR_err.append(self.get_ssr(rtk))
 
         results.insert(results.columns.size,'set',label)
+        results.insert(results.columns.size,'samples',samples)
         results.insert(results.columns.size,'µ_err',µ_err)
         results.insert(results.columns.size,'σ_err',σ_err)
         results.insert(results.columns.size,'RMS_err',RMS_err)
@@ -454,6 +465,10 @@ class Evaluator:
 
         self.results = self.results.append(results)
         print('-'*60 + '\n' + str(label) + ': \n', results)
+
+    def get_samples(self,rtk):
+        # Samples (samples) – number of samples
+        return len(rtk)
 
     def get_accuracy (self,rtk):
         # Accuracy (µerr) – sample mean of deviations from reference point (error offset)
@@ -474,6 +489,12 @@ class Evaluator:
     def get_ssr(self,rtk):
         # System status ratio (SSR) – ability of the system to solve the problem of ambiguity integer phases
         return float(len(rtk.status[rtk.status == 4])/len(rtk)*100)
+
+    def get_rtks_results(self):
+        self.results_novatel = self.results[self.results.index == 'novatel']
+        self.results_tersus = self.results[self.results.index == 'tersus']
+        self.results_ashtech = self.results[self.results.index == 'ashtech']
+        self.results_ublox = self.results[self.results.index == 'ublox']
 
 # =============================================================================
 #  DEFINITIONS
