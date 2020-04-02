@@ -381,6 +381,12 @@ class Evaluator:
         self.ashtech = self.calculate_deviations(rtk_list[2])
         self.ublox = self.calculate_deviations(rtk_list[3])
 
+    def filter_fix(self):
+        self.novatel = self.novatel[self.novatel.status == 4]
+        self.tersus = self.tersus[self.tersus.status == 4]
+        self.ashtech = self.ashtech[self.ashtech.status == 4]
+        self.ublox = self.ublox[self.ublox.status == 4]
+
     def get_make_boxes(self):
         self.novatel_by_speed = self.get_boxes(self.novatel,'cvl_speed',self.bounds_speed,'novatel')
         self.tersus_by_speed = self.get_boxes(self.tersus,'cvl_speed',self.bounds_speed,'tersus')
@@ -430,21 +436,21 @@ class Evaluator:
             rtk_list.append(pd.read_csv(os.path.join(csv_dir, rtk_name), sep=',', engine='python'))
         return rtk_list
 
-    def get_results(self):
+    def get_results(self,only_fix):
         rtks = [self.novatel,self.tersus,self.ashtech,self.ublox]
-        self.evaluate(rtks,"WHOLE")
+        self.evaluate(rtks,"WHOLE",only_fix)
 
         for speed in range(len(self.labels_speed)):
             rtks = [self.novatel_by_speed[speed],self.tersus_by_speed[speed],self.ashtech_by_speed[speed],self.ublox_by_speed[speed]]
-            self.evaluate(rtks,self.labels_speed[speed])
+            self.evaluate(rtks,self.labels_speed[speed],only_fix)
 
         for acc in range(len(self.labels_acc)):
             rtks = [self.novatel_by_acc[acc],self.tersus_by_acc[acc],self.ashtech_by_acc[acc],self.ublox_by_acc[acc]]
-            self.evaluate(rtks,self.labels_acc[acc])
+            self.evaluate(rtks,self.labels_acc[acc],only_fix)
 
         self.get_rtks_results()
 
-    def evaluate(self,rtks,label):
+    def evaluate(self,rtks,label,only_fix):
         results = pd.DataFrame(index=self.labels_rtk)
         samples,µ_err,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[],[]
 
@@ -453,7 +459,8 @@ class Evaluator:
         for rtk in rtks: σ_err.append(self.get_precision(rtk))
         for rtk in rtks: RMS_err.append(self.get_rms(rtk))
         for rtk in rtks: CEP_err.append(self.get_cep(rtk))
-        for rtk in rtks: SSR_err.append(self.get_ssr(rtk))
+        if not only_fix:
+            for rtk in rtks: SSR_err.append(self.get_ssr(rtk))
 
         results.insert(results.columns.size,'set',label)
         results.insert(results.columns.size,'samples',samples)
@@ -461,7 +468,8 @@ class Evaluator:
         results.insert(results.columns.size,'σ_err',σ_err)
         results.insert(results.columns.size,'RMS_err',RMS_err)
 #        results.insert(results.columns.size,'CEP_err',CEP_err)
-        results.insert(results.columns.size,'SSR_err',SSR_err)
+        if not only_fix:
+            results.insert(results.columns.size,'SSR_err',SSR_err)
 
         self.results = self.results.append(results)
         print('-'*60 + '\n' + str(label) + ': \n', results)
@@ -476,7 +484,7 @@ class Evaluator:
 
     def get_precision(self,rtk):
         # Precision (σerr) – standard deviation of error (stability of positioning)
-        return float(rtk.deviation.std())
+        return float(np.sqrt(rtk.deviation.std()))
 
     def get_rms(self,rtk):
         # RMS error (RMSerr) – value specified by the manufacturer (metric emphasizing large errors)
@@ -515,6 +523,7 @@ if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 new_preproccess = False
+only_fix = True
 
 pltr = plot.Plotter()
 
@@ -561,16 +570,17 @@ if not new_preproccess:
     evl.csv_load(csv_dir)
     rtk_list = evl.csv_load(csv_dir)
 evl.get_deviations(rtk_list)
+if only_fix:
+    evl.filter_fix()
 evl.get_make_boxes()
+evl.get_results(only_fix)
+evl.csv_print(csv_dir)
+
 
 pltr.plot_devs(evl.novatel,'novatel',"g")
 pltr.plot_devs(evl.tersus,'tersus',"y")
 pltr.plot_devs(evl.ashtech,'ashtech',"b")
 pltr.plot_devs(evl.ublox,'ublox',"m")
-
-evl.get_results()
-evl.csv_print(csv_dir)
-
 
 
 
