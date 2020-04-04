@@ -589,6 +589,12 @@ pltr.plot_devs(evl.tersus,'tersus',"y")
 pltr.plot_devs(evl.ashtech,'ashtech',"b")
 pltr.plot_devs(evl.ublox,'ublox',"m")
 
+pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7')
+pltr.plot_hist(evl.tersus,200,'Tersus BX305')
+pltr.plot_hist(evl.ashtech,200,'Ashtech MB800')
+pltr.plot_hist(evl.ublox,40,'u-blox C94-M8P')
+
+
 
 
 

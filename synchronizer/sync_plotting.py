@@ -196,4 +196,65 @@ class Plotter:
         self.fig_43.set_facecolor('whitesmoke')
         self.fig_43.show()
 
+    def plot_hist(self,rtk,bins,label):
+        from matplotlib.colors import LogNorm
+
+        # definitions for the axes
+        x,y = rtk.diff_east, rtk.diff_north
+        left, width = 0.1, 0.75
+        bottom, height = 0.1, 0.75
+        spacing = 0.005
+        bins = bins#200
+        max_hist = 7500
+        lim = 0.25
+        color = 'w'
+
+        rect_scatter = [left, bottom, width, height]
+        rect_histx = [left, bottom + height + spacing, width, 0.1]
+        rect_histy = [left + width + spacing, bottom, 0.1, height]
+
+        # start with a rectangular Figure
+        plt.figure(figsize=(8, 8),facecolor='whitesmoke', edgecolor='r')
+
+        # 2D hist
+        ax_1 = plt.axes(rect_scatter)
+        ax_1.hist2d(x, y, bins=bins, cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
+        ax_1.set_xlabel('distance to North [m]',size=10)
+        ax_1.set_ylabel('distance to East [m]',size=10)
+        ax_1.set_xlim([-lim,lim])
+        ax_1.set_ylim([-lim,lim])
+        ax_1.minorticks_on()
+        ax_1.tick_params(axis='both',which='major',length=10,width=1,labelsize=0)
+        ax_1.set_aspect('equal', 'datalim')
+        ax_1.grid(True)
+
+        # Hist x
+        ax_histx = plt.axes(rect_histx)
+        ax_histx.hist(x, bins=bins, color='k')
+        #ax_histx.set_ylabel('Number of \nsamles [-]',size=10)
+        ax_histx.set_ylim([0,max_hist])
+        ax_histx.set_xlim(ax_1.get_xlim())
+        ax_histx.minorticks_on()
+        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
+        ax_histx.grid(True)
+
+        # Hist y
+        ax_histy = plt.axes(rect_histy)
+        ax_histy.hist(y, bins=bins, color='k', orientation='horizontal')
+        #ax_histy.set_xlabel('Number of \nsamles [-]',size=10)
+        ax_histy.set_xlim([0,max_hist])
+        ax_histy.set_ylim(ax_1.get_ylim())
+        ax_histy.minorticks_on()
+        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax_histy.grid(True)
+
+
+        #plt.tight_layout()
+        ax_1.set_facecolor(color)
+        ax_histx.set_facecolor(color)
+        ax_histy.set_facecolor(color)
+        plt.show()
+        ax_histx.set_title(label + ' - Histograms of horizontal deviations from MRA', size=12, loc='left')
+        plt.title('Number of \nsamles [-]', size=10, loc='center')
+
 
