@@ -219,12 +219,12 @@ class Plotter:
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
         ax_1.hist2d(x, y, bins=bins, cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
-        ax_1.set_xlabel('distance to North [m]',size=10)
-        ax_1.set_ylabel('distance to East [m]',size=10)
+        ax_1.set_xlabel('distance to North [m]',size=12)
+        ax_1.set_ylabel('distance to East [m]',size=12)
         ax_1.set_xlim([-lim,lim])
         ax_1.set_ylim([-lim,lim])
         ax_1.minorticks_on()
-        ax_1.tick_params(axis='both',which='major',length=10,width=1,labelsize=0)
+        ax_1.tick_params(axis='both',which='major',length=5,width=1,labelsize=0)
         ax_1.set_aspect('equal', 'datalim')
         ax_1.grid(True)
 
@@ -235,7 +235,8 @@ class Plotter:
         ax_histx.set_ylim([0,max_hist])
         ax_histx.set_xlim(ax_1.get_xlim())
         ax_histx.minorticks_on()
-        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
+        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
+        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
         ax_histx.grid(True)
 
         # Hist y
@@ -245,7 +246,8 @@ class Plotter:
         ax_histy.set_xlim([0,max_hist])
         ax_histy.set_ylim(ax_1.get_ylim())
         ax_histy.minorticks_on()
-        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
+        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
         ax_histy.grid(True)
 
 
@@ -254,7 +256,7 @@ class Plotter:
         ax_histx.set_facecolor(color)
         ax_histy.set_facecolor(color)
         plt.show()
-        ax_histx.set_title(label + ' - Histograms of horizontal deviations from MRA', size=12, loc='left')
-        plt.title('Number of \nsamles [-]', size=10, loc='center')
+        ax_histx.set_title(label + ' - horizontal deviations from MRA', size=16, loc='left')
+        plt.title('Number of \nsamles [-]', size=12, loc='left')
 
 
