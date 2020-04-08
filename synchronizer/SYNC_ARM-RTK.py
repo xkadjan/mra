@@ -503,7 +503,11 @@ class Evaluator:
 
     def get_ssr(self,rtk):
         # System status ratio (SSR) – ability of the system to solve the problem of ambiguity integer phases
-        return float(len(rtk.status[rtk.status == 4])/len(rtk)*100)
+        if len(rtk) == 0:
+            SSR = '-'
+        else:
+            SSR = float(len(rtk.status[rtk.status == 4])/len(rtk)*100)
+        return SSR
 
     def get_rtks_results(self):
         self.results_novatel = self.results[self.results.index == 'novatel']
@@ -530,7 +534,7 @@ if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 new_preproccess = False
-only_fix = True
+only_fix = False
 
 pltr = plot.Plotter()
 
@@ -579,7 +583,7 @@ if not new_preproccess:
 evl.get_deviations(rtk_list)
 if only_fix:
     evl.filter_fix()
-evl.filter_sigma()
+#evl.filter_sigma()
 evl.get_make_boxes()
 evl.get_results(only_fix)
 evl.csv_print(csv_dir,new_preproccess)
@@ -591,8 +595,8 @@ pltr.plot_devs(evl.ublox,'ublox',"m")
 
 pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7')
 pltr.plot_hist(evl.tersus,200,'Tersus BX305')
-pltr.plot_hist(evl.ashtech,200,'Ashtech MB800')
-pltr.plot_hist(evl.ublox,40,'u-blox C94-M8P')
+pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800')
+pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P')
 
 
 
