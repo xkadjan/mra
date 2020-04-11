@@ -518,10 +518,10 @@ class Evaluator:
 # =============================================================================
 #  DEFINITIONS
 # =============================================================================
-dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
-dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200327"
+dir_rtk = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\dewesoft_data\petr_posvic\DATA\used"
+dir_arm = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\arm_data\arm_output_200412-enctol3"
 
-csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\zaverecna zprava\vysledky\csv"
+csv_dir = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\output_eval"
 #csv_dir = os.path.join(dir_arm,'output')
 
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
@@ -533,8 +533,9 @@ if prefix == 'auto': slice_times = [57800,61500]
 if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
-new_preproccess = False
+new_preproccess = True
 only_fix = False
+rtk_dewesoft = True
 
 pltr = plot.Plotter()
 
@@ -560,7 +561,7 @@ if new_preproccess:
 # =============================================================================
 # RTK
 # =============================================================================
-if new_preproccess:
+if new_preproccess and not rtk_dewesoft:
     rtk = RtkParser(dir_rtk,fixed_height)
     rtk.parse_slices(prefix)
     #rtk.slice_times(slice_times)
@@ -576,65 +577,25 @@ if new_preproccess:
 # =============================================================================
 # EVL
 # =============================================================================
-evl = Evaluator()
-if not new_preproccess:
-    evl.csv_load(csv_dir)
-    rtk_list = evl.csv_load(csv_dir)
-evl.get_deviations(rtk_list)
-if only_fix:
-    evl.filter_fix()
-#evl.filter_sigma()
-evl.get_make_boxes()
-evl.get_results(only_fix)
-evl.csv_print(csv_dir,new_preproccess)
+if not rtk_dewesoft:
+    evl = Evaluator()
+    if not new_preproccess:
+        evl.csv_load(csv_dir)
+        rtk_list = evl.csv_load(csv_dir)
+    evl.get_deviations(rtk_list)
+    if only_fix:
+        evl.filter_fix()
+    #evl.filter_sigma()
+    evl.get_make_boxes()
+    evl.get_results(only_fix)
+    evl.csv_print(csv_dir,new_preproccess)
 
-pltr.plot_devs(evl.novatel,'novatel',"g")
-pltr.plot_devs(evl.tersus,'tersus',"y")
-pltr.plot_devs(evl.ashtech,'ashtech',"b")
-pltr.plot_devs(evl.ublox,'ublox',"m")
+    pltr.plot_devs(evl.novatel,'novatel',"g")
+    pltr.plot_devs(evl.tersus,'tersus',"y")
+    pltr.plot_devs(evl.ashtech,'ashtech',"b")
+    pltr.plot_devs(evl.ublox,'ublox',"m")
 
-pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7')
-pltr.plot_hist(evl.tersus,200,'Tersus BX305')
-pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800')
-pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P')
-
-
-
-
-
-
-
-
-
-### =============================================================================
-### DEWESOFT:
-### =============================================================================
-##dewsoft_files = os.listdir(dir_dewesoft)
-##dewesoft_csvs = [i for i in dewsoft_files if 'csv' in i]
-##dewesoft_csvs_paths = [os.path.join(dir_dewesoft, name) for name in dewesoft_csvs]
-##
-###header = ['lat', 'lon', 'height', 'utc_time', 'east_row', 'north_row', 'up_row', 'utc_time_2']
-###for file in [novatel_csvs_paths[7]]:
-##for file in dewesoft_csvs_paths:
-###    dewesoft = pd.read_csv(file, sep=',', names=header , engine='python')#.values.tolist()
-##    dewesoft = pd.read_csv(file, sep=';', engine='python')#.values.tolist()
-##
-###    dewesoft["utc_time"] = dewesoft.utc_time % 86400
-##
-###    dewesoft.insert(len(dewesoft.count()), 'lat_in_rad', dewesoft.lat*np.pi/180, allow_duplicates=False)
-###    dewesoft.insert(len(dewesoft.count()), 'lon_in_rad', dewesoft.lon*np.pi/180, allow_duplicates=False)
-###
-###    xyz = transpos.wgs2xyz(dewesoft[['lat_in_rad','lon_in_rad','height']].values)
-###    enu = transpos.xyz2enu(xyz,wgs_ref)
-###
-###    dewesoft["east"], dewesoft["north"], dewesoft["up"] = enu.T[0], enu.T[1], enu.T[2]
-##    dewesoft = dewesoft[["utc_time","lat","lon","height","east","north","up"]]
-##    print(' - dewesoft loading done, ' + str(len(dewesoft)) + ' points')
-##
-##    dewesoft["east"] = dewesoft.east - 0.59
-##    dewesoft["north"] = dewesoft.north - 0.588
-##
-##    filename = file.split("\\")[-1][:-4]
-##    plot.plot_EN(dewesoft, filename, "b")
-##    plot.plot_utcE(dewesoft, filename, "b")
-#
+    pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7')
+    pltr.plot_hist(evl.tersus,200,'Tersus BX305')
+    pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800')
+    pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P')
