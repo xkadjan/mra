@@ -1,0 +1,5 @@
+﻿NTRIP Caster=195.250.148.89
+NTRIP Caster Port=2100
+NTRIP Username=valeo
+NTRIP Password=valeo
+NTRIP MountPoint=VRS
