@@ -1,0 +1,11 @@
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\MeasurementArm.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\MeasurementArm.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
