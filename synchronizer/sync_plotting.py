@@ -11,11 +11,12 @@ import numpy as np
 
 class Plotter:
 #    ax: https://matplotlib.org/api/axes_api.html
-    def __init__(self):
-        self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
-        self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
-        self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
-        self.fig_4, self.ax_4 = plt.subplots(num=304,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
+    def __init__(self,new_preproccess):
+        if new_preproccess:
+            self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
+            self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
+            self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
+            self.fig_4, self.ax_4 = plt.subplots(num=304,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
 
         self.fig_41, self.ax_41 = plt.subplots(num=401,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
         self.fig_42, self.ax_42 = plt.subplots(num=402,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')

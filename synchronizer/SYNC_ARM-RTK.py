@@ -524,8 +524,8 @@ dir_arm = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\arm_data\a
 csv_dir = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\output_eval"
 #csv_dir = os.path.join(dir_arm,'output')
 
-wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
-fixed_height = 235.58
+wgs_ref = [50.07478605085059,14.52025289904692,235.05] # dws using this
+fixed_height = 235.05                                  # not used by dws
 
 prefix = 'all'
 
@@ -537,7 +537,7 @@ new_preproccess = True
 only_fix = False
 rtk_dewesoft = True
 
-pltr = plot.Plotter()
+pltr = plot.Plotter(new_preproccess)
 
 # =============================================================================
 # ARM:
@@ -574,6 +574,16 @@ if new_preproccess and not rtk_dewesoft:
     pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
     pltr.plot_rtk(rtk.ublox,'ublox',"m")
 
+elif new_preproccess and rtk_dewesoft:
+    import DWS_PARSER
+    dws_p = DWS_PARSER.DwsParser(dir_rtk,wgs_ref)
+    dws_p.parse_slices()
+    dws_p.drop_unpaired_points(arm.arm_20hz)
+    rtk_list = dws_p.concate_arm_and_rtks()
+
+    pltr.plot_rtk(dws_p.dewesoft,'dewesoft',"b")
+
+
 # =============================================================================
 # EVL
 # =============================================================================
@@ -599,3 +609,20 @@ if not rtk_dewesoft:
     pltr.plot_hist(evl.tersus,200,'Tersus BX305')
     pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800')
     pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P')
+
+if rtk_dewesoft:
+    dws_e = DWS_PARSER.Evaluator()
+#    if not new_preproccess:
+#        evl.csv_load(csv_dir)
+#        rtk_list = evl.csv_load(csv_dir)
+    dws_e.get_deviations(rtk_list)
+    if only_fix:
+        dws_e.filter_fix()
+    dws_e.filter_sigma()
+    dws_e.get_make_boxes()
+    dws_e.get_results(only_fix)
+    dws_e.csv_print(csv_dir,new_preproccess)
+
+    pltr.plot_devs(dws_e.dewesoft,'dewesoft',"b")
+    pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft')
+
