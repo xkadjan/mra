@@ -197,7 +197,7 @@ class Plotter:
         self.fig_43.set_facecolor('whitesmoke')
         self.fig_43.show()
 
-    def plot_hist(self,rtk,bins,label):
+    def plot_hist(self,rtk,bins,label,max_hist,results):
         from matplotlib.colors import LogNorm
 
         # definitions for the axes
@@ -206,7 +206,7 @@ class Plotter:
         bottom, height = 0.1, 0.75
         spacing = 0.005
         bins = bins#200
-        max_hist = 500
+        max_hist = max_hist
         lim = 0.5
         color = 'w'
 
@@ -260,4 +260,20 @@ class Plotter:
         ax_histx.set_title(label + ' - horizontal deviations from MRA', size=16, loc='left')
         plt.title('Number of \nsamles [-]', size=12, loc='left')
 
+        # Results
+        def plot_errors(err,color):
+            ax_histx.plot([results[err],results[err]],[0,max_hist],color=color)
+            ax_histy.plot([0,max_hist],[results[err],results[err]],color=color)
+            ax_histx.plot([-results[err],-results[err]],[0,max_hist],color=color)
+            ax_histy.plot([0,max_hist],[-results[err],-results[err]],color=color)
+            ax_1.add_artist(plt.Circle((0,0),results[err],fill=False,linestyle='-',color=color,label=err))
+        plot_errors('µ_err','y')
+        plot_errors('σ_err','g')
+        plot_errors('RMS_err','b')
+
+        from matplotlib.lines import Line2D
+        custom_lines = [Line2D([0], [0], color='y'),
+                Line2D([0], [0], color='g'),
+                Line2D([0], [0], color='b')]
+        ax_1.legend(custom_lines, ['µ_err', 'σ_err', 'RMS_err'],loc=3)
 

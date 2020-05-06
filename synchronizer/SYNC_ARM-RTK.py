@@ -625,5 +625,13 @@ if rtk_dewesoft:
     dws_e.csv_print(csv_dir,new_preproccess)
 
     pltr.plot_devs(dws_e.dewesoft,'dewesoft',"b")
-    pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft')
+    pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft',500,dws_e.results_dewesoft.iloc[0])
+
+    for speed in range(len(dws_e.dewesoft_by_speed)):
+        title = 'Dewesoft - speed ' + str(dws_e.bounds_speed[speed]) + '-' + str(dws_e.bounds_speed[speed+1]) + 'm/s'
+        pltr.plot_hist(dws_e.dewesoft_by_speed[speed],100,title,70,dws_e.results_dewesoft.iloc[1+speed])
+
+#    for acc in range(len(dws_e.dewesoft_by_acc)):
+#        title = 'Dewesoft - acc ' + str(dws_e.bounds_acc[acc]) + '-' + str(dws_e.bounds_acc[acc+1]) + 'm/s²'
+#        pltr.plot_hist(dws_e.dewesoft_by_acc[acc],100,title,70)
 
