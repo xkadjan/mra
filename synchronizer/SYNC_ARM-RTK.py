@@ -519,7 +519,7 @@ class Evaluator:
 #  DEFINITIONS
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\dewesoft_data\petr_posvic\DATA\used"
-dir_arm = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\arm_data\arm_output_200412-enctol3"
+dir_arm = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\arm_data\arm_output_200427-enctol3-offset17.7"
 
 csv_dir = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\output_eval"
 #csv_dir = os.path.join(dir_arm,'output')
@@ -578,6 +578,7 @@ elif new_preproccess and rtk_dewesoft:
     import DWS_PARSER
     dws_p = DWS_PARSER.DwsParser(dir_rtk,wgs_ref)
     dws_p.parse_slices()
+    dws_p.compensate_offset()
     dws_p.drop_unpaired_points(arm.arm_20hz)
     rtk_list = dws_p.concate_arm_and_rtks()
 

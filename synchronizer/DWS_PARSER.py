@@ -39,6 +39,10 @@ class DwsParser:
         rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status']]
         return rtk
 
+    def compensate_offset(self):
+        self.dewesoft["east"] = self.dewesoft.east - 0.35
+        self.dewesoft["north"] = self.dewesoft.north + 0.94
+
     def drop_unpaired_points(self,arm_df):
         self.dewesoft = self.drop_according_time(self.dewesoft,arm_df,'dewesoft')
         self.dewesoft_ref = self.drop_according_time(arm_df,self.dewesoft,'dewesoft_ref')
@@ -86,7 +90,7 @@ class Evaluator:
         self.bounds_acc = [-4,-3,-2,-1,0,1,2]
         self.labels_speed = self.get_labels(self.bounds_speed,'m/s')
         self.labels_acc = self.get_labels(self.bounds_acc,'m/s²')
-        self.labels_rtk = ['novatel']
+        self.labels_rtk = ['dewesoft']
         self.results = pd.DataFrame()
         self.results_dewesoft = pd.DataFrame()
 

@@ -206,8 +206,8 @@ class Plotter:
         bottom, height = 0.1, 0.75
         spacing = 0.005
         bins = bins#200
-        max_hist = 15000
-        lim = 10
+        max_hist = 500
+        lim = 0.5
         color = 'w'
 
         rect_scatter = [left, bottom, width, height]
