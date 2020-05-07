@@ -75,7 +75,7 @@ class Plotter:
     #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     def plot_EN(self,points_DF, rcv_name, rcv_color):
-        self.ax_1.plot(points_DF.east, points_DF.north, rcv_color, marker=".", linewidth=0.1, alpha=0.4)
+        self.ax_1.plot(points_DF.east, points_DF.north, rcv_color, marker=".", linewidth=0.1, alpha=0.2,label=rcv_name)
         self.ax_1.set_title('Map of horizontal positions', size=12, loc='left')
         self.ax_1.set_xlabel('distance to North [m]',size=10)
         self.ax_1.set_ylabel('distance to East [m]',size=10)
@@ -220,8 +220,8 @@ class Plotter:
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
         ax_1.hist2d(x, y, bins=bins, cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
-        ax_1.set_xlabel('distance to North [m]',size=12)
-        ax_1.set_ylabel('distance to East [m]',size=12)
+        ax_1.set_xlabel('distance to North [m]',size=14)
+        ax_1.set_ylabel('distance to East [m]',size=14)
         ax_1.set_xlim([-lim,lim])
         ax_1.set_ylim([-lim,lim])
         ax_1.minorticks_on()
@@ -260,16 +260,34 @@ class Plotter:
         ax_histx.set_title(label + ' - horizontal deviations from MRA', size=16, loc='left')
         plt.title('Number of \nsamles [-]', size=12, loc='left')
 
-        # Results
-        def plot_errors(err,color):
-            ax_histx.plot([results[err],results[err]],[0,max_hist],color=color)
-            ax_histy.plot([0,max_hist],[results[err],results[err]],color=color)
-            ax_histx.plot([-results[err],-results[err]],[0,max_hist],color=color)
-            ax_histy.plot([0,max_hist],[-results[err],-results[err]],color=color)
-            ax_1.add_artist(plt.Circle((0,0),results[err],fill=False,linestyle='-',color=color,label=err))
-        plot_errors('µ_err','y')
-        plot_errors('σ_err','g')
-        plot_errors('RMS_err','b')
+#        # Results
+#        def plot_errors(err,color):
+#            ax_histx.plot([results[err],results[err]],[0,max_hist],color=color)
+#            ax_histy.plot([0,max_hist],[results[err],results[err]],color=color)
+#
+##            ax_histx.plot([-results[err],-results[err]],[0,max_hist],color=color)
+##            ax_histy.plot([0,max_hist],[-results[err],-results[err]],color=color)
+#            ax_1.add_artist(plt.Circle((0,0),results[err],fill=False,linestyle='-',color=color,label=err))
+
+        ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
+        ax_histy.plot([0,max_hist],[results['µ_err_north'],results['µ_err_north']],color='y')
+        ax_1.add_artist(plt.Circle((0,0),results['µ_err'],fill=False,linestyle='-',color='y',label='µ_err'))
+
+        ax_histx.plot([results['σ_err'],results['σ_err']],[0,max_hist],color='g')
+        ax_histy.plot([0,max_hist],[results['σ_err'],results['σ_err']],color='g')
+        ax_histx.plot([-results['σ_err'],-results['σ_err']],[0,max_hist],color='g')
+        ax_histy.plot([0,max_hist],[-results['σ_err'],-results['σ_err']],color='g')
+        ax_1.add_artist(plt.Circle((0,0),results['σ_err'],fill=False,linestyle='-',color='g',label='σ_err'))
+
+        ax_histx.plot([results['RMS_err'],results['RMS_err']],[0,max_hist],color='b')
+        ax_histy.plot([0,max_hist],[results['RMS_err'],results['RMS_err']],color='b')
+        ax_histx.plot([-results['RMS_err'],-results['RMS_err']],[0,max_hist],color='b')
+        ax_histy.plot([0,max_hist],[-results['RMS_err'],-results['RMS_err']],color='b')
+        ax_1.add_artist(plt.Circle((0,0),results['RMS_err'],fill=False,linestyle='-',color='b',label='RMS_err'))
+
+#        plot_errors('µ_err','y')
+#        plot_errors('σ_err','g')
+#        plot_errors('RMS_err','b')
 
         from matplotlib.lines import Line2D
         custom_lines = [Line2D([0], [0], color='y'),

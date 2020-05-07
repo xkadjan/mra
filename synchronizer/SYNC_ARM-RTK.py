@@ -554,9 +554,7 @@ if new_preproccess:
     arm.drop_zero_acc()
     arm.drop_limit_acc()
 
-    #pltr.plot_arm(arm.arm_async,'arm_async','k')
-    pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
-    pltr.plot_marks(arm)
+
 
 # =============================================================================
 # RTK
@@ -583,6 +581,9 @@ elif new_preproccess and rtk_dewesoft:
     rtk_list = dws_p.concate_arm_and_rtks()
 
     pltr.plot_rtk(dws_p.dewesoft,'dewesoft',"b")
+    #pltr.plot_arm(arm.arm_async,'arm_async','k')
+    pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
+    pltr.plot_marks(arm)
 
 
 # =============================================================================
@@ -625,7 +626,7 @@ if rtk_dewesoft:
     dws_e.csv_print(csv_dir,new_preproccess)
 
     pltr.plot_devs(dws_e.dewesoft,'dewesoft',"b")
-    pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft',500,dws_e.results_dewesoft.iloc[0])
+    pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft - whole measurement',500,dws_e.results_dewesoft.iloc[0])
 
     for speed in range(len(dws_e.dewesoft_by_speed)):
         title = 'Dewesoft - speed ' + str(dws_e.bounds_speed[speed]) + '-' + str(dws_e.bounds_speed[speed+1]) + 'm/s'
