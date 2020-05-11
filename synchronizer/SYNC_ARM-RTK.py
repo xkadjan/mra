@@ -77,7 +77,7 @@ if not new_preproccess:
 evl.get_deviations(rtk_list)
 if only_fix:
     evl.filter_fix()
-#evl.filter_sigma()
+evl.filter_sigma()
 evl.get_make_boxes()
 evl.get_results(only_fix)
 evl.csv_print(csv_dir,new_preproccess)
