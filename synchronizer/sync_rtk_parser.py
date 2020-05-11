@@ -12,9 +12,8 @@ import sync_transpositions as transpos
 
 class RtkParser:
 
-    def __init__(self,dir_rtk,wgs_ref,fixed_height):
+    def __init__(self,dir_rtk,wgs_ref):
         self.wgs_ref = wgs_ref
-        self.fixed_height = fixed_height
         self.dir_rtk = dir_rtk
         self.rtk_folders = os.listdir(dir_rtk)
         self.novatel = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
@@ -66,7 +65,7 @@ class RtkParser:
                 label = file.split('\\')[-2:]
                 rtk = pd.DataFrame(self.get_points(sentences,label)).astype(float)
                 rtk.columns = ['utc_time','lat','lon','status']
-                rtk["height"] = self.fixed_height
+                rtk["height"] = self.wgs_ref[2]
                 rtk.insert(len(rtk.count()), 'lat_in_rad', rtk.lat*np.pi/180, allow_duplicates=False)
                 rtk.insert(len(rtk.count()), 'lon_in_rad', rtk.lon*np.pi/180, allow_duplicates=False)
                 xyz = transpos.wgs2xyz(rtk[['lat_in_rad','lon_in_rad','height']].values)

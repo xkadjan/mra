@@ -55,7 +55,7 @@ if new_preproccess:
 # RTK
 # =============================================================================
 if new_preproccess:
-    rtk = rtk_prs.RtkParser(dir_rtk,wgs_ref,fixed_height)
+    rtk = rtk_prs.RtkParser(dir_rtk,wgs_ref)
     rtk.parse_slices(prefix)
     #rtk.slice_times(slice_times)
     rtk.drop_points_wo_arm(arm.arm_20hz)
