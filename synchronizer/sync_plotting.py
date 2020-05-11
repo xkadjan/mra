@@ -7,6 +7,8 @@ Created on Sat Aug 10 10:25:24 2019
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from matplotlib.colors import LogNorm
+from matplotlib.lines import Line2D
 import numpy as np
 
 class Plotter:
@@ -198,8 +200,6 @@ class Plotter:
         self.fig_43.show()
 
     def plot_hist(self,rtk,bins,label,max_hist,results):
-        from matplotlib.colors import LogNorm
-
         # definitions for the axes
         x,y = rtk.diff_east, rtk.diff_north
         left, width = 0.1, 0.75
@@ -251,7 +251,6 @@ class Plotter:
         ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
         ax_histy.grid(True)
 
-
         #plt.tight_layout()
         ax_1.set_facecolor(color)
         ax_histx.set_facecolor(color)
@@ -260,26 +259,48 @@ class Plotter:
         ax_histx.set_title(label + ' - horizontal deviations from MRA', size=16, loc='left')
         plt.title('Number of \nsamles [-]', size=12, loc='left')
 
-#        # Results
-        ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
-        ax_histy.plot([0,max_hist],[results['µ_err_north'],results['µ_err_north']],color='y')
-        ax_1.add_artist(plt.Circle((0,0),results['µ_err'],fill=False,linestyle='-',color='y',label='µ_err'))
+##        # Results
+#        ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
+#        ax_histy.plot([0,max_hist],[results['µ_err_north'],results['µ_err_north']],color='y')
+#        ax_1.add_artist(plt.Circle((0,0),results['µ_err'],fill=False,linestyle='-',color='y',label='µ_err'))
+#
+#        ax_histx.plot([results['σ_err'],results['σ_err']],[0,max_hist],color='g')
+#        ax_histy.plot([0,max_hist],[results['σ_err'],results['σ_err']],color='g')
+#        ax_histx.plot([-results['σ_err'],-results['σ_err']],[0,max_hist],color='g')
+#        ax_histy.plot([0,max_hist],[-results['σ_err'],-results['σ_err']],color='g')
+#        ax_1.add_artist(plt.Circle((0,0),results['σ_err'],fill=False,linestyle='-',color='g',label='σ_err'))
+#
+#        ax_histx.plot([results['RMS_err'],results['RMS_err']],[0,max_hist],color='b')
+#        ax_histy.plot([0,max_hist],[results['RMS_err'],results['RMS_err']],color='b')
+#        ax_histx.plot([-results['RMS_err'],-results['RMS_err']],[0,max_hist],color='b')
+#        ax_histy.plot([0,max_hist],[-results['RMS_err'],-results['RMS_err']],color='b')
+#        ax_1.add_artist(plt.Circle((0,0),results['RMS_err'],fill=False,linestyle='-',color='b',label='RMS_err'))
 
-        ax_histx.plot([results['σ_err'],results['σ_err']],[0,max_hist],color='g')
-        ax_histy.plot([0,max_hist],[results['σ_err'],results['σ_err']],color='g')
-        ax_histx.plot([-results['σ_err'],-results['σ_err']],[0,max_hist],color='g')
-        ax_histy.plot([0,max_hist],[-results['σ_err'],-results['σ_err']],color='g')
-        ax_1.add_artist(plt.Circle((0,0),results['σ_err'],fill=False,linestyle='-',color='g',label='σ_err'))
+#        from matplotlib.lines import Line2D
+#        custom_lines = [Line2D([0], [0], color='y'),
+#                Line2D([0], [0], color='g'),
+#                Line2D([0], [0], color='b')]
+#        ax_1.legend(custom_lines, ['µ_err', 'σ_err', 'RMS_err'],loc=3)
 
-        ax_histx.plot([results['RMS_err'],results['RMS_err']],[0,max_hist],color='b')
-        ax_histy.plot([0,max_hist],[results['RMS_err'],results['RMS_err']],color='b')
-        ax_histx.plot([-results['RMS_err'],-results['RMS_err']],[0,max_hist],color='b')
-        ax_histy.plot([0,max_hist],[-results['RMS_err'],-results['RMS_err']],color='b')
-        ax_1.add_artist(plt.Circle((0,0),results['RMS_err'],fill=False,linestyle='-',color='b',label='RMS_err'))
+    def plot_hist_dev(self,dev,bins,label,results):
+        fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
+        ax.hist(dev, bins=bins, density =True, color='C7')
+        ax.set_title(label + ' - density of horizontal deviations from MRA', size=10, loc='left')
+        ax.plot([results['µ_err'],results['µ_err']],[0,35],color='y')
+        ax.plot([results['σ_err'],results['σ_err']],[0,35],color='g')
+        ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
+        ax.set_xlabel('deviation [m]',size=10)
+        ax.set_ylabel('density [%]',size=10)
+        ax.set_xlim([0,0.3])
+        ax.set_ylim([0,35])
+        ax.minorticks_on()
+        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
+        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax.grid(True)
+        fig.tight_layout()
 
-        from matplotlib.lines import Line2D
-        custom_lines = [Line2D([0], [0], color='y'),
-                Line2D([0], [0], color='g'),
-                Line2D([0], [0], color='b')]
-        ax_1.legend(custom_lines, ['µ_err', 'σ_err', 'RMS_err'],loc=3)
-
+        custom_lines = [patches.Rectangle((0,0),1,1, color='C7'),
+                        Line2D([0], [0], color='y'),
+                        Line2D([0], [0], color='g'),
+                        Line2D([0], [0], color='b')]
+        ax.legend(custom_lines, ['density','µ_err', 'σ_err', 'RMS_err'],loc=1)

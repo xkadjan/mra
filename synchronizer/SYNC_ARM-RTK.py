@@ -91,3 +91,8 @@ pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7',500,evl.results_novatel.iloc[0]
 pltr.plot_hist(evl.tersus,200,'Tersus BX305',500,evl.results_tersus.iloc[0])
 pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800',500,evl.results_ashtech.iloc[0])
 pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P',500,evl.results_ublox.iloc[0])
+
+pltr.plot_hist_dev(evl.novatel.deviation,50,'Novatel PwrPak7',evl.results_novatel.iloc[0])
+pltr.plot_hist_dev(evl.tersus.deviation,50,'Tersus BX305',evl.results_tersus.iloc[0])
+pltr.plot_hist_dev(evl.ashtech.deviation,50,'Ashtech MB800',evl.results_ashtech.iloc[0])
+pltr.plot_hist_dev(evl.ublox.deviation,50,'u-blox C94-M8P',evl.results_ublox.iloc[0])
