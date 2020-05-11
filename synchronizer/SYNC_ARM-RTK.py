@@ -80,6 +80,7 @@ if only_fix:
 evl.filter_sigma()
 evl.get_make_boxes()
 evl.get_results(only_fix)
+evl.get_correlation()
 evl.csv_print(csv_dir,new_preproccess)
 
 pltr.plot_devs(evl.novatel,'novatel',"g")
@@ -105,3 +106,8 @@ pltr.plot_correlation(evl.novatel.cvl_acc,evl.novatel.deviation,'Novatel PwrPak7
 pltr.plot_correlation(evl.tersus.cvl_acc,evl.tersus.deviation,'Tersus BX305','acceleration [m/s²]')
 pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
 pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')
+
+pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
+pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
+pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
+pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')

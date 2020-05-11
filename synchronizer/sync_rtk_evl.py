@@ -166,3 +166,9 @@ class Evaluator:
         self.results_tersus = self.results[self.results.index == 'tersus']
         self.results_ashtech = self.results[self.results.index == 'ashtech']
         self.results_ublox = self.results[self.results.index == 'ublox']
+
+    def get_correlation(self):
+        self.pearsoncorr_novatel = self.novatel.corr(method='pearson')
+        self.pearsoncorr_tersus = self.tersus.corr(method='pearson')
+        self.pearsoncorr_ashtech = self.ashtech.corr(method='pearson')
+        self.pearsoncorr_ublox = self.ublox.corr(method='pearson')

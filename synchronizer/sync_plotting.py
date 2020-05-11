@@ -10,6 +10,7 @@ import matplotlib.patches as patches
 from matplotlib.colors import LogNorm
 from matplotlib.lines import Line2D
 import numpy as np
+import seaborn as sb
 
 class Plotter:
 #    ax: https://matplotlib.org/api/axes_api.html
@@ -316,3 +317,16 @@ class Plotter:
         ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
         ax.grid(True)
         fig.tight_layout()
+
+    def plot_pearsoncorr(self,pearsoncorr,label):
+        fig, ax = plt.subplots(figsize=[10, 5], dpi=100, facecolor='w', edgecolor='r')
+        sb.heatmap(pearsoncorr,
+            xticklabels=pearsoncorr.columns,
+            yticklabels=pearsoncorr.columns,
+            cmap='RdBu_r',
+            annot=True,
+            linewidth=0.5,
+            square=False)
+        ax.set_title(label + ' - pearsons correlations', size=10, loc='left')
+        fig.tight_layout()
+
