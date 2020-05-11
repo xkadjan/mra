@@ -261,14 +261,6 @@ class Plotter:
         plt.title('Number of \nsamles [-]', size=12, loc='left')
 
 #        # Results
-#        def plot_errors(err,color):
-#            ax_histx.plot([results[err],results[err]],[0,max_hist],color=color)
-#            ax_histy.plot([0,max_hist],[results[err],results[err]],color=color)
-#
-##            ax_histx.plot([-results[err],-results[err]],[0,max_hist],color=color)
-##            ax_histy.plot([0,max_hist],[-results[err],-results[err]],color=color)
-#            ax_1.add_artist(plt.Circle((0,0),results[err],fill=False,linestyle='-',color=color,label=err))
-
         ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
         ax_histy.plot([0,max_hist],[results['µ_err_north'],results['µ_err_north']],color='y')
         ax_1.add_artist(plt.Circle((0,0),results['µ_err'],fill=False,linestyle='-',color='y',label='µ_err'))
@@ -284,10 +276,6 @@ class Plotter:
         ax_histx.plot([-results['RMS_err'],-results['RMS_err']],[0,max_hist],color='b')
         ax_histy.plot([0,max_hist],[-results['RMS_err'],-results['RMS_err']],color='b')
         ax_1.add_artist(plt.Circle((0,0),results['RMS_err'],fill=False,linestyle='-',color='b',label='RMS_err'))
-
-#        plot_errors('µ_err','y')
-#        plot_errors('σ_err','g')
-#        plot_errors('RMS_err','b')
 
         from matplotlib.lines import Line2D
         custom_lines = [Line2D([0], [0], color='y'),
