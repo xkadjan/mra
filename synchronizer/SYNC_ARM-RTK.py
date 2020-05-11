@@ -96,3 +96,12 @@ pltr.plot_hist_dev(evl.novatel.deviation,50,'Novatel PwrPak7',evl.results_novate
 pltr.plot_hist_dev(evl.tersus.deviation,50,'Tersus BX305',evl.results_tersus.iloc[0])
 pltr.plot_hist_dev(evl.ashtech.deviation,50,'Ashtech MB800',evl.results_ashtech.iloc[0])
 pltr.plot_hist_dev(evl.ublox.deviation,50,'u-blox C94-M8P',evl.results_ublox.iloc[0])
+
+pltr.plot_correlation(evl.novatel.cvl_speed,evl.novatel.deviation,'Novatel PwrPak7','speed [m/s]')
+pltr.plot_correlation(evl.tersus.cvl_speed,evl.tersus.deviation,'Tersus BX305','speed [m/s]')
+pltr.plot_correlation(evl.ashtech.cvl_speed,evl.ashtech.deviation,'Ashtech MB800','speed [m/s]')
+pltr.plot_correlation(evl.ublox.cvl_speed,evl.ublox.deviation,'u-blox C94-M8P','speed [m/s]')
+pltr.plot_correlation(evl.novatel.cvl_acc,evl.novatel.deviation,'Novatel PwrPak7','acceleration [m/s²]')
+pltr.plot_correlation(evl.tersus.cvl_acc,evl.tersus.deviation,'Tersus BX305','acceleration [m/s²]')
+pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
+pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')

@@ -304,3 +304,15 @@ class Plotter:
                         Line2D([0], [0], color='g'),
                         Line2D([0], [0], color='b')]
         ax.legend(custom_lines, ['density','µ_err', 'σ_err', 'RMS_err'],loc=1)
+
+    def plot_correlation(self,x_value,dev,label,x_value_name):
+        fig, ax = plt.subplots(figsize=[10, 10], dpi=100, facecolor='w', edgecolor='r')
+        ax.scatter(x_value,dev, s=1, color='C7')
+        ax.set_title(label + ' - dependence of deviation on ' + x_value_name.split('[')[0], size=10, loc='left')
+        ax.set_xlabel(x_value_name,size=10)
+        ax.set_ylabel('deviation [m]',size=10)
+        ax.minorticks_on()
+        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
+        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax.grid(True)
+        fig.tight_layout()
