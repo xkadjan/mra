@@ -330,3 +330,9 @@ class Plotter:
         ax.set_title(label + ' - pearsons correlations', size=10, loc='left')
         fig.tight_layout()
 
+    def plot_lmplot(self,data,label,x_value):
+        g = sb.lmplot('cvl_speed','deviation',data,scatter_kws={"s": 1, "alpha": 0.3},legend=True)
+        g = (g.set_axis_labels(x_value,'deviation [m]')
+        .set(xlim=(0, 10), ylim=(0, 0.3),xticks=[0,2,4,6,8,10], yticks=[0,0.1,0.2,0.3])
+        .fig.subplots_adjust(wspace=.02))
+
