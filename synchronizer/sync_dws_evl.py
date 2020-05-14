@@ -129,4 +129,10 @@ class Evaluator:
     def csv_print(self,csv_dir,new_preproccess):
         if new_preproccess:
             self.dewesoft.to_csv(os.path.join(csv_dir, 'dewesoft_whole.csv'))
+            for speed in range(len(self.labels_speed)):
+                filename = 'dewesoft_speed_from' + str(self.bounds_speed[speed]) + 'to' + str(self.bounds_speed[speed]) + 'mps.csv'
+                self.dewesoft_by_speed[speed].to_csv(os.path.join(csv_dir, filename))
+            for acc in range(len(self.labels_acc)):
+                filename = 'dewesoft_acc_from' + str(self.bounds_acc[acc]) + 'to' + str(self.bounds_acc[acc]) + 'mps-1.csv'
+                self.dewesoft_by_acc[acc].to_csv(os.path.join(csv_dir, filename))
         self.results_dewesoft.to_csv(os.path.join(csv_dir, 'results_dewesoft.csv'))
