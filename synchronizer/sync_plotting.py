@@ -44,22 +44,22 @@ class Plotter:
 
     def plot_marks(self,arm):
         bold = 1
-        self.plot_MARK(self.fig_2, self.ax_2, arm.arm_badhalls,'arm_badhalls','y',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5])
-        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_badhalls,'arm_badhalls','y',bold,[-10,10])
+        self.plot_MARK(self.fig_2, self.ax_2, arm.arm_badhalls,'arm_badhalls','y',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5],'arm_badhall')
+        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_badhalls,'arm_badhalls','y',bold,[-10,10],'arm_badhall')
 
-        self.plot_MARK(self.fig_2, self.ax_2, arm.arm_halls,'arm_halls','k',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5])
-        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_halls,'arm_halls','k',bold,[-10,10])
+        self.plot_MARK(self.fig_2, self.ax_2, arm.arm_halls,'arm_halls','k',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5],'arm_hall')
+        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_halls,'arm_halls','k',bold,[-10,10],'arm_hall')
 
         if len(arm.arm_peaks): self.plot_MARK(self.fig_2, self.ax_2, arm.arm_peaks,'arm_peaks','r',bold+1,[arm.arm_20hz.east.min()-1,arm.arm_20hz.east.max()+1])
         if len(arm.arm_peaks): self.plot_MARK(self.fig_4, self.ax_4, arm.arm_peaks,'arm_peaks','r',bold+1,arm.arm_peaks.raw_speed_diff)
 
         self.plot_bad_circles(arm.circle_bad)
 
-    def plot_MARK(self,fig, ax, marks, mark_type, rcv_color, bold, bounds):
+    def plot_MARK(self,fig, ax, marks, mark_type, rcv_color, bold, bounds, label):
         if len(bounds) == 2:
-            ax.plot([marks.utc_time, marks.utc_time], [bounds[0],bounds[1]], rcv_color, linestyle='--', linewidth=bold, alpha=0.6)
+            ax.plot([marks.utc_time, marks.utc_time], [bounds[0],bounds[1]], rcv_color, linestyle='--', linewidth=bold, alpha=0.6, label=label)
         else:
-            ax.plot(marks.utc_time, np.zeros(len(marks.utc_time)), rcv_color, linewidth=0, marker='o', markersize=5, alpha=0.8)
+            ax.plot(marks.utc_time, np.zeros(len(marks.utc_time)), rcv_color, linewidth=0, marker='o', markersize=5, alpha=0.8, label=label)
         fig.show()
 
     def plot_bad_circles(self,circle_bad):
@@ -85,7 +85,7 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_1.minorticks_on()
-        self.ax_1.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_1.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         self.ax_1.set_aspect('equal', 'datalim')
     #    plt.style.use('seaborn-paper')
         self.ax_1.grid(True)
@@ -102,13 +102,19 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_2.minorticks_on()
-        self.ax_2.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_2.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         #plt.axes().set_aspect('equal', 'datalim')
         self.ax_2.grid(True)
         self.ax_2.legend(loc=1)
         self.fig_2.tight_layout()
         self.fig_2.set_facecolor('whitesmoke')
         self.fig_2.show()
+        custom_lines = [Line2D([0], [0], color='b', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
+                        Line2D([0], [0], color='r', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
+                        Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+                        Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+                        patches.Rectangle((0,0),1,1, color='r', alpha=0.2)]
+        self.ax_2.legend(custom_lines, ['dewesoft', 'arm','hall_bad','hall_correct','removed_period'],loc=1)
 
     def plot_utcStatus(self,points_DF, rcv_name, rcv_color):
         self.ax_3.plot(points_DF.utc_time, points_DF.status, rcv_color, marker="|", linewidth=0.2, alpha=0.4, label=rcv_name)
@@ -119,7 +125,7 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_3.minorticks_on()
-        self.ax_3.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_3.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         #plt.axes().set_aspect('equal', 'datalim')
         self.ax_3.grid(True)
         self.ax_3.legend(loc=1)
@@ -139,7 +145,7 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_4.minorticks_on()
-        self.ax_4.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_4.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         #plt.axes().set_aspect('equal', 'datalim')
         self.ax_4.grid(True)
         self.ax_4.legend(loc=1)
@@ -148,6 +154,14 @@ class Plotter:
     #    plt.axis([points_DF.utc_time.min()-100, points_DF.utc_time.max()+100, -6, 10])
         self.fig_4.set_facecolor('whitesmoke')
         self.fig_4.show()
+        custom_lines = [Line2D([0], [0], color='k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5),
+                        Line2D([0], [0], color='k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5),
+                        Line2D([0], [0], color='r', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
+                        Line2D([0], [0], color='b', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
+                        Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+                        Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+                        patches.Rectangle((0,0),1,1, color='r', alpha=0.4)]
+        self.ax_4.legend(custom_lines, ['raw_speed','raw_acc', 'cvl_speed', 'cvl_acc','hall_bad','hall_correct','removed_period'],loc=1)
 
     #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -159,7 +173,7 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_41.minorticks_on()
-        self.ax_41.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_41.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         self.ax_41.set_aspect('equal', 'datalim')
     #    plt.style.use('seaborn-paper')
         self.ax_41.grid(True)
@@ -176,7 +190,7 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_42.minorticks_on()
-        self.ax_42.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_42.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         #plt.axes().set_aspect('equal', 'datalim')
         self.ax_42.grid(True)
         self.ax_42.legend(loc=1)
@@ -192,7 +206,7 @@ class Plotter:
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_43.minorticks_on()
-        self.ax_43.tick_params(axis='both',which='major',length=10,width=1,labelsize=6)
+        self.ax_43.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         #plt.axes().set_aspect('equal', 'datalim')
         self.ax_43.grid(True)
         self.ax_43.legend(loc=1)
@@ -221,8 +235,8 @@ class Plotter:
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
         ax_1.hist2d(x, y, bins=bins, cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
-        ax_1.set_xlabel('distance to North [m]',size=14)
-        ax_1.set_ylabel('distance to East [m]',size=14)
+        ax_1.set_xlabel('distance to North [m]',size=10)
+        ax_1.set_ylabel('distance to East [m]',size=10)
         ax_1.set_xlim([-lim,lim])
         ax_1.set_ylim([-lim,lim])
         ax_1.minorticks_on()
@@ -232,24 +246,24 @@ class Plotter:
 
         # Hist x
         ax_histx = plt.axes(rect_histx)
-        ax_histx.hist(x, bins=bins, color='k')
+        ax_histx.hist(x, bins=bins, color='k',density = True)
         #ax_histx.set_ylabel('Number of \nsamles [-]',size=10)
         ax_histx.set_ylim([0,max_hist])
         ax_histx.set_xlim(ax_1.get_xlim())
         ax_histx.minorticks_on()
-        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
-        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
+        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
+        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
         ax_histx.grid(True)
 
         # Hist y
         ax_histy = plt.axes(rect_histy)
-        ax_histy.hist(y, bins=bins, color='k', orientation='horizontal')
+        ax_histy.hist(y, bins=bins, color='k', density = True, orientation='horizontal')
         #ax_histy.set_xlabel('Number of \nsamles [-]',size=10)
         ax_histy.set_xlim([0,max_hist])
         ax_histy.set_ylim(ax_1.get_ylim())
         ax_histy.minorticks_on()
-        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
-        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
+        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
+        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
         ax_histy.grid(True)
 
         #plt.tight_layout()
@@ -257,8 +271,8 @@ class Plotter:
         ax_histx.set_facecolor(color)
         ax_histy.set_facecolor(color)
         plt.show()
-        ax_histx.set_title(label + ' - horizontal deviations from MRA', size=16, loc='left')
-        plt.title('Number of \nsamles [-]', size=12, loc='left')
+        ax_histx.set_title(label + ' - horizontal deviations from MRA', size=12, loc='left')
+        plt.title('Density of \nsamles [-]', size=12, loc='left')
 
 ##        # Results
 #        ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
@@ -292,8 +306,10 @@ class Plotter:
         ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
         ax.set_xlabel('deviation [m]',size=10)
         ax.set_ylabel('density [%]',size=10)
-        ax.set_xlim([0,0.3])
-        ax.set_ylim([0,35])
+#        ax.set_xlim([0,0.3])
+#        ax.set_ylim([0,35])
+        ax.set_xlim([0,0.4])
+        ax.set_ylim([0,28])
         ax.minorticks_on()
         ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
         ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
