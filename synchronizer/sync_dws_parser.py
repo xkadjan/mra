@@ -75,10 +75,10 @@ class DwsParser:
         return [self.concate_dfs(self.dewesoft_ref,self.dewesoft)]
 
     def concate_dfs(self,arm_df,rtk_df):
-        arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
+        arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','raw_speed','raw_acc','cvl_speed','cvl_acc']]
         arm_df = arm_df.rename(columns={"east": "arm_east", "north": "arm_north"})
         rtk_df = rtk_df.reset_index()[['east','north','status']]
         rtk_df = rtk_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
         arm_rtk_df = pd.concat([arm_df, rtk_df], axis=1)
-        arm_rtk_df = arm_rtk_df[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
+        arm_rtk_df = arm_rtk_df[['utc_time','raw_speed','raw_acc','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
         return arm_rtk_df
