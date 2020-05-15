@@ -70,18 +70,19 @@ if new_preproccess:
 # =============================================================================
 # EVL
 # =============================================================================
-#evl = rtk_evl.Evaluator()
-#if not new_preproccess:
-#    evl.csv_load(csv_dir)
-#    rtk_list = evl.csv_load(csv_dir)
-#evl.get_deviations(rtk_list)
-#if only_fix:
-#    evl.filter_fix()
-#evl.filter_sigma()
-#evl.get_make_boxes()
-#evl.get_results(only_fix)
-#evl.get_correlation()
-#evl.csv_print(csv_dir,new_preproccess)
+evl = rtk_evl.Evaluator()
+if not new_preproccess:
+    evl.csv_load(csv_dir)
+    rtk_list = evl.csv_load(csv_dir)
+evl.get_deviations(rtk_list)
+if only_fix:
+    evl.filter_fix()
+evl.filter_sigma()
+evl.abs_acc()
+evl.get_make_boxes()
+evl.get_results(only_fix)
+evl.get_correlation()
+evl.csv_print(csv_dir,new_preproccess)
 
 #pltr.plot_devs(evl.novatel,'novatel',"g")
 #pltr.plot_devs(evl.tersus,'tersus',"y")
@@ -102,6 +103,10 @@ pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
 pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')
 pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','speed [m/s]')
 pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','speed [m/s]')
+pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','acc [m/s]')
+pltr.plot_lmplot(evl.tersus,'Tersus BX305','acc [m/s]')
+pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','acc [m/s]')
+pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','acc [m/s]')
 
 #pltr.plot_correlation(evl.novatel.cvl_speed,evl.novatel.deviation,'Novatel PwrPak7','speed [m/s]')
 #pltr.plot_correlation(evl.tersus.cvl_speed,evl.tersus.deviation,'Tersus BX305','speed [m/s]')

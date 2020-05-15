@@ -172,3 +172,9 @@ class Evaluator:
         self.pearsoncorr_tersus = self.tersus.corr(method='pearson')
         self.pearsoncorr_ashtech = self.ashtech.corr(method='pearson')
         self.pearsoncorr_ublox = self.ublox.corr(method='pearson')
+
+    def abs_acc(self):
+        self.novatel["cvl_acc"] = self.novatel["cvl_acc"].abs()
+        self.tersus["cvl_acc"] = self.tersus["cvl_acc"].abs()
+        self.ashtech["cvl_acc"] = self.novatel["cvl_acc"].abs()
+        self.ublox["cvl_acc"] = self.ublox["cvl_acc"].abs()

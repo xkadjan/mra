@@ -19,7 +19,7 @@ class Plotter:
             self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
             self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
             self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
-            self.fig_4, self.ax_4 = plt.subplots(num=304,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
+            self.fig_4, self.ax_4 = plt.subplots(num=304,figsize=[12.2, 5], dpi=100, facecolor='w', edgecolor='r')
 
         self.fig_41, self.ax_41 = plt.subplots(num=401,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
         self.fig_42, self.ax_42 = plt.subplots(num=402,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
@@ -79,7 +79,7 @@ class Plotter:
 
     def plot_EN(self,points_DF, rcv_name, rcv_color):
         self.ax_1.plot(points_DF.east, points_DF.north, rcv_color, marker=".", linewidth=0.1, alpha=0.2,label=rcv_name)
-        self.ax_1.set_title('Map of horizontal positions', size=12, loc='left')
+        self.ax_1.set_title('Map of positions', size=12, loc='left')
         self.ax_1.set_xlabel('distance to North [m]',size=10)
         self.ax_1.set_ylabel('distance to East [m]',size=10)
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
@@ -96,7 +96,7 @@ class Plotter:
 
     def plot_utcE(self,points_DF, rcv_name, rcv_color):
         self.ax_2.plot(points_DF.utc_time, points_DF.east, rcv_color, marker=".", linewidth=1, markersize=4, alpha=0.4, label=rcv_name)
-        self.ax_2.set_title('Deviation in time', size=12, loc='left')
+        self.ax_2.set_title('Positions in time', size=12, loc='left')
         self.ax_2.set_xlabel('time of day [s]',size=10)
         self.ax_2.set_ylabel('distance to East [m]',size=10)
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
@@ -186,7 +186,7 @@ class Plotter:
         self.ax_42.plot(points_DF.utc_time, points_DF.diff_east, rcv_color, marker=".", linewidth=1, markersize=4, alpha=0.4, label=rcv_name)
         self.ax_42.set_title('Deviation in time', size=12, loc='left')
         self.ax_42.set_xlabel('time of day [s]',size=10)
-        self.ax_42.set_ylabel('distance to East [m]',size=10)
+        self.ax_42.set_ylabel('deviation to East [m]',size=10)
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_42.minorticks_on()
@@ -202,7 +202,7 @@ class Plotter:
         self.ax_43.plot(points_DF.utc_time, points_DF.diff_north, rcv_color, marker=".", linewidth=1, markersize=4, alpha=0.4, label=rcv_name)
         self.ax_43.set_title('Deviation in time', size=12, loc='left')
         self.ax_43.set_xlabel('time of day [s]',size=10)
-        self.ax_43.set_ylabel('distance to North [m]',size=10)
+        self.ax_43.set_ylabel('deviation to North [m]',size=10)
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_43.minorticks_on()
@@ -216,9 +216,9 @@ class Plotter:
 
     def plot_hist(self,rtk,bins,label,max_hist,results):
         # definitions for the axes
-        x,y = rtk.diff_east, rtk.diff_north
+        x,y = rtk.diff_north, rtk.diff_east
         left, width = 0.1, 0.75
-        bottom, height = 0.1, 0.75
+        bottom, height = 0.07, 0.72
         spacing = 0.005
         bins = bins#200
         max_hist = max_hist
@@ -235,8 +235,8 @@ class Plotter:
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
         ax_1.hist2d(x, y, bins=bins, cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
-        ax_1.set_xlabel('distance to North [m]',size=10)
-        ax_1.set_ylabel('distance to East [m]',size=10)
+        ax_1.set_xlabel('deviation to East [m]',size=14)
+        ax_1.set_ylabel('deviation to North [m]',size=14)
         ax_1.set_xlim([-lim,lim])
         ax_1.set_ylim([-lim,lim])
         ax_1.minorticks_on()
@@ -251,19 +251,19 @@ class Plotter:
         ax_histx.set_ylim([0,max_hist])
         ax_histx.set_xlim(ax_1.get_xlim())
         ax_histx.minorticks_on()
-        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
-        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
+        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
         ax_histx.grid(True)
 
         # Hist y
         ax_histy = plt.axes(rect_histy)
         ax_histy.hist(y, bins=bins, color='k', density = True, orientation='horizontal')
-        #ax_histy.set_xlabel('Number of \nsamles [-]',size=10)
+        #ax_histy.set_xlabel('Number \n    [-]',size=10)
         ax_histy.set_xlim([0,max_hist])
         ax_histy.set_ylim(ax_1.get_ylim())
         ax_histy.minorticks_on()
-        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
-        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
+        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
         ax_histy.grid(True)
 
         #plt.tight_layout()
@@ -271,8 +271,10 @@ class Plotter:
         ax_histx.set_facecolor(color)
         ax_histy.set_facecolor(color)
         plt.show()
-        ax_histx.set_title(label + ' - horizontal deviations from MRA', size=12, loc='left')
-        plt.title('Density of \nsamles [-]', size=12, loc='left')
+
+        title = 'Horizontal positions deviations\n' + label#.split(' - ')[1]
+        ax_histx.set_title(title, size=16, loc='left')
+        plt.title('Density\n[%]', size=14, loc='left')
 
 ##        # Results
 #        ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
@@ -300,7 +302,11 @@ class Plotter:
     def plot_hist_dev(self,dev,bins,label,results):
         fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
         ax.hist(dev, bins=bins, density =True, color='C7')
-        ax.set_title(label + ' - density of horizontal deviations from MRA', size=10, loc='left')
+        title = 'Density of horizontal deviations from MRA - ' + label
+        title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
+        title = title + '; σ_err = ' + '%.2f'%(results['σ_err']*100) + ' cm'
+        title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
+        ax.set_title(title, size=10, loc='left')
         ax.plot([results['µ_err'],results['µ_err']],[0,35],color='y')
         ax.plot([results['σ_err'],results['σ_err']],[0,35],color='g')
         ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
@@ -347,8 +353,8 @@ class Plotter:
         fig.tight_layout()
 
     def plot_lmplot(self,data,label,x_value):
-        g = sb.lmplot('cvl_speed','deviation',data,scatter_kws={"s": 1, "alpha": 0.3},legend=True)
+        g = sb.lmplot('cvl_' + x_value.split(' ')[0],'deviation',data,scatter_kws={"s": 2, "alpha": 0.3},legend=True)
         g = (g.set_axis_labels(x_value,'deviation [m]')
-        .set(xlim=(0, 10), ylim=(0, 0.3),xticks=[0,2,4,6,8,10], yticks=[0,0.1,0.2,0.3])
+        .set(xlim=(0, 10), ylim=(0, 0.3),xticks=[0,2,4,6,8,10], yticks=[0,0.05,0.1,0.15])
         .fig.subplots_adjust(wspace=.02))
 
