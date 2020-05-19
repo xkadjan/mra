@@ -25,6 +25,8 @@ class Plotter:
         self.fig_42, self.ax_42 = plt.subplots(num=402,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
         self.fig_43, self.ax_43 = plt.subplots(num=403,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
 
+        self.count_hist = 500
+
     def plot_arm(self,data,signal_name,color):
         self.plot_EN(data, signal_name, color)
         self.plot_utcE(data, signal_name, color)
@@ -230,7 +232,9 @@ class Plotter:
         rect_histy = [left + width + spacing, bottom, 0.1, height]
 
         # start with a rectangular Figure
-        plt.figure(figsize=(8, 8),facecolor='whitesmoke', edgecolor='r')
+        fig = plt.figure(num=self.count_hist,figsize=(8, 8),facecolor='whitesmoke', edgecolor='r')
+        self.count_hist += 1
+#        fig.show()
 
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
@@ -270,34 +274,12 @@ class Plotter:
         ax_1.set_facecolor(color)
         ax_histx.set_facecolor(color)
         ax_histy.set_facecolor(color)
-        plt.show()
+
 
         title = 'Horizontal positions deviations\n' + label#.split(' - ')[1]
         ax_histx.set_title(title, size=16, loc='left')
         plt.title('Density\n[%]', size=14, loc='left')
-
-##        # Results
-#        ax_histx.plot([results['µ_err_east'],results['µ_err_east']],[0,max_hist],color='y')
-#        ax_histy.plot([0,max_hist],[results['µ_err_north'],results['µ_err_north']],color='y')
-#        ax_1.add_artist(plt.Circle((0,0),results['µ_err'],fill=False,linestyle='-',color='y',label='µ_err'))
-#
-#        ax_histx.plot([results['σ_err'],results['σ_err']],[0,max_hist],color='g')
-#        ax_histy.plot([0,max_hist],[results['σ_err'],results['σ_err']],color='g')
-#        ax_histx.plot([-results['σ_err'],-results['σ_err']],[0,max_hist],color='g')
-#        ax_histy.plot([0,max_hist],[-results['σ_err'],-results['σ_err']],color='g')
-#        ax_1.add_artist(plt.Circle((0,0),results['σ_err'],fill=False,linestyle='-',color='g',label='σ_err'))
-#
-#        ax_histx.plot([results['RMS_err'],results['RMS_err']],[0,max_hist],color='b')
-#        ax_histy.plot([0,max_hist],[results['RMS_err'],results['RMS_err']],color='b')
-#        ax_histx.plot([-results['RMS_err'],-results['RMS_err']],[0,max_hist],color='b')
-#        ax_histy.plot([0,max_hist],[-results['RMS_err'],-results['RMS_err']],color='b')
-#        ax_1.add_artist(plt.Circle((0,0),results['RMS_err'],fill=False,linestyle='-',color='b',label='RMS_err'))
-
-#        from matplotlib.lines import Line2D
-#        custom_lines = [Line2D([0], [0], color='y'),
-#                Line2D([0], [0], color='g'),
-#                Line2D([0], [0], color='b')]
-#        ax_1.legend(custom_lines, ['µ_err', 'σ_err', 'RMS_err'],loc=3)
+        plt.show()
 
     def plot_hist_dev(self,dev,bins,label,results):
         fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
@@ -327,6 +309,7 @@ class Plotter:
                         Line2D([0], [0], color='g'),
                         Line2D([0], [0], color='b')]
         ax.legend(custom_lines, ['density','µ_err', 'σ_err', 'RMS_err'],loc=1)
+        fig.show()
 
     def plot_correlation(self,x_value,dev,label,x_value_name):
         fig, ax = plt.subplots(figsize=[10, 10], dpi=100, facecolor='w', edgecolor='r')

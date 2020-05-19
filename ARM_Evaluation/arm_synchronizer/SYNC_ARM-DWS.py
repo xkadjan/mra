@@ -5,13 +5,6 @@ Created on Mon May 11 11:24:21 2020
 @author: xkadj
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Aug  9 14:57:48 2019
-
-@author: xkadj
-"""
-
 import sync_armparser as arm
 import sync_dws_parser as dws_prs
 import sync_dws_evl as dws_evl
@@ -42,19 +35,6 @@ wgs_ref = args.wgs_ref
 
 new_preproccess = args.new_preproccess
 only_fix = args.only_fix
-
-# =============================================================================
-#  DEFINITIONS
-# =============================================================================
-
-#dir_rtk = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\dewesoft_data\petr_posvic\DATA\used"
-#dir_arm = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\arm_data\arm_output_200427-enctol3-offset17.7"
-#output_path = r"C:\Users\xkadj\OneDrive\valeo\191114_ARM_DEWESOFT_NOVATEL\output_eval"
-#
-#wgs_ref = [50.07478605085059,14.52025289904692,235.05] # dws using this
-#
-#new_preproccess = True
-#only_fix = False
 
 pltr = plot.Plotter(new_preproccess)
 
@@ -91,7 +71,6 @@ if new_preproccess:
 # =============================================================================
 # EVL
 # =============================================================================
-
 dws_e = dws_evl.Evaluator()
 #if not new_preproccess:
 #    evl.csv_load(output_path)# dws_evl have not 'csv_load' (rkt_eval have it)
@@ -104,21 +83,23 @@ dws_e.get_results(only_fix)
 dws_e.csv_print(output_path,new_preproccess)
 
 pltr.plot_devs(dws_e.dewesoft,'dewesoft',"b")
-pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft - whole measurement',40,dws_e.results_dewesoft.iloc[0])
-
-for speed in range(len(dws_e.dewesoft_by_speed)):
-    title = 'Dewesoft - speed ' + str(dws_e.bounds_speed[speed]) + '-' + str(dws_e.bounds_speed[speed+1]) + 'm/s'
-    pltr.plot_hist(dws_e.dewesoft_by_speed[speed],100,title,40,dws_e.results_dewesoft.iloc[1+speed])
-
-#for acc in range(len(dws_e.dewesoft_by_acc)):
-#    title = 'Dewesoft - acc ' + str(dws_e.bounds_acc[acc]) + '-' + str(dws_e.bounds_acc[acc+1]) + 'm/s²'
-#    pltr.plot_hist(dws_e.dewesoft_by_acc[acc],100,title,70)
 
 pltr.plot_hist_dev(dws_e.dewesoft.deviation,50,'Dewesoft - whole measurement',dws_e.results_dewesoft.iloc[0])
 for speed in range(len(dws_e.dewesoft_by_speed)):
     title = 'Dewesoft - speed ' + str(dws_e.bounds_speed[speed]) + '-' + str(dws_e.bounds_speed[speed+1]) + 'm/s'
     pltr.plot_hist_dev(dws_e.dewesoft_by_speed[speed].deviation,50,title,dws_e.results_dewesoft.iloc[speed+1])
 
-#pltr.plot_correlation(dws_e.dewesoft.cvl_speed,dws_e.dewesoft.deviation,'Dewesoft','speed [m/s]')
-pltr.plot_lmplot(dws_e.dewesoft,'Dewesoft','speed [m/s]')
-pltr.plot_pearsoncorr(dws_e.dewesoft.corr(method='pearson'),'Dewesoft')
+pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft - whole measurement',40,dws_e.results_dewesoft.iloc[0])
+
+# Uncomment rows below for detailed plotting analyze:
+#for speed in range(len(dws_e.dewesoft_by_speed)):
+#    title = 'Dewesoft - speed ' + str(dws_e.bounds_speed[speed]) + '-' + str(dws_e.bounds_speed[speed+1]) + 'm/s'
+#    pltr.plot_hist(dws_e.dewesoft_by_speed[speed],100,title,40,dws_e.results_dewesoft.iloc[1+speed])
+##for acc in range(len(dws_e.dewesoft_by_acc)):
+##    title = 'Dewesoft - acc ' + str(dws_e.bounds_acc[acc]) + '-' + str(dws_e.bounds_acc[acc+1]) + 'm/s²'
+##    pltr.plot_hist(dws_e.dewesoft_by_acc[acc],100,title,70)
+
+#pltr.plot_lmplot(dws_e.dewesoft,'Dewesoft','speed [m/s]')
+#pltr.plot_pearsoncorr(dws_e.dewesoft.corr(method='pearson'),'Dewesoft')
+
+input("Press Enter to close matplotlib graphs...")
