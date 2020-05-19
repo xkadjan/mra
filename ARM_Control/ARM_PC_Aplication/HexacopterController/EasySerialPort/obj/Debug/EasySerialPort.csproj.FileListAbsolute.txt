@@ -1,0 +1,7 @@
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\EasySerialPort.EasySerialPortControl.resources
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\EasySerialPort.csproj.GenerateResource.Cache
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\bin\Debug\EasySerialPort.dll
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\bin\Debug\EasySerialPort.pdb
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\EasySerialPort.dll
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\EasySerialPort.pdb
