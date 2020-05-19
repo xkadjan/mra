@@ -40,8 +40,8 @@ class DwsParser:
         return rtk
 
     def compensate_offset(self):
-        self.dewesoft["east"] = self.dewesoft.east - 0.35
-        self.dewesoft["north"] = self.dewesoft.north + 0.94
+        self.dewesoft["east"] = self.dewesoft.east + 0.26
+        self.dewesoft["north"] = self.dewesoft.north + 0.34
 
     def drop_unpaired_points(self,arm_df):
         self.dewesoft = self.drop_according_time(self.dewesoft,arm_df,'dewesoft')

@@ -95,7 +95,7 @@ pltr.plot_hist(dws_e.dewesoft,200,'Dewesoft - whole measurement',40,dws_e.result
 #for speed in range(len(dws_e.dewesoft_by_speed)):
 #    title = 'Dewesoft - speed ' + str(dws_e.bounds_speed[speed]) + '-' + str(dws_e.bounds_speed[speed+1]) + 'm/s'
 #    pltr.plot_hist(dws_e.dewesoft_by_speed[speed],100,title,40,dws_e.results_dewesoft.iloc[1+speed])
-##for acc in range(len(dws_e.dewesoft_by_acc)):
+#for acc in range(len(dws_e.dewesoft_by_acc)):
 ##    title = 'Dewesoft - acc ' + str(dws_e.bounds_acc[acc]) + '-' + str(dws_e.bounds_acc[acc+1]) + 'm/s²'
 ##    pltr.plot_hist(dws_e.dewesoft_by_acc[acc],100,title,70)
 
