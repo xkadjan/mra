@@ -1,7 +1,0 @@
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\bin\Release\SimpleSerialPort.dll
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\bin\Release\SimpleSerialPort.pdb
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Release\SimpleSerialPort.SimpleSerialPort.resources
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Release\SimpleSerialPort.csproj.GenerateResource.Cache
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Release\SimpleSerialPort.dll
-C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Release\SimpleSerialPort.pdb

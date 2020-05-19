@@ -1,0 +1,212 @@
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\jackson\Desktop\SentryGun\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\jackson\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v3.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\Measurement arm v4.0\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\Measurement arm v4.0\Arm aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\Measurement arm v4.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pmatejka\Desktop\Measurement arm v4.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\Measurement arm v4.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\Measurement arm v4.0\Arm aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM_Soft v2.0\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pajam\Desktop\ARM_Soft v2.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM_Soft v2.6\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\markova verze\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.2\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.Cache
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Google Drive\Projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v3.5\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.9\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.11\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\ARM_Soft v3.14\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pajam\OneDrive\Moje soukromý\Moje projekty\Projekt Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.00\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pajam\Desktop\ARM_Soft v4.02\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\pajam\OneDrive\Privatni\Moje_Projekty\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.dll
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\bin\Debug\SimpleSerialPort.pdb
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csprojAssemblyReference.cache
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.SimpleSerialPort.resources
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.GenerateResource.cache
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.csproj.CoreCompileInputs.cache
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.dll
+C:\Users\xkadj\OneDrive\PROJEKTY\Projekt_Arm\SWskripty\ARM_Soft\ARM_Soft v4.03\ARM_PC_Aplication\HexacopterController\EasySerialPort\obj\Debug\SimpleSerialPort.pdb

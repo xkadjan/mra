@@ -1,0 +1,219 @@
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\New folder\HexacopterController\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.02\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.03\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.04\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.05\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\In progress\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\HexacopterController v.06\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v.07\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v.08\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v_1.08\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v_1.08\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\HexacopterController v_1.09\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\measurmentarm\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Google Drive\Projekt Arm\Verzo 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Google Drive\Projekt Arm\Verzo 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\Verze 1.0\measurmentarm\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Desktop\Verze 2.1\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Verze 2.1\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Verze 2.2\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Verze 2.2\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Measurement arm v2.2\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Measurement arm v2.2\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\SharpDX.DirectInput.dll
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\SharpDX.dll
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\SimpleSerialPort.pdb
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\SharpDX.xml
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\bin\Debug\SharpDX.DirectInput.xml
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\Pavel\Desktop\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\Pavel\Google Drive\Projekt Arm\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Google Drive\Projekt Arm\Measurement arm v2.3\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\Pavel\Desktop\Measurement arm v2.4\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\Pavel\Desktop\Measurement arm v2.4\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.csprojResolveAssemblyReference.cache
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.MainForm.resources
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.Properties.Resources.resources
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.Senzors.resources
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.csproj.GenerateResource.Cache
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.exe
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\obj\Debug\HexacopterController.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\bin\Debug\HexacopterController.exe
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\bin\Debug\HexacopterController.pdb
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\bin\Debug\SimpleSerialPort.dll
+C:\Users\pmatejka\Desktop\ARM\Measurement arm v2.5\Arm aplication\HexacopterController\bin\Debug\SimpleSerialPort.pdb
