@@ -29,6 +29,12 @@ class Evaluator:
         self.ashtech = self.calculate_deviations(rtk_list[2])
         self.ublox = self.calculate_deviations(rtk_list[3])
 
+        # Make backup
+        self.novatel_unsliced = self.novatel
+        self.tersus_unsliced = self.tersus
+        self.ashtech_unsliced = self.ashtech
+        self.ublox_unsliced = self.ublox
+
     def filter_fix(self):
         self.novatel = self.novatel[self.novatel.status == 4]
         self.tersus = self.tersus[self.tersus.status == 4]
@@ -75,10 +81,11 @@ class Evaluator:
 
     def csv_print(self,csv_dir,new_preproccess):
         if new_preproccess:
-            self.novatel.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
-            self.tersus.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
-            self.ashtech.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
-            self.ublox.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
+            self.novatel_unsliced.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
+            self.tersus_unsliced.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
+            self.ashtech_unsliced.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
+            self.ublox_unsliced.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
+
         self.results_novatel.to_csv(os.path.join(csv_dir, 'results_novatel.csv'))
         self.results_tersus.to_csv(os.path.join(csv_dir, 'results_tersus.csv'))
         self.results_ashtech.to_csv(os.path.join(csv_dir, 'results_ashtech.csv'))

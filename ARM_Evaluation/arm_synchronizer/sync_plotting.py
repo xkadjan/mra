@@ -287,8 +287,8 @@ class Plotter:
             bins = 2000
             xmax = 5
         else:
-            bins = 200
-            xmax = 1.7
+            bins = 2000
+            xmax = 50
         fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
         ax.hist(dev, bins=bins, range=[0,xmax], density =True, color='C7')
         # title = 'Density of horizontal deviations from MRA - ' + label
@@ -308,7 +308,7 @@ class Plotter:
             # ax.set_ylim([0.001,100])
             # ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         else:
-            ax.set_xlim([0,1.7])
+            ax.set_xlim([0,xmax])
             ax.set_ylim([0.001,100])
             ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         ax.minorticks_on()
