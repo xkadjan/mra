@@ -14,7 +14,8 @@ import seaborn as sb
 
 class Plotter:
 #    ax: https://matplotlib.org/api/axes_api.html
-    def __init__(self,new_preproccess):
+    def __init__(self,new_preproccess,only_fix):
+        self.only_fix = only_fix
         if new_preproccess:
             self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
             self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
@@ -52,8 +53,8 @@ class Plotter:
         self.plot_MARK(self.fig_2, self.ax_2, arm.arm_halls,'arm_halls','k',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5],'arm_hall')
         self.plot_MARK(self.fig_4, self.ax_4, arm.arm_halls,'arm_halls','k',bold,[-10,10],'arm_hall')
 
-        if len(arm.arm_peaks): self.plot_MARK(self.fig_2, self.ax_2, arm.arm_peaks,'arm_peaks','r',bold+1,[arm.arm_20hz.east.min()-1,arm.arm_20hz.east.max()+1])
-        if len(arm.arm_peaks): self.plot_MARK(self.fig_4, self.ax_4, arm.arm_peaks,'arm_peaks','r',bold+1,arm.arm_peaks.raw_speed_diff)
+        if len(arm.arm_peaks): self.plot_MARK(self.fig_2, self.ax_2, arm.arm_peaks,'arm_peaks','r',bold+1,[arm.arm_20hz.east.min()-1,arm.arm_20hz.east.max()+1],'arm_peak')
+        if len(arm.arm_peaks): self.plot_MARK(self.fig_4, self.ax_4, arm.arm_peaks,'arm_peaks','r',bold+1,arm.arm_peaks.raw_speed_diff,'arm_peak')
 
         self.plot_bad_circles(arm.circle_bad)
 
@@ -281,10 +282,17 @@ class Plotter:
         plt.title('Density\n[%]', size=14, loc='left')
         plt.show()
 
-    def plot_hist_dev(self,dev,bins,label,results):
+    def plot_hist_dev(self,dev,label,results):
+        if self.only_fix:
+            bins = 2000
+            xmax = 5
+        else:
+            bins = 200
+            xmax = 1.7
         fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
-        ax.hist(dev, bins=bins, density =True, color='C7')
-        title = 'Density of horizontal deviations from MRA - ' + label
+        ax.hist(dev, bins=bins, range=[0,xmax], density =True, color='C7')
+        # title = 'Density of horizontal deviations from MRA - ' + label
+        title = label
         title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
         title = title + '; σ_err = ' + '%.2f'%(results['σ_err']*100) + ' cm'
         title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
@@ -294,10 +302,15 @@ class Plotter:
         ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
         ax.set_xlabel('deviation [m]',size=10)
         ax.set_ylabel('density [%]',size=10)
-#        ax.set_xlim([0,0.3])
-#        ax.set_ylim([0,35])
-        ax.set_xlim([0,0.4])
-        ax.set_ylim([0,28])
+        if self.only_fix:
+            ax.set_xlim([0,0.4])
+            ax.set_ylim([0,35])
+            # ax.set_ylim([0.001,100])
+            # ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
+        else:
+            ax.set_xlim([0,1.7])
+            ax.set_ylim([0.001,100])
+            ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         ax.minorticks_on()
         ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
         ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)

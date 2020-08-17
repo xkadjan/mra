@@ -15,7 +15,7 @@ import sync_plotting as plot
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
 dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200327"
-csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\zaverecna zprava\vysledky\csv"
+csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RESULTS"
 #csv_dir = os.path.join(dir_arm,'output')
 
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
@@ -28,9 +28,9 @@ if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 new_preproccess = False
-only_fix = True
+only_fix = False
 
-pltr = plot.Plotter(new_preproccess)
+pltr = plot.Plotter(new_preproccess,only_fix)
 
 # =============================================================================
 # ARM:
@@ -84,40 +84,43 @@ evl.get_results(only_fix)
 evl.get_correlation()
 evl.csv_print(csv_dir,new_preproccess)
 
-#pltr.plot_devs(evl.novatel,'novatel',"g")
-#pltr.plot_devs(evl.tersus,'tersus',"y")
-#pltr.plot_devs(evl.ashtech,'ashtech',"b")
-#pltr.plot_devs(evl.ublox,'ublox',"m")
-#
-#pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7',500,evl.results_novatel.iloc[0])
-#pltr.plot_hist(evl.tersus,200,'Tersus BX305',500,evl.results_tersus.iloc[0])
-#pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800',500,evl.results_ashtech.iloc[0])
-#pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P',500,evl.results_ublox.iloc[0])
-#
-#pltr.plot_hist_dev(evl.novatel.deviation,50,'Novatel PwrPak7',evl.results_novatel.iloc[0])
-#pltr.plot_hist_dev(evl.tersus.deviation,50,'Tersus BX305',evl.results_tersus.iloc[0])
-#pltr.plot_hist_dev(evl.ashtech.deviation,50,'Ashtech MB800',evl.results_ashtech.iloc[0])
-#pltr.plot_hist_dev(evl.ublox.deviation,50,'u-blox C94-M8P',evl.results_ublox.iloc[0])
+# Print deviations (map,east,noth)
+# pltr.plot_devs(evl.novatel,'novatel',"g")
+# pltr.plot_devs(evl.tersus,'tersus',"y")
+# pltr.plot_devs(evl.ashtech,'ashtech',"b")
+# pltr.plot_devs(evl.ublox,'ublox',"m")
 
-pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
-pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')
-pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','speed [m/s]')
-pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','speed [m/s]')
-pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','acc [m/s]')
-pltr.plot_lmplot(evl.tersus,'Tersus BX305','acc [m/s]')
-pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','acc [m/s]')
-pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','acc [m/s]')
+# Print deviations (map,east,noth)
+pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7',500,evl.results_novatel.iloc[0])
+pltr.plot_hist(evl.tersus,200,'Tersus BX305',500,evl.results_tersus.iloc[0])
+pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800',500,evl.results_ashtech.iloc[0])
+pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P',500,evl.results_ublox.iloc[0])
 
-#pltr.plot_correlation(evl.novatel.cvl_speed,evl.novatel.deviation,'Novatel PwrPak7','speed [m/s]')
-#pltr.plot_correlation(evl.tersus.cvl_speed,evl.tersus.deviation,'Tersus BX305','speed [m/s]')
-#pltr.plot_correlation(evl.ashtech.cvl_speed,evl.ashtech.deviation,'Ashtech MB800','speed [m/s]')
-#pltr.plot_correlation(evl.ublox.cvl_speed,evl.ublox.deviation,'u-blox C94-M8P','speed [m/s]')
-#pltr.plot_correlation(evl.novatel.cvl_acc,evl.novatel.deviation,'Novatel PwrPak7','acceleration [m/s²]')
-#pltr.plot_correlation(evl.tersus.cvl_acc,evl.tersus.deviation,'Tersus BX305','acceleration [m/s²]')
-#pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
-#pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')
+#Print density
+pltr.plot_hist_dev(evl.novatel.deviation,'Novatel PwrPak7',evl.results_novatel.iloc[0])
+pltr.plot_hist_dev(evl.tersus.deviation,'Tersus BX305',evl.results_tersus.iloc[0])
+pltr.plot_hist_dev(evl.ashtech.deviation,'Ashtech MB800',evl.results_ashtech.iloc[0])
+pltr.plot_hist_dev(evl.ublox.deviation,'u-blox C94-M8P',evl.results_ublox.iloc[0])
 
-pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
-pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
-pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
-pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')
+# pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
+# pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')
+# pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','speed [m/s]')
+# pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','speed [m/s]')
+# pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','acc [m/s]')
+# pltr.plot_lmplot(evl.tersus,'Tersus BX305','acc [m/s]')
+# pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','acc [m/s]')
+# pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','acc [m/s]')
+
+# pltr.plot_correlation(evl.novatel.cvl_speed,evl.novatel.deviation,'Novatel PwrPak7','speed [m/s]')
+# pltr.plot_correlation(evl.tersus.cvl_speed,evl.tersus.deviation,'Tersus BX305','speed [m/s]')
+# pltr.plot_correlation(evl.ashtech.cvl_speed,evl.ashtech.deviation,'Ashtech MB800','speed [m/s]')
+# pltr.plot_correlation(evl.ublox.cvl_speed,evl.ublox.deviation,'u-blox C94-M8P','speed [m/s]')
+# pltr.plot_correlation(evl.novatel.cvl_acc,evl.novatel.deviation,'Novatel PwrPak7','acceleration [m/s²]')
+# pltr.plot_correlation(evl.tersus.cvl_acc,evl.tersus.deviation,'Tersus BX305','acceleration [m/s²]')
+# pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
+# pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')
+
+# pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')

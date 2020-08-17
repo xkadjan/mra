@@ -36,10 +36,10 @@ class Evaluator:
         self.ublox = self.ublox[self.ublox.status == 4]
 
     def filter_sigma(self):
-        self.novatel = self.novatel[self.novatel.deviation < (2 * self.get_precision(self.novatel))]
-        self.tersus = self.tersus[self.tersus.deviation < (2 * self.get_precision(self.tersus))]
-        self.ashtech = self.ashtech[self.ashtech.deviation < (2 * self.get_precision(self.ashtech))]
-        self.ublox = self.ublox[self.ublox.deviation < (2 * self.get_precision(self.ublox))]
+        self.novatel = self.novatel[self.novatel.deviation < (3 * self.get_precision(self.novatel))]
+        self.tersus = self.tersus[self.tersus.deviation < (3 * self.get_precision(self.tersus))]
+        self.ashtech = self.ashtech[self.ashtech.deviation < (3 * self.get_precision(self.ashtech))]
+        self.ublox = self.ublox[self.ublox.deviation < (3 * self.get_precision(self.ublox))]
 
     def get_make_boxes(self):
         self.novatel_by_speed = self.get_boxes(self.novatel,'cvl_speed',self.bounds_speed,'novatel')
