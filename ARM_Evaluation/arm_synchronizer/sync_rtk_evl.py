@@ -42,10 +42,21 @@ class Evaluator:
         self.ublox = self.ublox[self.ublox.status == 4]
 
     def filter_sigma(self):
-        self.novatel = self.novatel[self.novatel.deviation < (3 * self.get_precision(self.novatel))]
-        self.tersus = self.tersus[self.tersus.deviation < (3 * self.get_precision(self.tersus))]
-        self.ashtech = self.ashtech[self.ashtech.deviation < (3 * self.get_precision(self.ashtech))]
-        self.ublox = self.ublox[self.ublox.deviation < (3 * self.get_precision(self.ublox))]
+        self.novatel = self.make_sigma_filter(self.novatel,3)
+        self.tersus = self.make_sigma_filter(self.tersus,3)
+        self.ashtech = self.make_sigma_filter(self.ashtech,3)
+        self.ublox = self.make_sigma_filter(self.ublox,3)
+
+    def make_sigma_filter(self,rtk,multiplier):
+        # n = len(rtk.index)
+        # mean = self.get_accuracy(rtk.deviation)
+
+
+        mean = self.get_accuracy(rtk.deviation)
+        std = self.get_sigma(rtk)
+        rtk = rtk[rtk.deviation < mean + multiplier * std]
+        rtk = rtk[rtk.deviation > mean - multiplier * std]
+        return rtk
 
     def get_make_boxes(self):
         self.novatel_by_speed = self.get_boxes(self.novatel,'cvl_speed',self.bounds_speed,'novatel')
@@ -151,6 +162,11 @@ class Evaluator:
     def get_precision(self,rtk):
         # Precision (σerr) – standard deviation of error (stability of positioning)
         return float(np.sqrt(rtk.deviation.std()))
+        # return float(rtk.deviation.std() / np.sqrt(len(rtk.deviation)))
+
+    def get_sigma(self,rtk):
+        # -
+        return float(rtk.deviation.std())
 
     def get_rms(self,rtk):
         # RMS error (RMSerr) – value specified by the manufacturer (metric emphasizing large errors)

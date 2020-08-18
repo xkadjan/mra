@@ -223,9 +223,9 @@ class Plotter:
         left, width = 0.1, 0.75
         bottom, height = 0.07, 0.72
         spacing = 0.005
-        bins = bins#200
-        max_hist = max_hist
-        lim = 0.5
+        # bins = bins#200
+        # max_hist = max_hist
+        lim = 25
         color = 'w'
 
         rect_scatter = [left, bottom, width, height]
@@ -239,7 +239,7 @@ class Plotter:
 
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
-        ax_1.hist2d(x, y, bins=bins, cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
+        ax_1.hist2d(x, y, bins=bins, range=[[-max_hist,max_hist],[-max_hist,max_hist]], cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
         ax_1.set_xlabel('deviation to East [m]',size=14)
         ax_1.set_ylabel('deviation to North [m]',size=14)
         ax_1.set_xlim([-lim,lim])
@@ -288,14 +288,14 @@ class Plotter:
             xmax = 5
         else:
             bins = 2000
-            xmax = 50
+            xmax = 40
         fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
         ax.hist(dev, bins=bins, range=[0,xmax], density =True, color='C7')
         # title = 'Density of horizontal deviations from MRA - ' + label
         title = label
-        title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
-        title = title + '; σ_err = ' + '%.2f'%(results['σ_err']*100) + ' cm'
-        title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
+        # title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
+        # title = title + '; σ_err = ' + '%.2f'%(results['σ_err']*100) + ' cm'
+        # title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
         ax.set_title(title, size=10, loc='left')
         ax.plot([results['µ_err'],results['µ_err']],[0,35],color='y')
         ax.plot([results['σ_err'],results['σ_err']],[0,35],color='g')

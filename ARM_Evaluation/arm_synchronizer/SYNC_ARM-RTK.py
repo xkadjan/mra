@@ -77,7 +77,7 @@ if not new_preproccess:
 evl.get_deviations(rtk_list)
 if only_fix:
     evl.filter_fix()
-evl.filter_sigma()
+# evl.filter_sigma()
 evl.abs_acc()
 evl.get_make_boxes()
 evl.get_results(only_fix)
@@ -90,11 +90,17 @@ evl.csv_print(csv_dir,new_preproccess)
 # pltr.plot_devs(evl.ashtech,'ashtech',"b")
 # pltr.plot_devs(evl.ublox,'ublox',"m")
 
-# Print deviations (map,east,noth)
-pltr.plot_hist(evl.novatel,200,'Novatel PwrPak7',500,evl.results_novatel.iloc[0])
-pltr.plot_hist(evl.tersus,200,'Tersus BX305',500,evl.results_tersus.iloc[0])
-pltr.plot_hist(evl.ashtech,5000,'Ashtech MB800',500,evl.results_ashtech.iloc[0])
-pltr.plot_hist(evl.ublox,1000,'u-blox C94-M8P',500,evl.results_ublox.iloc[0])
+# # Print deviations (map,east,noth)
+if only_fix:
+    pltr.plot_hist(evl.novatel,2000,'Novatel PwrPak7',15,evl.results_novatel.iloc[0])
+    pltr.plot_hist(evl.tersus,2000,'Tersus BX305',15,evl.results_tersus.iloc[0])
+    pltr.plot_hist(evl.ashtech,2000,'Ashtech MB800',15,evl.results_ashtech.iloc[0])
+    pltr.plot_hist(evl.ublox,2000,'u-blox C94-M8P',15,evl.results_ublox.iloc[0])
+else:
+    pltr.plot_hist(evl.novatel,2000,'Novatel PwrPak7',15,evl.results_novatel.iloc[0])
+    pltr.plot_hist(evl.tersus,2000,'Tersus BX305',15,evl.results_tersus.iloc[0])
+    pltr.plot_hist(evl.ashtech,2000,'Ashtech MB800',15,evl.results_ashtech.iloc[0])
+    pltr.plot_hist(evl.ublox,2000,'u-blox C94-M8P',15,evl.results_ublox.iloc[0])
 
 #Print density
 pltr.plot_hist_dev(evl.novatel.deviation,'Novatel PwrPak7',evl.results_novatel.iloc[0])
