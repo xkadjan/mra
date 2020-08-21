@@ -15,7 +15,8 @@ import sync_plotting as plot
 # =============================================================================
 dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
 dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200327"
-csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RESULTS"
+# csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RESULTS"
+csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\Computers and Electronics in Agriculture\RESULTS"
 #csv_dir = os.path.join(dir_arm,'output')
 
 wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
@@ -30,7 +31,7 @@ if prefix == 'ped': slice_times = [0,90000]
 new_preproccess = False
 only_fix = False
 
-pltr = plot.Plotter(new_preproccess,only_fix)
+pltr = plot.Plotter(new_preproccess,only_fix,csv_dir)
 
 # =============================================================================
 # ARM:
@@ -91,16 +92,16 @@ evl.csv_print(csv_dir,new_preproccess)
 # pltr.plot_devs(evl.ublox,'ublox',"m")
 
 # # Print deviations (map,east,noth)
-if only_fix:
-    pltr.plot_hist(evl.novatel,2000,'Novatel PwrPak7',15,evl.results_novatel.iloc[0])
-    pltr.plot_hist(evl.tersus,2000,'Tersus BX305',15,evl.results_tersus.iloc[0])
-    pltr.plot_hist(evl.ashtech,2000,'Ashtech MB800',15,evl.results_ashtech.iloc[0])
-    pltr.plot_hist(evl.ublox,2000,'u-blox C94-M8P',15,evl.results_ublox.iloc[0])
-else:
-    pltr.plot_hist(evl.novatel,2000,'Novatel PwrPak7',15,evl.results_novatel.iloc[0])
-    pltr.plot_hist(evl.tersus,2000,'Tersus BX305',15,evl.results_tersus.iloc[0])
-    pltr.plot_hist(evl.ashtech,2000,'Ashtech MB800',15,evl.results_ashtech.iloc[0])
-    pltr.plot_hist(evl.ublox,2000,'u-blox C94-M8P',15,evl.results_ublox.iloc[0])
+# if only_fix:
+#     pltr.plot_hist(evl.novatel,2000,'Novatel PwrPak7',15,evl.results_novatel.iloc[0])
+#     pltr.plot_hist(evl.tersus,2000,'Tersus BX305',15,evl.results_tersus.iloc[0])
+#     pltr.plot_hist(evl.ashtech,2000,'Ashtech MB800',15,evl.results_ashtech.iloc[0])
+#     pltr.plot_hist(evl.ublox,2000,'u-blox C94-M8P',15,evl.results_ublox.iloc[0])
+# else:
+#     pltr.plot_hist(evl.novatel,2000,'Novatel PwrPak7',15,evl.results_novatel.iloc[0])
+#     pltr.plot_hist(evl.tersus,2000,'Tersus BX305',15,evl.results_tersus.iloc[0])
+#     pltr.plot_hist(evl.ashtech,2000,'Ashtech MB800',15,evl.results_ashtech.iloc[0])
+#     pltr.plot_hist(evl.ublox,2000,'u-blox C94-M8P',15,evl.results_ublox.iloc[0])
 
 #Print density
 pltr.plot_hist_dev(evl.novatel.deviation,'Novatel PwrPak7',evl.results_novatel.iloc[0])

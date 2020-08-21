@@ -125,13 +125,13 @@ class Evaluator:
 
     def evaluate(self,rtks,label,only_fix):
         results = pd.DataFrame(index=self.labels_rtk)
-        samples,µ_err,µ_err_east,µ_err_north,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[],[],[],[]
+        samples,µ_err,µ_err_east,µ_err_north,s_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[],[],[],[]
 
         for rtk in rtks: samples.append(self.get_samples(rtk))
         for rtk in rtks: µ_err.append(self.get_accuracy(rtk.deviation))
         for rtk in rtks: µ_err_east.append(self.get_accuracy(rtk.diff_east))
         for rtk in rtks: µ_err_north.append(self.get_accuracy(rtk.diff_north))
-        for rtk in rtks: σ_err.append(self.get_precision(rtk))
+        for rtk in rtks: s_err.append(self.get_precision(rtk))
         for rtk in rtks: RMS_err.append(self.get_rms(rtk))
         for rtk in rtks: CEP_err.append(self.get_cep(rtk))
         if not only_fix:
@@ -142,7 +142,7 @@ class Evaluator:
         results.insert(results.columns.size,'µ_err',µ_err)
         results.insert(results.columns.size,'µ_err_east',µ_err)
         results.insert(results.columns.size,'µ_err_north',µ_err)
-        results.insert(results.columns.size,'σ_err',σ_err)
+        results.insert(results.columns.size,'s_err',s_err)
         results.insert(results.columns.size,'RMS_err',RMS_err)
 #        results.insert(results.columns.size,'CEP_err',CEP_err)
         if not only_fix:
@@ -160,7 +160,7 @@ class Evaluator:
         return float(rtk.mean())
 
     def get_precision(self,rtk):
-        # Precision (σerr) – standard deviation of error (stability of positioning)
+        # Precision (serr) – standard deviation of error (stability of positioning)
         return float(np.sqrt(rtk.deviation.std()))
         # return float(rtk.deviation.std() / np.sqrt(len(rtk.deviation)))
 

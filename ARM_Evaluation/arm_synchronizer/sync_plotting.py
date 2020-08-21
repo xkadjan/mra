@@ -11,11 +11,13 @@ from matplotlib.colors import LogNorm
 from matplotlib.lines import Line2D
 import numpy as np
 import seaborn as sb
+import os
 
 class Plotter:
 #    ax: https://matplotlib.org/api/axes_api.html
-    def __init__(self,new_preproccess,only_fix):
+    def __init__(self,new_preproccess,only_fix,csv_dir):
         self.only_fix = only_fix
+        self.csv_dir = csv_dir
         if new_preproccess:
             self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
             self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
@@ -280,7 +282,8 @@ class Plotter:
         title = 'Horizontal positions deviations\n' + label#.split(' - ')[1]
         ax_histx.set_title(title, size=16, loc='left')
         plt.title('Density\n[%]', size=14, loc='left')
-        plt.show()
+        # plt.show()
+        fig.savefig(os.path.join(self.csv_dir, 'position_' + label + '.svg'))
 
     def plot_hist_dev(self,dev,label,results):
         if self.only_fix:
@@ -294,11 +297,11 @@ class Plotter:
         # title = 'Density of horizontal deviations from MRA - ' + label
         title = label
         # title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
-        # title = title + '; σ_err = ' + '%.2f'%(results['σ_err']*100) + ' cm'
+        # title = title + '; s_err = ' + '%.2f'%(results['s_err']*100) + ' cm'
         # title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
         ax.set_title(title, size=10, loc='left')
         ax.plot([results['µ_err'],results['µ_err']],[0,35],color='y')
-        ax.plot([results['σ_err'],results['σ_err']],[0,35],color='g')
+        ax.plot([results['s_err'],results['s_err']],[0,35],color='g')
         ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
         ax.set_xlabel('deviation [m]',size=10)
         ax.set_ylabel('density [%]',size=10)
@@ -309,6 +312,7 @@ class Plotter:
             # ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         else:
             ax.set_xlim([0,xmax])
+            ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
             ax.set_ylim([0.001,100])
             ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         ax.minorticks_on()
@@ -321,8 +325,9 @@ class Plotter:
                         Line2D([0], [0], color='y'),
                         Line2D([0], [0], color='g'),
                         Line2D([0], [0], color='b')]
-        ax.legend(custom_lines, ['density','µ_err', 'σ_err', 'RMS_err'],loc=1)
-        fig.show()
+        ax.legend(custom_lines, ['density','µ_err', 's_err', 'RMS_err'],loc=1)
+        # fig.show()
+        fig.savefig(os.path.join(self.csv_dir, 'deviation_' + label + '.jpg'))
 
     def plot_correlation(self,x_value,dev,label,x_value_name):
         fig, ax = plt.subplots(figsize=[10, 10], dpi=100, facecolor='w', edgecolor='r')
