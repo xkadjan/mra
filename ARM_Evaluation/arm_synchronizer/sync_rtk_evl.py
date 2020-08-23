@@ -69,6 +69,23 @@ class Evaluator:
         self.ashtech_by_acc = self.get_boxes(self.ashtech,'cvl_acc',self.bounds_acc,'ashtech')
         self.ublox_by_acc = self.get_boxes(self.ublox,'cvl_acc',self.bounds_acc,'ublox')
 
+    def adjust_status(self):
+        self.novatel['status'] = self.make_status_adjust(self.novatel['status'].values.astype(int).tolist())
+        self.tersus['status'] = self.make_status_adjust(self.tersus['status'].values.astype(int).tolist())
+        self.ashtech['status'] = self.make_status_adjust(self.ashtech['status'].values.astype(int).tolist())
+        self.ublox['status'] = self.make_status_adjust(self.ublox['status'].values.astype(int).tolist())
+
+    def make_status_adjust(self,old_status_list):
+        status_list = []
+        for status in old_status_list:
+            if status == 4:
+                status_list.append(2)
+            elif status == 5:
+                status_list.append(1)
+            else:
+                status_list.append(0)
+        return status_list
+
     def calculate_deviations(self,df):
         df['diff_east'] = df.rtk_east - df.arm_east
         df['diff_north'] = df.rtk_north - df.arm_north

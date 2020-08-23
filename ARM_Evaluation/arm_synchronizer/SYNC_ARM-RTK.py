@@ -29,7 +29,7 @@ if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 new_preproccess = False
-only_fix = True
+only_fix = False
 
 print("MRA synchronizer started")
 
@@ -83,6 +83,7 @@ if only_fix:
 # evl.filter_sigma()
 evl.abs_acc()
 evl.get_make_boxes()
+evl.adjust_status()
 evl.get_results(only_fix)
 evl.get_correlation()
 evl.csv_print(csv_dir,new_preproccess)
@@ -124,7 +125,7 @@ evl.csv_print(csv_dir,new_preproccess)
 # pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
 # pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')
 
-pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
-pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
-pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
-pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
+# pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')
