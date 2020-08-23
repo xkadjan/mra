@@ -219,7 +219,7 @@ class Plotter:
         self.fig_43.set_facecolor('whitesmoke')
         self.fig_43.show()
 
-    def plot_hist(self,rtk,bins,label,max_hist,results):
+    def plot_hist(self,rtk,label,results):
         # definitions for the axes
         x,y = rtk.diff_north, rtk.diff_east
         left, width = 0.1, 0.75
@@ -227,7 +227,23 @@ class Plotter:
         spacing = 0.005
         # bins = bins#200
         # max_hist = max_hist
-        lim = 25
+        if self.only_fix:
+            bins = 1000
+            max_hist = 7500
+            lim = 0.6
+            lim_xy = 0.6
+        else:
+            if ('Novatel' in label) or ('Tersus' in label):
+                bins = 1500
+                max_hist = 7500
+                lim = 1.5
+                lim_xy = 1.5
+            else:
+                bins = 6500
+                max_hist = 7500
+                lim = 10
+                lim_xy = 10
+
         color = 'w'
 
         rect_scatter = [left, bottom, width, height]
@@ -241,7 +257,7 @@ class Plotter:
 
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
-        ax_1.hist2d(x, y, bins=bins, range=[[-max_hist,max_hist],[-max_hist,max_hist]], cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
+        ax_1.hist2d(x, y, bins=bins, range=[[-lim_xy,lim_xy],[-lim_xy,lim_xy]], cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
         ax_1.set_xlabel('deviation to East [m]',size=14)
         ax_1.set_ylabel('deviation to North [m]',size=14)
         ax_1.set_xlim([-lim,lim])
@@ -253,10 +269,11 @@ class Plotter:
 
         # Hist x
         ax_histx = plt.axes(rect_histx)
-        ax_histx.hist(x, bins=bins, color='k',density = True)
+        ax_histx.hist(x, bins=bins, color='k', range=[-lim_xy,lim_xy])
         #ax_histx.set_ylabel('Number of \nsamles [-]',size=10)
         ax_histx.set_ylim([0,max_hist])
         ax_histx.set_xlim(ax_1.get_xlim())
+        # ax_histx.set_xlim(lim)
         ax_histx.minorticks_on()
         ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
         ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
@@ -264,10 +281,11 @@ class Plotter:
 
         # Hist y
         ax_histy = plt.axes(rect_histy)
-        ax_histy.hist(y, bins=bins, color='k', density = True, orientation='horizontal')
+        ax_histy.hist(y, bins=bins, color='k', range=[-lim_xy,lim_xy], orientation='horizontal')
         #ax_histy.set_xlabel('Number \n    [-]',size=10)
         ax_histy.set_xlim([0,max_hist])
         ax_histy.set_ylim(ax_1.get_ylim())
+        # ax_histy.set_ylim(lim)
         ax_histy.minorticks_on()
         ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
         ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
@@ -279,11 +297,12 @@ class Plotter:
         ax_histy.set_facecolor(color)
 
 
-        title = 'Horizontal positions deviations\n' + label#.split(' - ')[1]
+        # title = 'Horizontal positions deviations\n' + label#.split(' - ')[1]
+        title = label
         ax_histx.set_title(title, size=16, loc='left')
-        plt.title('Density\n[%]', size=14, loc='left')
+        plt.title('Samples\n[-]', size=14, loc='left')
         # plt.show()
-        fig.savefig(os.path.join(self.csv_dir, 'position_' + label + '.svg'))
+        fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
 
     def plot_hist_dev(self,dev,label,results):
         if self.only_fix:
@@ -299,25 +318,25 @@ class Plotter:
         # title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
         # title = title + '; s_err = ' + '%.2f'%(results['s_err']*100) + ' cm'
         # title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
-        ax.set_title(title, size=10, loc='left')
+        ax.set_title(title, size=14, loc='left')
         ax.plot([results['µ_err'],results['µ_err']],[0,35],color='y')
         ax.plot([results['s_err'],results['s_err']],[0,35],color='g')
         ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
-        ax.set_xlabel('deviation [m]',size=10)
-        ax.set_ylabel('density [%]',size=10)
+        ax.set_xlabel('deviation [m]',size=12)
+        ax.set_ylabel('density [%]',size=12)
         if self.only_fix:
-            ax.set_xlim([0,0.4])
+            ax.set_xlim([0,0.6])
             ax.set_ylim([0,35])
             # ax.set_ylim([0.001,100])
             # ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         else:
-            ax.set_xlim([0,xmax])
-            ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
+            ax.set_xlim([0.001,100])
+            ax.set_xscale("log",basex=10,subsx=[2,3,4,5,6,7,8,9])
             ax.set_ylim([0.001,100])
             ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
         ax.minorticks_on()
-        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=10)
-        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=10)
+        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=12)
+        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=11)
         ax.grid(True)
         fig.tight_layout()
 
@@ -325,9 +344,9 @@ class Plotter:
                         Line2D([0], [0], color='y'),
                         Line2D([0], [0], color='g'),
                         Line2D([0], [0], color='b')]
-        ax.legend(custom_lines, ['density','µ_err', 's_err', 'RMS_err'],loc=1)
+        ax.legend(custom_lines, [r'$density$', r'$µ_{err}$', r'$s_{err}$', r'$RMS_{err}$'], prop={'weight':'bold'}, loc=1)
         # fig.show()
-        fig.savefig(os.path.join(self.csv_dir, 'deviation_' + label + '.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'deviation_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
 
     def plot_correlation(self,x_value,dev,label,x_value_name):
         fig, ax = plt.subplots(figsize=[10, 10], dpi=100, facecolor='w', edgecolor='r')
@@ -352,6 +371,7 @@ class Plotter:
             square=False)
         ax.set_title(label + ' - pearsons correlations', size=10, loc='left')
         fig.tight_layout()
+        fig.savefig(os.path.join(self.csv_dir, 'pearson_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
 
     def plot_lmplot(self,data,label,x_value):
         g = sb.lmplot('cvl_' + x_value.split(' ')[0],'deviation',data,scatter_kws={"s": 2, "alpha": 0.3},legend=True)
