@@ -50,7 +50,7 @@ class Plotter:
     def plot_marks(self,arm):
         bold = 1
         self.plot_MARK(self.fig_2, self.ax_2, arm.arm_badhalls,'arm_badhalls','y',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5],'arm_badhall')
-        self.plot_MARK(self.fig_4, self.ax_4, arm.arm_badhalls,'arm_badhalls','y',bold,[-10,10],'arm_badhall')
+        # self.plot_MARK(self.fig_4, self.ax_4, arm.arm_badhalls,'arm_badhalls','y',bold,[-10,10],'arm_badhall')
 
         self.plot_MARK(self.fig_2, self.ax_2, arm.arm_halls,'arm_halls','k',bold,[arm.arm_20hz.east.min()-0.5,arm.arm_20hz.east.max()+0.5],'arm_hall')
         self.plot_MARK(self.fig_4, self.ax_4, arm.arm_halls,'arm_halls','k',bold,[-10,10],'arm_hall')
@@ -140,10 +140,10 @@ class Plotter:
         self.fig_3.show()
 
     def plot_utcSpeed(self,points_DF, rcv_name, rcv_color):
-        self.ax_4.plot(points_DF.utc_time, points_DF.raw_speed, 'k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5, label='raw_speed[m/s]')
-        self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc, 'k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5, label='raw_acc[m/s-2]')
-        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_speed, '-r', marker=".", linewidth=0.3, alpha=1, markersize=1.5, label='filtered_speed[m/s]')
-        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_acc, '-b', marker=".", linewidth=0.3, alpha=1, markersize=1.5, label='filtered_acc[m/s-2]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.raw_speed, 'darksalmon', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_speed[m/s]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc, 'skyblue', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_acc[m/s-2]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_speed, '-r', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_speed[m/s]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_acc, '-b', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_acc[m/s-2]')
         self.ax_4.set_title('Speed and acceleration in time', size=12, loc='left')
         self.ax_4.set_xlabel('time of day [s]',size=10)
         self.ax_4.set_ylabel('speed [mps] / acceleration [mps-2]',size=10)
@@ -155,18 +155,21 @@ class Plotter:
         self.ax_4.grid(True)
         self.ax_4.legend(loc=1)
         self.ax_4.set_ylim([-10,10])
+        self.ax_4.set_xlim([60585,60655])
+
         self.fig_4.tight_layout()
     #    plt.axis([points_DF.utc_time.min()-100, points_DF.utc_time.max()+100, -6, 10])
         self.fig_4.set_facecolor('whitesmoke')
         self.fig_4.show()
-        custom_lines = [Line2D([0], [0], color='k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5),
-                        Line2D([0], [0], color='k', marker=".", linewidth=0.3, alpha=0.4, markersize=1.5),
-                        Line2D([0], [0], color='r', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
-                        Line2D([0], [0], color='b', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
-                        Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
-                        Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6),
-                        patches.Rectangle((0,0),1,1, color='r', alpha=0.4)]
-        self.ax_4.legend(custom_lines, ['raw_speed','raw_acc', 'cvl_speed', 'cvl_acc','hall_bad','hall_correct','removed_period'],loc=1)
+        custom_lines = [Line2D([0], [0], color='darksalmon', marker=".", linewidth=1, alpha=1, markersize=2),
+                        Line2D([0], [0], color='skyblue', marker=".", linewidth=1, alpha=1, markersize=2),
+                        Line2D([0], [0], color='r', marker=".", linewidth=1, alpha=1, markersize=2),
+                        Line2D([0], [0], color='b', marker=".", linewidth=1, alpha=1, markersize=2),
+                        # Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+                        Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6)]#,
+                        # patches.Rectangle((0,0),1,1, color='r', alpha=0.4)]
+        # self.ax_4.legend(custom_lines, ['raw_speed','raw_acc', 'cvl_speed', 'cvl_acc','hall_bad','hall_correct','removed_period'],loc=1)
+        self.ax_4.legend(custom_lines, [r'$v_{r}$',r'$a_{r}$', r'$v_{f}$', r'$a_{f}$',r'$t_{h}$',],loc=1)
 
     #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
