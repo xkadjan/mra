@@ -5,7 +5,7 @@ Created on Fri Aug  9 14:57:48 2019
 @author: xkadj
 """
 
-import sync_armparser as arm
+import sync_armparser as arm_prs
 import sync_rtk_parser as rtk_prs
 import sync_rtk_evl as rtk_evl
 import sync_plotting as plot
@@ -39,7 +39,7 @@ pltr = plot.Plotter(new_preproccess,only_fix,csv_dir)
 # ARM:
 # =============================================================================
 if new_preproccess:
-    arm = arm.ArmParser(dir_arm,prefix)
+    arm = arm_prs.ArmParser(dir_arm,prefix)
     arm.parse_slices()
     #arm.slice_times(slice_times)
     arm.get_bad_cicles()
@@ -81,12 +81,31 @@ evl.get_deviations(rtk_list)
 if only_fix:
     evl.filter_fix()
 # evl.filter_sigma()
-evl.abs_acc()
+# evl.abs_acc()
 evl.get_make_boxes()
-evl.adjust_status()
+# evl.adjust_status()
 evl.get_results(only_fix)
 evl.get_correlation()
 evl.csv_print(csv_dir,new_preproccess)
+
+# Print deviatiton by status
+pltr.plot_boxplot(evl.novatel,'Novatel PwrPak7','status')
+pltr.plot_boxplot(evl.tersus,'Tersus BX305','status')
+pltr.plot_boxplot(evl.ashtech,'Ashtech MB800','status')
+pltr.plot_boxplot(evl.ublox,'u-blox C94-M8P','status')
+
+# Print deviatiton by phase:
+pltr.plot_boxplot(evl.novatel_by_acc,'Novatel PwrPak7','phase')
+pltr.plot_boxplot(evl.tersus_by_acc,'Tersus BX305','phase')
+pltr.plot_boxplot(evl.ashtech_by_acc,'Ashtech MB800','phase')
+pltr.plot_boxplot(evl.ublox_by_acc,'u-blox C94-M8P','phase')
+# =============================================================================
+# import numpy as np
+# import matplotlib.pyplot as plt
+# plt.scatter(evl.ashtech.status,evl.ashtech.deviation,marker ="_")
+# plt.scatter(evl.ashtech.status,evl.ashtech.cvl_speed,marker ="_")
+# plt.show()
+# =============================================================================
 
 # Print deviations (map,east,noth)
 # pltr.plot_devs(evl.novatel,'novatel',"g")

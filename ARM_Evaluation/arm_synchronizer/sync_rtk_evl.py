@@ -13,7 +13,8 @@ class Evaluator:
 
     def __init__(self):
         self.bounds_speed = [0,1,2.5,4,5.5,7,8.5,10]
-        self.bounds_acc = [-4,-3,-2,-1,0,1,2]
+        # self.bounds_acc = [-4,-3,-2,-1,0,1,2]
+        self.bounds_acc = [-4,-0.2,0.4,2]
         self.labels_speed = self.get_labels(self.bounds_speed,'m/s')
         self.labels_acc = self.get_labels(self.bounds_acc,'m/s²')
         self.labels_rtk = ['novatel', 'tersus', 'ashtech', 'ublox']

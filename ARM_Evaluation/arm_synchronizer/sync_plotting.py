@@ -379,3 +379,57 @@ class Plotter:
         .set(xlim=(0, 10), ylim=(0, 0.3),xticks=[0,2,4,6,8,10], yticks=[0,0.05,0.1,0.15])
         .fig.subplots_adjust(wspace=.02))
 
+    def plot_boxplot(self,data,label,mode):
+        if mode == 'status':
+            data_1 = np.array(data.deviation[data.status == 4])
+            data_2 = np.array(data.deviation[data.status == 5])
+            data_3 = np.array(data.deviation[data.status == 2])
+        elif mode == 'phase':
+            data_1 = np.array(data[0].deviation)
+            data_2 = np.array(data[1].deviation)
+            data_3 = np.array(data[2].deviation)
+        data = [data_1, data_2, data_3]
+
+        fig = plt.figure(figsize =(10, 2),facecolor='w', edgecolor='r',dpi=100)
+        ax = fig.add_subplot(111)
+
+        # Creating axes instance
+        bp = ax.boxplot(data,vert = False)
+
+        for cap in bp['caps']:
+            cap.set(color ='r',
+                    linewidth = 1)
+
+        for median in bp['medians']:
+            median.set(color ='red',
+                        linewidth = 1)
+
+        for flier in bp['fliers']:
+            flier.set(marker ='o',
+                      markersize = 0.2,
+                      color ='k',
+                      alpha = 0.2)
+
+        if mode == 'status':
+            ax.set_yticklabels(['fix', 'float','gnss'])
+        elif mode == 'phase':
+            ax.set_yticklabels(['ramp', 'constant speed','deceleration'])
+        ax.set_xlabel('deviation [m]',size=12)
+        ax.grid(True)
+
+        ax.set_xlim([0.00007,60])
+        ax.set_xscale("log",basex=10,subsx=[0,1,2,3,4,5,6,7,8,9])
+
+        # Adding title
+        ax.set_title(label, size=14, loc='left')
+        plt.tight_layout()
+
+        # Removing top axes and right axes
+        # ticks
+        ax.get_xaxis().tick_bottom()
+        ax.get_yaxis().tick_left()
+
+        # show plot
+        # plt.show(bp)
+        fig.savefig(os.path.join(self.csv_dir, 'deviations-state_' + mode + '_' + label + '.jpg'))
+
