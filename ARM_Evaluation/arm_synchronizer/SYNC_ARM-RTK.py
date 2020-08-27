@@ -28,8 +28,8 @@ if prefix == 'auto': slice_times = [57800,61500]
 if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
-new_preproccess = True
-only_fix = False
+new_preproccess = False
+only_fix = True
 
 print("MRA synchronizer started")
 
@@ -54,39 +54,43 @@ if new_preproccess:
     pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
     pltr.plot_marks(arm)
 
-# # =============================================================================
-# # RTK
-# # =============================================================================
-# if new_preproccess:
-#     rtk = rtk_prs.RtkParser(dir_rtk,wgs_ref)
-#     rtk.parse_slices(prefix)
-#     #rtk.slice_times(slice_times)
-#     rtk.drop_points_wo_arm(arm.arm_20hz)
-#     rtk.drop_points_wo_rtk(arm.arm_20hz)
-#     rtk_list = rtk.concate_arm_and_rtks()
+    # pltr.fig_4.savefig(os.path.join(csv_dir, 'slice.jpg'))
 
-#     pltr.plot_rtk(rtk.novatel,'novatel',"g")
-#     pltr.plot_rtk(rtk.tersus,'tersus',"y")
-#     pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
-#     pltr.plot_rtk(rtk.ublox,'ublox',"m")
+    pltr.plot_acc_density(arm.arm_20hz)
 
-# # =============================================================================
-# # EVL
-# # =============================================================================
-# evl = rtk_evl.Evaluator()
-# if not new_preproccess:
-#     evl.csv_load(csv_dir)
-#     rtk_list = evl.csv_load(csv_dir)
-# evl.get_deviations(rtk_list)
-# if only_fix:
-#     evl.filter_fix()
-# # evl.filter_sigma()
-# # evl.abs_acc()
-# evl.get_make_boxes()
-# # evl.adjust_status()
-# evl.get_results(only_fix)
-# evl.get_correlation()
-# evl.csv_print(csv_dir,new_preproccess)
+# =============================================================================
+# RTK
+# =============================================================================
+if new_preproccess:
+    rtk = rtk_prs.RtkParser(dir_rtk,wgs_ref)
+    rtk.parse_slices(prefix)
+    #rtk.slice_times(slice_times)
+    rtk.drop_points_wo_arm(arm.arm_20hz)
+    rtk.drop_points_wo_rtk(arm.arm_20hz)
+    rtk_list = rtk.concate_arm_and_rtks()
+
+    pltr.plot_rtk(rtk.novatel,'novatel',"g")
+    pltr.plot_rtk(rtk.tersus,'tersus',"y")
+    pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
+    pltr.plot_rtk(rtk.ublox,'ublox',"m")
+
+# =============================================================================
+# EVL
+# =============================================================================
+evl = rtk_evl.Evaluator()
+if not new_preproccess:
+    evl.csv_load(csv_dir)
+    rtk_list = evl.csv_load(csv_dir)
+evl.get_deviations(rtk_list)
+if only_fix:
+    evl.filter_fix()
+# evl.filter_sigma()
+# evl.abs_acc()
+evl.get_make_boxes()
+# evl.adjust_status()
+evl.get_results(only_fix)
+evl.get_correlation()
+evl.csv_print(csv_dir,new_preproccess)
 
 # # Print deviatiton by status
 # pltr.plot_boxplot(evl.novatel,'Novatel PwrPak7','status')

@@ -144,13 +144,13 @@ class Plotter:
         self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc, 'skyblue', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_acc[m/s-2]')
         self.ax_4.plot(points_DF.utc_time, points_DF.cvl_speed, '-r', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_speed[m/s]')
         self.ax_4.plot(points_DF.utc_time, points_DF.cvl_acc, '-b', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_acc[m/s-2]')
-        self.ax_4.set_title('Speed and acceleration in time', size=12, loc='left')
-        self.ax_4.set_xlabel('time of day [s]',size=10)
-        self.ax_4.set_ylabel('speed [mps] / acceleration [mps-2]',size=10)
+        self.ax_4.set_title('Speed and acceleration in time', size=14, loc='left')
+        self.ax_4.set_xlabel('time of day [s]',size=12)
+        self.ax_4.set_ylabel('speed [mps] / acceleration [mps-2]',size=12)
         #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
         #plt.majorticks_on()
         self.ax_4.minorticks_on()
-        self.ax_4.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
+        self.ax_4.tick_params(axis='both',which='major',length=10,width=1,labelsize=12)
         #plt.axes().set_aspect('equal', 'datalim')
         self.ax_4.grid(True)
         self.ax_4.legend(loc=1)
@@ -435,4 +435,24 @@ class Plotter:
         # show plot
         # plt.show(bp)
         fig.savefig(os.path.join(self.csv_dir, 'deviations-state_' + mode + '_' + label + '.jpg'))
+
+    def plot_acc_density(self,arm_20hz):
+        fig, ax = plt.subplots(figsize=[5,5], dpi=100, facecolor='w', edgecolor='r')
+        ax.hist(arm_20hz.cvl_acc, bins=500, range=[arm_20hz.cvl_acc.min(),arm_20hz.cvl_acc.max()], density =True, color='C7')
+        title = 'Acceleration density'
+        ax.set_title(title, size=14, loc='left')
+        ax.set_xlabel('acceleration [m*s-2]',size=12)
+        ax.set_ylabel('density [%]',size=12)
+
+        ax.set_xlim([-4,2])
+        ax.set_ylim([0.001,10])
+        ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
+
+        ax.minorticks_on()
+        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=12)
+        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=11)
+        ax.grid(True)
+        fig.tight_layout()
+
+        fig.savefig(os.path.join(self.csv_dir, 'density-acc+speed.jpg'))
 
