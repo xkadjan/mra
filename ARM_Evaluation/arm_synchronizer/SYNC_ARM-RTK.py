@@ -50,13 +50,12 @@ if new_preproccess:
     arm.drop_zero_acc()
     arm.drop_limit_acc()
 
-    #pltr.plot_arm(arm.arm_async,'arm_async','k')
-    pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
-    pltr.plot_marks(arm)
+    # #pltr.plot_arm(arm.arm_async,'arm_async','k')
+    # pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
+    # pltr.plot_marks(arm)
 
     # pltr.fig_4.savefig(os.path.join(csv_dir, 'slice.jpg'))
-
-    pltr.plot_acc_density(arm.arm_20hz)
+    # pltr.plot_acc_density(arm.arm_20hz)
 
 # =============================================================================
 # RTK
@@ -92,11 +91,14 @@ evl.get_results(only_fix)
 evl.get_correlation()
 evl.csv_print(csv_dir,new_preproccess)
 
+evl.get_spearman()
+evl.get_median()
+
 # # Print deviatiton by status
-# pltr.plot_boxplot(evl.novatel,'Novatel PwrPak7','status')
-# pltr.plot_boxplot(evl.tersus,'Tersus BX305','status')
-# pltr.plot_boxplot(evl.ashtech,'Ashtech MB800','status')
-# pltr.plot_boxplot(evl.ublox,'u-blox C94-M8P','status')
+pltr.plot_boxplot(evl.novatel,'Novatel PwrPak7','status')
+pltr.plot_boxplot(evl.tersus,'Tersus BX305','status')
+pltr.plot_boxplot(evl.ashtech,'Ashtech MB800','status')
+pltr.plot_boxplot(evl.ublox,'u-blox C94-M8P','status')
 
 # # Print deviatiton by phase:
 # pltr.plot_boxplot(evl.novatel_by_acc,'Novatel PwrPak7','phase')

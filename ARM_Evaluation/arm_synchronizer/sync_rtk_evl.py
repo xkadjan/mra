@@ -8,6 +8,7 @@ Created on Mon May 11 11:02:34 2020
 import os
 import pandas as pd
 import numpy as np
+from scipy.stats import spearmanr
 
 class Evaluator:
 
@@ -219,3 +220,32 @@ class Evaluator:
         self.tersus["cvl_acc"] = self.tersus["cvl_acc"].abs()
         self.ashtech["cvl_acc"] = self.novatel["cvl_acc"].abs()
         self.ublox["cvl_acc"] = self.ublox["cvl_acc"].abs()
+
+    def get_spearman(self):
+        self.print_spearman(self.novatel,'novatel')
+        self.print_spearman(self.tersus,'tersus')
+        self.print_spearman(self.ashtech,'ashtech')
+        self.print_spearman(self.ublox,'ublox')
+
+    def print_spearman(self,rtk,label):
+        print(label + ':')
+        corr, p_value = spearmanr(rtk.cvl_speed, rtk.deviation)
+        print('cvl_speed/deviation: coor=' + str(corr) + '; p-value=' + str(p_value))
+        corr, p_value = spearmanr(rtk.cvl_acc, rtk.deviation)
+        print('cvl_acc/deviation: coor=' + str(corr) + '; p-value=' + str(p_value))
+
+    def get_median(self):
+        self.print_median(self.novatel,self.novatel_by_acc,'novatel')
+        self.print_median(self.tersus,self.tersus_by_acc,'tersus')
+        self.print_median(self.ashtech,self.ashtech_by_acc,'ashtech')
+        self.print_median(self.ublox,self.ublox_by_acc,'ublox')
+
+    def print_median(self,rtk,rtk_acc,label):
+        print('\n*******************' + label + ':')
+        me = [rtk.deviation[rtk.status == 4].median(),rtk.deviation[rtk.status == 5].median(),rtk.deviation[rtk.status == 2].median()]
+        print('median: FIX=' + str(me[0]) + '; FLOAT' + str(me[1]) + '; GNSS' + str(me[2]))
+
+        me = [rtk_acc[0].deviation.median(),rtk_acc[1].deviation.median(),rtk_acc[2].deviation.median()]
+        print('median: DECELERATION=' + str(me[0]) + '; CONSTANT=' + str(me[1]) + '; RAMP=' + str(me[2]))
+
+
