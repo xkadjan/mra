@@ -31,6 +31,11 @@ if prefix == 'ped': slice_times = [0,90000]
 new_preproccess = False
 only_fix = True
 
+if only_fix:
+    measurement = 'FIX state epoch'
+else:
+    measurement = 'Whole measurement'
+
 print("MRA synchronizer started")
 
 pltr = plot.Plotter(new_preproccess,only_fix,csv_dir)
@@ -88,23 +93,25 @@ if only_fix:
 evl.get_make_boxes()
 # evl.adjust_status()
 evl.get_results(only_fix)
-evl.get_correlation()
+
 evl.csv_print(csv_dir,new_preproccess)
 
+evl.get_correlation()
 evl.get_spearman()
 evl.get_median()
 
-# # Print deviatiton by status
-pltr.plot_boxplot(evl.novatel,'Novatel PwrPak7','status')
-pltr.plot_boxplot(evl.tersus,'Tersus BX305','status')
-pltr.plot_boxplot(evl.ashtech,'Ashtech MB800','status')
-pltr.plot_boxplot(evl.ublox,'u-blox C94-M8P','status')
+# # # Print deviatiton by status
+# pltr.plot_boxplot(evl.novatel,'Novatel PwrPak7','status',measurement)
+# pltr.plot_boxplot(evl.tersus,'Tersus BX305','status',measurement)
+# pltr.plot_boxplot(evl.ashtech,'Ashtech MB800','status',measurement)
+# pltr.plot_boxplot(evl.ublox,'u-blox C94-M8P','status',measurement)
 
 # # Print deviatiton by phase:
-# pltr.plot_boxplot(evl.novatel_by_acc,'Novatel PwrPak7','phase')
-# pltr.plot_boxplot(evl.tersus_by_acc,'Tersus BX305','phase')
-# pltr.plot_boxplot(evl.ashtech_by_acc,'Ashtech MB800','phase')
-# pltr.plot_boxplot(evl.ublox_by_acc,'u-blox C94-M8P','phase')
+# pltr.plot_boxplot(evl.novatel_by_acc,'Novatel PwrPak7','phase',measurement)
+# pltr.plot_boxplot(evl.tersus_by_acc,'Tersus BX305','phase',measurement)
+# pltr.plot_boxplot(evl.ashtech_by_acc,'Ashtech MB800','phase',measurement)
+# pltr.plot_boxplot(evl.ublox_by_acc,'u-blox C94-M8P','phase',measurement)
+
 # # =============================================================================
 # # import numpy as np
 # # import matplotlib.pyplot as plt
@@ -126,11 +133,11 @@ pltr.plot_boxplot(evl.ublox,'u-blox C94-M8P','status')
 # # pltr.plot_hist(evl.ublox,'u-blox C94-M8P',evl.results_ublox.iloc[0])
 
 
-# # #Print density
-# # pltr.plot_hist_dev(evl.novatel.deviation,'Novatel PwrPak7',evl.results_novatel.iloc[0])
-# # pltr.plot_hist_dev(evl.tersus.deviation,'Tersus BX305',evl.results_tersus.iloc[0])
-# # pltr.plot_hist_dev(evl.ashtech.deviation,'Ashtech MB800',evl.results_ashtech.iloc[0])
-# # pltr.plot_hist_dev(evl.ublox.deviation,'u-blox C94-M8P',evl.results_ublox.iloc[0])
+#Print density
+pltr.plot_hist_dev(evl.novatel.deviation,'Novatel PwrPak7',evl.results_novatel.iloc[0],measurement)
+pltr.plot_hist_dev(evl.tersus.deviation,'Tersus BX305',evl.results_tersus.iloc[0],measurement)
+pltr.plot_hist_dev(evl.ashtech.deviation,'Ashtech MB800',evl.results_ashtech.iloc[0],measurement)
+pltr.plot_hist_dev(evl.ublox.deviation,'u-blox C94-M8P',evl.results_ublox.iloc[0],measurement)
 
 # # pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
 # # pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')

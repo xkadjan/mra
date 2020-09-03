@@ -307,7 +307,7 @@ class Plotter:
         # plt.show()
         fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
 
-    def plot_hist_dev(self,dev,label,results):
+    def plot_hist_dev(self,dev,label,results,measurement):
         if self.only_fix:
             bins = 2000
             xmax = 5
@@ -321,14 +321,15 @@ class Plotter:
         # title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
         # title = title + '; s_err = ' + '%.2f'%(results['s_err']*100) + ' cm'
         # title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
-        ax.set_title(title, size=14, loc='left')
+        # ax.set_title(title, size=14, loc='left')
+        ax.set_title(label + ' - ' + measurement, size=14, loc='left')
         ax.plot([results['µ_err'],results['µ_err']],[0,35],color='y')
         ax.plot([results['s_err'],results['s_err']],[0,35],color='g')
         ax.plot([results['RMS_err'],results['RMS_err']],[0,35],color='b')
         ax.set_xlabel('deviation [m]',size=12)
         ax.set_ylabel('density [%]',size=12)
         if self.only_fix:
-            ax.set_xlim([0,0.6])
+            ax.set_xlim([0,0.7])
             ax.set_ylim([0,35])
             # ax.set_ylim([0.001,100])
             # ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
@@ -337,9 +338,11 @@ class Plotter:
             ax.set_xscale("log",basex=10,subsx=[2,3,4,5,6,7,8,9])
             ax.set_ylim([0.001,100])
             ax.set_yscale("log",basey=10,subsy=[2,3,4,5,6,7,8,9])
+            ax.set_yticks((0.001,0.01,0.1,1,10,100))
+            # ax.set_yticklabels([0.001,0.01,0.1,1,10])
         ax.minorticks_on()
-        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=12)
-        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=11)
+        ax.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
+        ax.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
         ax.grid(True)
         fig.tight_layout()
 
@@ -382,7 +385,7 @@ class Plotter:
         .set(xlim=(0, 10), ylim=(0, 0.3),xticks=[0,2,4,6,8,10], yticks=[0,0.05,0.1,0.15])
         .fig.subplots_adjust(wspace=.02))
 
-    def plot_boxplot(self,data,label,mode):
+    def plot_boxplot(self,data,label,mode,measurement):
         if mode == 'status':
             data_1 = np.array(data.deviation[data.status == 4])
             data_2 = np.array(data.deviation[data.status == 5])
@@ -424,7 +427,7 @@ class Plotter:
         ax.set_xscale("log",basex=10,subsx=[0,1,2,3,4,5,6,7,8,9])
 
         # Adding title
-        ax.set_title(label, size=14, loc='left')
+        ax.set_title(label + ' - ' + measurement, size=14, loc='left')
         plt.tight_layout()
 
         # Removing top axes and right axes
@@ -434,7 +437,7 @@ class Plotter:
 
         # show plot
         # plt.show(bp)
-        fig.savefig(os.path.join(self.csv_dir, 'deviations-state_' + mode + '_' + label + '.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'deviations-state_' + (measurement) + '_' + mode + '_' + label + '.jpg'))
 
     def plot_acc_density(self,arm_20hz):
         fig, ax = plt.subplots(figsize=[5,5], dpi=100, facecolor='w', edgecolor='r')
