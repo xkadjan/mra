@@ -222,7 +222,7 @@ class Plotter:
         self.fig_43.set_facecolor('whitesmoke')
         self.fig_43.show()
 
-    def plot_hist(self,rtk,label,results):
+    def plot_hist(self,rtk,label,results,measurement):
         # definitions for the axes
         x,y = rtk.diff_north, rtk.diff_east
         left, width = 0.1, 0.75
@@ -236,12 +236,12 @@ class Plotter:
             lim = 0.6
             lim_xy = 0.6
         else:
-            if ('Novatel' in label) or ('Tersus' in label):
+            if ('Receiver A' in label) or ('Receiver B' in label):
                 bins = 1500
                 max_hist = 7500
                 lim = 1.5
                 lim_xy = 1.5
-            else:
+            elif ('Receiver C' in label) or ('Receiver D' in label):
                 bins = 6500
                 max_hist = 7500
                 lim = 10
@@ -269,6 +269,17 @@ class Plotter:
         ax_1.tick_params(axis='both',which='major',length=5,width=1,labelsize=0)
         ax_1.set_aspect('equal', 'datalim')
         ax_1.grid(True)
+        if not self.only_fix:
+            if ('Receiver A' in label) or ('Receiver B' in label):
+                ax_1.set_xticks([-1,-0.5,0,0.5,1])
+                ax_1.set_yticks([-1,-0.5,0,0.5,1])
+                ax_1.set_xticklabels([-1,-0.5,0,0.5,1])
+                ax_1.set_yticklabels([-1,-0.5,0,0.5,1])
+            elif ('Receiver C' in label) or ('Receiver D' in label):
+                ax_1.set_xticks([-7.5,-5,-2.5,0,2.5,5,7.5])
+                ax_1.set_yticks([-7.5,-5,-2.5,0,2.5,5,7.5])
+                ax_1.set_xticklabels([-7.5,-5,-2.5,0,2.5,5,7.5])
+                ax_1.set_yticklabels([-7.5,-5,-2.5,0,2.5,5,7.5])
 
         # Hist x
         ax_histx = plt.axes(rect_histx)
@@ -302,7 +313,7 @@ class Plotter:
 
         # title = 'Horizontal positions deviations\n' + label#.split(' - ')[1]
         title = label
-        ax_histx.set_title(title, size=16, loc='left')
+        ax_histx.set_title(label + ' - ' + measurement, size=16, loc='left')
         plt.title('Samples\n[-]', size=14, loc='left')
         # plt.show()
         fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
@@ -317,7 +328,7 @@ class Plotter:
         fig, ax = plt.subplots(figsize=[10, 3], dpi=100, facecolor='w', edgecolor='r')
         ax.hist(dev, bins=bins, range=[0,xmax], density =True, color='C7')
         # title = 'Density of horizontal deviations from MRA - ' + label
-        title = label
+        # title = label
         # title = title + '\n µ_err = ' + '%.2f'%(results['µ_err']*100) + ' cm'
         # title = title + '; s_err = ' + '%.2f'%(results['s_err']*100) + ' cm'
         # title = title + '; RMS_err = ' + '%.2f'%(results['RMS_err']*100) + ' cm'
