@@ -223,18 +223,21 @@ class Plotter:
         self.fig_43.show()
 
     def plot_hist(self,rtk,label,results,measurement):
-        # definitions for the axes
-        x,y = rtk.diff_north, rtk.diff_east
+        x,y = rtk.diff_east, rtk.diff_north
         left, width = 0.1, 0.75
-        bottom, height = 0.07, 0.72
+        bottom, height = 0.1, 0.75
         spacing = 0.005
-        # bins = bins#200
-        # max_hist = max_hist
+        color = 'w'
+
+        rect_scatter = [left, bottom, width, height]
+        rect_histx = [left, bottom + height + spacing, width, 0.1]
+        rect_histy = [left + width + spacing, bottom, 0.1, height]
+
         if self.only_fix:
             bins = 1000
             max_hist = 7500
-            lim = 0.6
-            lim_xy = 0.6
+            lim = 0.59
+            lim_xy = 0.59
         else:
             if ('Receiver A' in label) or ('Receiver B' in label):
                 bins = 1500
@@ -243,35 +246,18 @@ class Plotter:
                 lim_xy = 1.4
             elif ('Receiver C' in label) or ('Receiver D' in label):
                 bins = 6500
-                max_hist = 7500
-                lim = 10
-                lim_xy = 10
+                max_hist = 3000
+                lim = 9.5
+                lim_xy = 9.5
 
-        rect_scatter = [left, bottom, width, height]
-        rect_histx = [left, bottom + height + spacing, width, 0.1]
-        rect_histy = [left + width + spacing, bottom, 0.1, height]
-
-        # start with a rectangular Figure
         fig = plt.figure(num=self.count_hist,figsize=(8, 8),facecolor='whitesmoke', edgecolor='r')
         self.count_hist += 1
-#        fig.show()
 
         # 2D hist
         ax_1 = plt.axes(rect_scatter)
         ax_1.hist2d(x, y, bins=bins, range=[[-lim_xy,lim_xy],[-lim_xy,lim_xy]], cmap=plt.cm.gist_heat,norm=LogNorm(),alpha=1)
-        ax_1.set_xlabel('deviation to East [m]',size=14)
-        ax_1.set_ylabel('deviation to North [m]',size=14)
-        if not self.only_fix:
-            if ('Receiver A' in label) or ('Receiver B' in label):
-                ax_1.set_xticks([-1,-0.5,0,0.5,1])
-                ax_1.set_yticks([-1,-0.5,0,0.5,1])
-                ax_1.set_xticklabels([-1,-0.5,0,0.5,1])
-                ax_1.set_yticklabels([-1,-0.5,0,0.5,1])
-            elif ('Receiver C' in label) or ('Receiver D' in label):
-                ax_1.set_xticks([-7.5,-5,-2.5,0,2.5,5,7.5])
-                ax_1.set_yticks([-7.5,-5,-2.5,0,2.5,5,7.5])
-                ax_1.set_xticklabels([-7.5,-5,-2.5,0,2.5,5,7.5])
-                ax_1.set_yticklabels([-7.5,-5,-2.5,0,2.5,5,7.5])
+        ax_1.set_xlabel('deviation to East [m]',size=18)
+        ax_1.set_ylabel('deviation to North [m]',size=18)
         ax_1.set_xlim([-lim,lim])
         ax_1.set_ylim([-lim,lim])
         ax_1.minorticks_on()
@@ -279,42 +265,37 @@ class Plotter:
         ax_1.set_aspect('equal', 'datalim')
         ax_1.grid(True)
 
-        # # Hist x
+        # Hist x
         ax_histx = plt.axes(rect_histx)
         ax_histx.hist(x, bins=bins, color='k', range=[-lim_xy,lim_xy])
         #ax_histx.set_ylabel('Number of \nsamles [-]',size=10)
         ax_histx.set_ylim([0,max_hist])
-        # ax_histx.set_xlim(ax_1.get_xlim())
-        ax_histx.set_xlim([-lim,lim])
-        # ax_histx.set_xlim(lim)
+        ax_histx.set_xlim(ax_1.get_xlim())
         ax_histx.minorticks_on()
-        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
-        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
+        ax_histx.tick_params(axis='y',which='major',length=10,width=1,labelsize=18)
+        ax_histx.tick_params(axis='x',which='major',length=10,width=1,labelsize=18)
         ax_histx.grid(True)
 
         # Hist y
         ax_histy = plt.axes(rect_histy)
-        ax_histy.hist(y, bins=bins, color='k', range=[-lim_xy,lim_xy], orientation='horizontal')
-        #ax_histy.set_xlabel('Number \n    [-]',size=10)
+        ax_histy.hist(y, bins=bins, color='k', orientation='horizontal', range=[-lim_xy,lim_xy])
+        #ax_histy.set_xlabel('Number of \nsamles [-]',size=10)
         ax_histy.set_xlim([0,max_hist])
-        ax_histy.set_ylim([-lim,lim])
-        # ax_histy.set_ylim(ax_1.get_ylim())
-
-        # ax_histy.set_ylim(lim)
+        ax_histy.set_ylim(ax_1.get_ylim())
         ax_histy.minorticks_on()
-        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=14)
-        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=14)
+        ax_histy.tick_params(axis='y',which='major',length=10,width=1,labelsize=18)
+        ax_histy.tick_params(axis='x',which='major',length=10,width=1,labelsize=18)
         ax_histy.grid(True)
 
-        # plt.tight_layout()
-        # ax_1.set_facecolor(color)
-        # ax_histx.set_facecolor(color)
-        # ax_histy.set_facecolor(color)
+        #plt.tight_layout()
+        ax_1.set_facecolor(color)
+        ax_histx.set_facecolor(color)
+        ax_histy.set_facecolor(color)
+        ax_histx.set_title(label + ' - ' + measurement, size=20, loc='left')
+        plt.title('Samples\n[-]', size=18, loc='left')
 
-        ax_histx.set_title(label + ' - ' + measurement, size=16, loc='left')
-        plt.title('Samples\n[-]', size=14, loc='left')
-        plt.show()
         fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
+        # plt.show()
 
     def plot_hist_dev(self,dev,label,results,measurement):
         if self.only_fix:
@@ -360,7 +341,7 @@ class Plotter:
                         Line2D([0], [0], color='g'),
                         Line2D([0], [0], color='b')]
         ax.legend(custom_lines, [r'$density$', r'$µ_{err}$', r'$s_{err}$', r'$RMS_{err}$'], prop={'weight':'bold'}, loc=1)
-        # fig.show()
+        fig.show()
         fig.savefig(os.path.join(self.csv_dir, 'deviation_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
 
     def plot_correlation(self,x_value,dev,label,x_value_name):

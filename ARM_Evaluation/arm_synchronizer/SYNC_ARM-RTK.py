@@ -29,7 +29,7 @@ if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 new_preproccess = False
-only_fix = False
+only_fix = True
 
 if only_fix:
     measurement = 'FIX state epoch'
@@ -130,9 +130,9 @@ rtk_names = ['Receiver A', 'Receiver B', 'Receiver C', 'Receiver D']
 
 # Print deviations (map,east,noth)
 pltr.plot_hist(evl.novatel,rtk_names[0],evl.results_novatel.iloc[0],measurement)
-# pltr.plot_hist(evl.tersus,rtk_names[1],evl.results_tersus.iloc[0],measurement)
-# pltr.plot_hist(evl.ashtech,rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-# pltr.plot_hist(evl.ublox,rtk_names[3],evl.results_ublox.iloc[0],measurement)
+pltr.plot_hist(evl.tersus,rtk_names[1],evl.results_tersus.iloc[0],measurement)
+pltr.plot_hist(evl.ashtech,rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+pltr.plot_hist(evl.ublox,rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
 # #Print density
 # pltr.plot_hist_dev(evl.novatel.deviation,rtk_names[0],evl.results_novatel.iloc[0],measurement)
