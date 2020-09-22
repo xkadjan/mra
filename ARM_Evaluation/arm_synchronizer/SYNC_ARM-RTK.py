@@ -29,7 +29,7 @@ if prefix == 'car': slice_times = [71800,76000]
 if prefix == 'ped': slice_times = [0,90000]
 
 new_preproccess = False
-only_fix = True
+only_fix = False
 
 if only_fix:
     measurement = 'FIX state epoch'
@@ -102,17 +102,17 @@ evl.get_median()
 
 rtk_names = ['Receiver A', 'Receiver B', 'Receiver C', 'Receiver D']
 
-# # # Print deviatiton by status
-# pltr.plot_boxplot(evl.novatel,rtk_names[0],'status',measurement)
-# pltr.plot_boxplot(evl.tersus,rtk_names[1],'status',measurement)
-# pltr.plot_boxplot(evl.ashtech,rtk_names[2],'status',measurement)
-# pltr.plot_boxplot(evl.ublox,rtk_names[3],'status',measurement)
+# # Print deviatiton by status
+pltr.plot_boxplot(evl.novatel,rtk_names[0],'status',measurement)
+pltr.plot_boxplot(evl.tersus,rtk_names[1],'status',measurement)
+pltr.plot_boxplot(evl.ashtech,rtk_names[2],'status',measurement)
+pltr.plot_boxplot(evl.ublox,rtk_names[3],'status',measurement)
 
-# # Print deviatiton by phase:
-# pltr.plot_boxplot(evl.novatel_by_acc,rtk_names[0],'phase',measurement)
-# pltr.plot_boxplot(evl.tersus_by_acc,rtk_names[1],'phase',measurement)
-# pltr.plot_boxplot(evl.ashtech_by_acc,rtk_names[2],'phase',measurement)
-# pltr.plot_boxplot(evl.ublox_by_acc,rtk_names[3],'phase',measurement)
+# Print deviatiton by phase:
+pltr.plot_boxplot(evl.novatel_by_acc,rtk_names[0],'phase',measurement)
+pltr.plot_boxplot(evl.tersus_by_acc,rtk_names[1],'phase',measurement)
+pltr.plot_boxplot(evl.ashtech_by_acc,rtk_names[2],'phase',measurement)
+pltr.plot_boxplot(evl.ublox_by_acc,rtk_names[3],'phase',measurement)
 
 # # =============================================================================
 # # import numpy as np
@@ -128,11 +128,11 @@ rtk_names = ['Receiver A', 'Receiver B', 'Receiver C', 'Receiver D']
 # # pltr.plot_devs(evl.ashtech,'ashtech',"b")
 # # pltr.plot_devs(evl.ublox,'ublox',"m")
 
-# Print deviations (map,east,noth)
-pltr.plot_hist(evl.novatel,rtk_names[0],evl.results_novatel.iloc[0],measurement)
-pltr.plot_hist(evl.tersus,rtk_names[1],evl.results_tersus.iloc[0],measurement)
-pltr.plot_hist(evl.ashtech,rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-pltr.plot_hist(evl.ublox,rtk_names[3],evl.results_ublox.iloc[0],measurement)
+# # Print deviations (map,east,noth)
+# pltr.plot_hist(evl.novatel,rtk_names[0],evl.results_novatel.iloc[0],measurement)
+# pltr.plot_hist(evl.tersus,rtk_names[1],evl.results_tersus.iloc[0],measurement)
+# pltr.plot_hist(evl.ashtech,rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+# pltr.plot_hist(evl.ublox,rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
 # #Print density
 # pltr.plot_hist_dev(evl.novatel.deviation,rtk_names[0],evl.results_novatel.iloc[0],measurement)

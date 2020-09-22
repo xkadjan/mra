@@ -246,7 +246,7 @@ class Plotter:
                 lim_xy = 1.4
             elif ('Receiver C' in label) or ('Receiver D' in label):
                 bins = 6500
-                max_hist = 3000
+                max_hist = 7500
                 lim = 9.5
                 lim_xy = 9.5
 
@@ -407,9 +407,9 @@ class Plotter:
                       alpha = 0.2)
 
         if mode == 'status':
-            ax.set_yticklabels(['fix', 'float','gnss'])
+            ax.set_yticklabels(['FIX', 'FLOAT','GNSS'])
         elif mode == 'phase':
-            ax.set_yticklabels(['ramp', 'constant speed','deceleration'])
+            ax.set_yticklabels(['ACC', 'UNIF','DEC'])
         ax.set_xlabel('deviation [m]',size=12)
         ax.grid(True)
 
