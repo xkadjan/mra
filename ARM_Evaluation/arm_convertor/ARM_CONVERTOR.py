@@ -2,11 +2,11 @@
 import os
 import numpy as np
 import arm_processor as proc
-import arm_plotter as plt
 import configargparse
+import warnings
 
 def configArgParser():
-    description = '   Measurement Robotic Arm (MRA), The MIT License (MIT), Copyright (c) 2019 CULS Prague TF\nprogrammed by: Jan Kaderabek\n'
+    description = '   Measurement Robotic Arm (MRA), The MIT License (MIT), Copyright (c) 2019 CULS Prague TF\ndeveloped by: Jan Kaderabek\n'
     parser = configargparse.ArgParser(default_config_files=['config.ini'], description=description)
 
     # Arguments below are defaultly reading from configfile
@@ -21,9 +21,18 @@ def configArgParser():
     args = parser.parse()
     return args
 
+def checkFolder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+warnings.filterwarnings("ignore")
+
 args = configArgParser()
 
-dir_rtk = os.path.join(args.data_path,'dewesoft_converted')
+input_dir = args.data_path
+output_dir = checkFolder(os.path.join(args.data_path,'arm_converted'))
+
 wgs_ref = np.array([args.wgs_ref]) #RTK-VRS
 wgs_ref2 = np.array([args.wgs_ref_2])#RTK-VRS
 
@@ -32,22 +41,18 @@ Radius = args.radius
 artifical_angle_offset = args.angle_offset
 rate_hz = args.rate_hz
 enc_tol = args.enc_tol
-dir = os.path.join(args.data_path,'arm_raw')
-output_dir = os.path.join(args.data_path,'arm_converted')
 
-folders_list = [x[0] for x in os.walk(dir)]
-f = 20
+folders_list = [x[0] for x in os.walk(input_dir)]
 error_files = []
 for measurement_dir in folders_list[1:]:
     if "unused" in measurement_dir: continue
     measurement_name = measurement_dir.split('\\')[-1]
-    print(" - folder name: " + str(measurement_name))
+    print(" - ARM raw data folder: " + str(measurement_name))
     files = os.listdir(measurement_dir)
 
     ascs = [s for s in files if 'ASC' in s]
-    ascfilepaths = [os.path.join(dir, measurement_name, name) for name in ascs]
+    ascfilepaths = [os.path.join(input_dir, measurement_name, name) for name in ascs]
 
-    ff = f + 5
     for arm_path in ascfilepaths:
         try:
             armproc = proc.Arm_Processor(arm_path,wgs_ref,wgs_ref2,ENC_resolution,Radius,artifical_angle_offset,rate_hz,enc_tol)
@@ -58,32 +63,26 @@ for measurement_dir in folders_list[1:]:
             title = measurement_name + "_" + str(fixtimestring) + "_" +  os.path.basename(arm_path)
 
             arm_final_print = arm_final.drop(columns=['ENCnumber','EventTime','ENCangle'])
-            path = os.path.join(output_dir, 'async_' + title[:-4] + '.csv')
-            arm_final_print.to_csv(path)
+            arm_final_print.to_csv(os.path.join(output_dir, 'async_' + title[:-4] + '.csv'))
 
-            path = os.path.join(output_dir, str(rate_hz) + 'hz_' + title[:-4] + '.csv')
-            arm_synced.to_csv(path)
+            arm_synced.to_csv(os.path.join(output_dir, str(rate_hz) + 'hz_' + title[:-4] + '.csv'))
 
             peaks = proc.peak_detector(arm_synced)
-            path = os.path.join(output_dir, 'peaks_' + title[:-4] + '.csv')
-            peaks.to_csv(path)
+            peaks.to_csv(os.path.join(output_dir, 'peaks_' + title[:-4] + '.csv'))
 
             halls = proc.get_halls(sensorHALL)
-            path = os.path.join(output_dir, 'halls_' + title[:-4] + '.csv')
-            halls.to_csv(path)
+            halls.to_csv(os.path.join(output_dir, 'halls_' + title[:-4] + '.csv'))
 
             badhalls = proc.get_halls_orig(sensorHALL_orig)
-            path = os.path.join(output_dir, 'badhalls_' + title[:-4] + '.csv')
-            badhalls.to_csv(path)
+            badhalls.to_csv(os.path.join(output_dir, 'badhalls_' + title[:-4] + '.csv'))
 
-            ff += 1
-            #plt.arm_plot(f,ff,arm_final,arm_synced,sensorHALL,sensorHALL_orig,sensorENC,title,dir,peaks)
+            print(" - ARM data: " + title + " converting finished")
 
         except:
             print(" - an exception occurred")
             print(" - the file " + str(arm_path) + " was not posible to convert!")
             error_files.append(arm_path)
-        print(" - ARM_CONVERTOR - done")
-    print(" -" * 50)
-    f += 20 #pocet grafu
+
+        print("-" * 50)
+
 print(" - error files: " + str(error_files))

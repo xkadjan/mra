@@ -90,10 +90,10 @@ class Arm_Processor(object):
         pair = np.array([np.nan,np.nan])
         for arm_row in range(len(arm_raw_arr)):
             msg_ID = arm.iloc[arm_row,1]
-            if msg_ID == time_ID: #kdyz je to cas
+            if msg_ID == time_ID:
                 msg = arm_raw_arr[arm_row,3:7]
                 pair[0] = self.Byte4_converter(msg[0],msg[1],msg[2],msg[3])
-            elif msg_ID == num_ID: #kdyz je to increment
+            elif msg_ID == num_ID:
                 if not np.isnan(pair)[0]:
                     msg = arm_raw_arr[arm_row,3:7]
                     pair[1] = self.Byte4_converter(msg[0],msg[1],msg[2],msg[3])
@@ -133,7 +133,6 @@ class Arm_Processor(object):
     def enc_per_circle(self,sensorENC):
         enc_per_round = pd.DataFrame(sensorENC[[7,9]])
         enc_per_round.rename(columns={7: 'hall', 9: 'enc'},inplace=True)
-#        enc_per_round['enc'] = enc_per_round.enc + 1                    # maybe this woks with one direction
         enc_per_round['hall_diff'] = enc_per_round.hall.diff().shift(-1)
         enc_per_round.enc = (enc_per_round.enc % self.ENC_resolution).astype(int)
 
@@ -153,7 +152,7 @@ class Arm_Processor(object):
         return enc_per_round.enc.reset_index().enc
 
     def arm_processor(self):
-        arm = self.arm_extractor()         # load ASC data file
+        arm = self.arm_extractor()
         fixtimesec,fixtimestring,sensorPPS,sensorHALL,sensorENC = self.arm_parser(arm)
         sensorPPS, sensorPPSuError, sensorPPSuFixTime = self.get_time_err(sensorPPS)
         sensorENC["ENCnum"] = self.to_signed(sensorENC.ENCnum.tolist())
@@ -226,7 +225,7 @@ class Arm_Processor(object):
         if not self.direction: lastoff = lastoff + 2*self.ENC_resolution
         if not lastoff.empty: sensorENC.loc[mask, [9]] = sensorENC.loc[mask, [9]] + self.ENC_resolution - lastoff.iloc[len(lastoff) - 1]
         sensorENC[10] = (sensorENC[9] * 360 / self.ENC_resolution) % 360
-        sensorENC[10] = sensorENC[10] + self.artifical_angle_offset                      # <- artifical offset
+        sensorENC[10] = sensorENC[10] + self.artifical_angle_offset
         sensorENC[11] = np.radians(sensorENC[10])
         sensorENC[12] = self.RADIUS * -np.cos(sensorENC[11] + self.PHASE)
         sensorENC[13] = self.RADIUS * -np.sin(sensorENC[11] + self.PHASE)
@@ -287,7 +286,7 @@ class Arm_Processor(object):
             time_pairs_list.append([arm_asynchr_time_np[index_diff], arm_asynchr_time_np[index_diff+1]])
             angle_pairs_list.append([arm_asynchr_angle_np[index_diff], arm_asynchr_angle_np[index_diff+1]])
 
-        for sample in range(len(angle_pairs_list)):     # corrector of peaks caused by hall
+        for sample in range(len(angle_pairs_list)):
             angle_diff = angle_pairs_list[sample][1]-angle_pairs_list[sample][0]
             if not abs(angle_diff) < 360 - 1:
                 if angle_diff > 0:
@@ -302,18 +301,6 @@ class Arm_Processor(object):
         sampled_angle = np.array(sampled_angle)
 
         return sampled_angle
-
-#    def get_median_filtered(self,signal, threshold=3):
-#        signal = signal.copy()
-#        difference = np.abs(signal - np.median(signal))
-#        median_difference = np.median(difference)
-#        if median_difference == 0:
-#            s = 0
-#        else:
-#            s = difference / float(median_difference)
-#        mask = s > threshold
-#        signal[mask] = np.median(signal)
-#        return signal, mask
 
 def peak_detector(arm_synced):
     speed_diff = arm_synced.raw_speed.diff()
@@ -333,9 +320,3 @@ def get_halls_orig(sensorHALL_orig):
     halls[7]=0
     halls.columns = ["hall_index","utc_time","enc_err"]
     return halls
-
-# =============================================================================
-# # todo:
-# #   - rename colls in sensorENC!
-# #   - time correction distribution to whole sec
-# =============================================================================

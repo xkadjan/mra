@@ -79,23 +79,14 @@ def replace_times(enc):
 
     return enc
 
-# =============================================================================
-# INIT
-# =============================================================================
 def ENC_signal_corrector(sensorENC):
-
     radius = 3
     points = 2500
     circle = 2 * np.pi * radius
     distance = circle / points
-
     kernel_size = 15
     atol = 0.05
 
-# =============================================================================
-# MAIN
-# =============================================================================
-#    enc_copy = enc.copy(deep=True)
     enc = pd.DataFrame({'time': sensorENC.ENCtime,'num': sensorENC.ENCnum})
 
     enc["num_original"] = enc.num
@@ -142,10 +133,6 @@ def ENC_signal_corrector(sensorENC):
     outsiders["time"] = outsiders.time * 1000000
     bound_points["time"] = bound_points.time * 1000000
 
-    # =============================================================================
-    # speed plot
-    # =============================================================================
-
     fig, ax = plt.subplots(figsize=[12.2, 3])
     rcParams["font.family"] = "Arial"
 
@@ -172,9 +159,6 @@ def ENC_signal_corrector(sensorENC):
 
     plt.tight_layout()
     ax.set_facecolor('#f3f3f3')
-
-    #rect = patches.Rectangle((50,100),40,30,linewidth=20,edgecolor='r')#,facecolor='none')
-    #ax.add_patch(rect)
 #    plt.show()
 
     return enc_f[["time","num"]]
