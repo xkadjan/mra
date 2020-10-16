@@ -105,5 +105,6 @@ def hall_filter(ENC_resolution,sensorHALL,sensorENC,enc_tol):
     print(" - hall filter result: ", invalid_HALL)
     sensorHALL_orig = sensorHALL
     sensorHALL = sensorHALL.drop(invalid_HALL)
+    sensorHALL = sensorHALL.reset_index()
     return sensorHALL,sensorHALL_orig
 

@@ -4,24 +4,20 @@ import pandas as pd
 import hall_signal_corrector as hf
 import enc_signal_corrector_2 as ef
 import math
-import ctypes
 
 class Arm_Processor(object):
-    def __init__(self,arm_path,wgs_ref1,wgs_ref2,ENC_resolution,Radius,artifical_angle_offset,rate_hz,enc_tol):
-        heading = self.bearing(wgs_ref1, wgs_ref2)
+    def __init__(self,arm_path,args):
         self.ARMPATH = arm_path
-        self.PHASE = np.deg2rad(360 - heading + 90)
-        self.RADIUS = Radius
-        self.COR = [0,0]
-        self._arm_data = None
-        self._hall_times = None
-        self._owntime = None
-        self.ENC_resolution = 2500
-        self.artifical_angle_offset = artifical_angle_offset
-        self.rate_hz = rate_hz
+        self.PHASE = np.deg2rad(360 - self.bearing(np.array([args.wgs_ref]), np.array([args.wgs_ref_2])) + 90)
+        self.RADIUS = args.radius
+        self.ENC_resolution = args.resolution
+        self.artifical_angle_offset = args.angle_offset
+        self.rate_hz = args.rate_hz
+        self.enc_tol = args.enc_tol
+
         self.arm_synced = None
         self.direction = None
-        self.enc_tol = enc_tol
+        self.arm_data = None
 
     def bearing(self,wgs_1,wgs_2):
         lat1 = wgs_1[0,0]
@@ -34,13 +30,9 @@ class Arm_Processor(object):
         return 360 + bearing * 180 / np.pi
 
     def arm_extractor(self):
-        data = pd.read_fwf(self.ARMPATH,
-                           widths=[10, 1, 1, 2, 4, 7, 2, 1, 1, 1, 1, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3],
-                           skiprows=4, header=None, skipfooter=2)
-        data.drop(labels=[1, 2, 3, 5, 6, 7, 8, 9, 11, 13, 15, 17, 19, 21, 23, 25], axis=1, inplace=True)
-        data.rename(
-            columns={0: 'Log_Time', 4: 'ID', 10: 'Bytes', 12: 1, 14: 2, 16: 3, 18: 4, 20: 5, 22: 6, 24: 7, 26: 8},
-            inplace=True)
+        data = pd.read_fwf(self.ARMPATH,widths=[10,1,1,2,4,7,2,1,1,1,1,1,3,1,3,1,3,1,3,1,3,1,3,1,3,1,3],skiprows=4,header=None,skipfooter=2)
+        data.drop(labels=[1,2,3,5,6,7,8,9,11,13,15,17,19,21,23,25],axis=1,inplace=True)
+        data.rename(columns={0:'Log_Time',4:'ID',10:'Bytes',12:1,14:2,16:3,18:4,20:5,22:6,24:7,26:8},inplace=True)
         try:
             dropers = data.index[data.ID == '768'].tolist()
         except Exception:
@@ -51,11 +43,11 @@ class Arm_Processor(object):
         data.ID = data.ID.astype('int')
         cols_to_check = ['Bytes', 1, 2, 3, 4, 5, 6, 7, 8]
         for col in cols_to_check:
-            if not isinstance(data[col].iloc[6], float):
+            if not isinstance(data[col].iloc[6],float):
                 data[col] = data[col].astype(float)
         return data
 
-    def Byte4_converter(self,c1, c2, c3, c4):
+    def Byte4_converter(self,c1,c2,c3,c4):
         return c1 * 16777216 + c2 * 65536 + c3 * 256 + c4
 
     def Bytes2dec(self,b1, b2, b3, b4):
@@ -69,13 +61,8 @@ class Arm_Processor(object):
         mantissa = (int(bn[10:], 2)) / 2. ** 23
         return (1 + mantissa) * 2 ** e
 
-    def DetaTime2sec(self,hr, min, sec, milis=0):
+    def DetaTime2sec(self,hr,min,sec,milis=0):
         return hr * 3600 + min * 60 + sec + milis / 1000
-
-    def to_signed(self,ENCnum):
-        for row in range(len(ENCnum)):
-            ENCnum[row] = ctypes.c_long(int(ENCnum[row])).value
-        return ENCnum
 
     def parse_nmea(self,data,msgID):
         nmeacode = data[data.ID == 1024]
@@ -99,8 +86,7 @@ class Arm_Processor(object):
                     pair[1] = self.Byte4_converter(msg[0],msg[1],msg[2],msg[3])
                     sensor.append([pair[1],pair[0]])
                     pair = np.array([np.nan,np.nan])
-        sensor = pd.DataFrame(sensor)
-        return sensor
+        return pd.DataFrame(sensor)
 
     def arm_parser(self,arm):
         print (" - processing: " + str(self.ARMPATH))
@@ -130,9 +116,56 @@ class Arm_Processor(object):
         print(" - sensorPPSuError",sensorPPSuError)
         return sensorPPS, sensorPPSuError, sensorPPSuFixTime
 
+    def get_num_of_halls_per_scenario(self,sensorHALL,sensorENC):
+        cirnums = []
+        for i in range(len(sensorENC)):
+            numOfCircle = 0
+            for j in range(len(sensorHALL)):
+                if sensorENC.time_corrected.iloc[i] > sensorHALL.time_corrected.iloc[j]:
+                    numOfCircle += 1
+            cirnums.append(numOfCircle)
+        return cirnums
+
+    def num_of_enc_per_round(self,sensorHALL,sensorENC):
+        units = []
+        for i in range(len(sensorHALL)):
+            numOfUnit = 0
+            for j in range(len(sensorENC)):
+                if sensorHALL.HALLnum[i] == sensorENC.num_of_halls.iloc[j]:
+                    numOfUnit += 1
+            units.append(numOfUnit)
+        return units
+
+    def get_enc_ticks(self,sensorENC):
+        numOfDegree = 0
+        numOfDegreeMem = 0
+        ticks = [0]
+        ticks_corrected = [0]
+        for i in range(1, len(sensorENC)):
+            if sensorENC.num_of_halls.iloc[i] > sensorENC.num_of_halls.iloc[i - 1]:
+                numOfDegree = 1
+                ticks_corrected.append(sensorENC.ENCnum.iloc[i] - sensorENC.ENCnum.iloc[i - 1])
+                numOfDegreeMem = sensorENC.ENCnum.iloc[i - 1]
+            else:
+                numOfDegree += 1
+                ticks_corrected.append(sensorENC.ENCnum.iloc[i] - numOfDegreeMem)
+            ticks.append(numOfDegree)
+        sensorENC['ticks'] = ticks                                                                              # [-]
+        sensorENC['ticks_corrected'] = ticks_corrected                                                          # [-]
+
+        sensorENC = sensorENC[sensorENC['ENCnum'] != 0]
+
+        mask = sensorENC.num_of_halls == 0
+        lastoff = sensorENC.loc[mask, ['ticks_corrected']]
+        if not self.direction:
+            lastoff = lastoff + 2 * self.ENC_resolution
+        if not lastoff.empty:
+            sensorENC.loc[mask, ['ticks_corrected']] = sensorENC.loc[mask, ['ticks_corrected']] + self.ENC_resolution - lastoff.iloc[len(lastoff) - 1]
+        return sensorENC['ticks_corrected']
+
     def enc_per_circle(self,sensorENC):
-        enc_per_round = pd.DataFrame(sensorENC[[7,9]])
-        enc_per_round.rename(columns={7: 'hall', 9: 'enc'},inplace=True)
+        enc_per_round = pd.DataFrame(sensorENC[['num_of_halls','ticks_corrected']])
+        enc_per_round.rename(columns={'num_of_halls': 'hall', 'ticks_corrected': 'enc'},inplace=True)
         enc_per_round['hall_diff'] = enc_per_round.hall.diff().shift(-1)
         enc_per_round.enc = (enc_per_round.enc % self.ENC_resolution).astype(int)
 
@@ -149,113 +182,62 @@ class Arm_Processor(object):
             if errors[error] > self.ENC_resolution/2: errors[error] = errors[error] - self.ENC_resolution
         enc_per_round.enc = errors
 
-        return enc_per_round.enc.reset_index().enc
+        return enc_per_round.enc.reset_index().enc.astype(int)
 
     def arm_processor(self):
-        arm = self.arm_extractor()
-        fixtimesec,fixtimestring,sensorPPS,sensorHALL,sensorENC = self.arm_parser(arm)
+        fixtimesec,fixtimestring,sensorPPS,sensorHALL,sensorENC = self.arm_parser(self.arm_extractor())
         sensorPPS, sensorPPSuError, sensorPPSuFixTime = self.get_time_err(sensorPPS)
-        sensorENC["ENCnum"] = self.to_signed(sensorENC.ENCnum.tolist())
 
-        sensorENC = ef.ENC_signal_corrector(sensorENC)
-        sensorENC.rename({'time': 'ENCtime',
-                          'num': 'ENCnum'}, axis=1, inplace=True)
+        sensorENC,direction = ef.ENC_signal_corrector(sensorENC)
 
-        self.direction = sum(sensorENC.ENCnum.diff().dropna()) > 0
-#
-#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-        sensorHALL[2] = sensorHALL.HALLtime - sensorPPSuFixTime
-        sensorHALL[3] = sensorHALL[2] / 1000000
-        sensorHALL[4] = np.floor(sensorPPSuError * sensorHALL[3].apply(np.floor))
-        sensorHALL[5] = sensorHALL[2] + (sensorHALL[4])
-        sensorHALL[6] = sensorHALL[5] / 1000000
-        sensorHALL[8] = fixtimesec + sensorHALL[6]
+        sensorHALL['time_from_ppsfix'] = (sensorHALL.HALLtime - sensorPPSuFixTime) / 1e6                           # [s]
+        sensorHALL['time_error'] = np.floor(sensorPPSuError * sensorHALL.time_from_ppsfix.apply(np.floor)) / 1e6   # [s]
+        sensorHALL['time_corrected'] = (sensorHALL.time_from_ppsfix + sensorHALL.time_error)                       # [s]
+        sensorHALL['time_of_day'] = fixtimesec + sensorHALL.time_corrected                                         # [s]
 
-        sensorENC[2] = sensorENC.ENCtime - sensorPPSuFixTime
-        sensorENC[3] = sensorENC[2] / 1000000
-        sensorENC[4] = np.floor(sensorPPSuError * sensorENC[3].apply(np.floor))
-        sensorENC[5] = sensorENC[2] + (sensorENC[4])
-        sensorENC[6] = sensorENC[5] / 1000000
+        sensorENC['time_from_ppsfix'] = (sensorENC.ENCtime - sensorPPSuFixTime) / 1e6                              # [s]
+        sensorENC['time_error'] = np.floor(sensorPPSuError * sensorENC.time_from_ppsfix.apply(np.floor)) / 1e6     # [s]
+        sensorENC['time_corrected'] = (sensorENC.time_from_ppsfix + sensorENC.time_error)                          # [s]
+        sensorENC['time_of_day'] = fixtimesec + sensorENC.time_corrected                                           # [s]
 
-        sensorHALL, sensorHALL_orig = hf.hall_filter(self.ENC_resolution,sensorHALL,sensorENC,self.enc_tol)
-        sensorHALL = sensorHALL.reset_index()
+        sensorHALL,sensorHALL_orig = hf.hall_filter(self.ENC_resolution,sensorHALL,sensorENC,self.enc_tol)
 
-        lensENC = len(sensorENC)
-        lensHALL = len(sensorHALL)
+        sensorENC['num_of_halls'] = self.get_num_of_halls_per_scenario(sensorHALL,sensorENC)                       # [-]
+        sensorHALL['num_of_encs'] = self.num_of_enc_per_round(sensorHALL,sensorENC)                                # [-]
 
-        cirnums = []
-        for i in range(lensENC):
-            numOfCircle = 0
-            for j in range(lensHALL):
-                if sensorENC[6].iloc[i] > sensorHALL[6].iloc[j]:
-                    numOfCircle += 1
-            cirnums.append(numOfCircle)
-        sensorENC[7] = cirnums
+        sensorENC['ticks_corrected'] = self.get_enc_ticks(sensorENC)
 
-        units = []
-        for i in range(lensHALL):
-            numOfUnit = 0
-            for j in range(lensENC):
-                if sensorHALL.HALLnum[i] == sensorENC[7].iloc[j]:
-                    numOfUnit += 1
-            units.append(numOfUnit)
-        sensorHALL[7] = units
+        sensorENC['angle_deg'] = (sensorENC['ticks_corrected'] * 360 / self.ENC_resolution) % 360
+        sensorENC['angle_deg'] = sensorENC['angle_deg'] + self.artifical_angle_offset                              # [deg]
+        sensorENC['angle_rad'] = np.radians(sensorENC['angle_deg'])                                                # [radians]
+        sensorENC['distance_to_x'] = self.RADIUS * -np.cos(sensorENC['angle_rad'] + self.PHASE)                    # [m]
+        sensorENC['distance_to_y'] = self.RADIUS * -np.sin(sensorENC['angle_rad'] + self.PHASE)                    # [m]
 
-        numOfDegree = 0
-        numOfDegreeMem = 0
-        col8 = [0]
-        col9 = [0]
-        for i in range(1, lensENC):
-            if sensorENC[7].iloc[i] > sensorENC[7].iloc[i - 1]:
-                numOfDegree = 1
-                col9.append(sensorENC.ENCnum.iloc[i] - sensorENC.ENCnum.iloc[i - 1])
-                numOfDegreeMem = sensorENC.ENCnum.iloc[i - 1]
-            else:
-                numOfDegree += 1
-                col9.append(sensorENC.ENCnum.iloc[i] - numOfDegreeMem)
-            col8.append(numOfDegree)
-        sensorENC[8] = col8
-        sensorENC[9] = col9
-        sensorENC.drop(sensorENC[sensorENC['ENCnum'] == 0 ].index , inplace=True)
-
-        sensorHALL['enc_err'] = self.enc_per_circle(sensorENC).astype(int)
-
-        mask = sensorENC[7] == 0
-        lastoff = sensorENC.loc[mask, [9]]
-        if not self.direction: lastoff = lastoff + 2*self.ENC_resolution
-        if not lastoff.empty: sensorENC.loc[mask, [9]] = sensorENC.loc[mask, [9]] + self.ENC_resolution - lastoff.iloc[len(lastoff) - 1]
-        sensorENC[10] = (sensorENC[9] * 360 / self.ENC_resolution) % 360
-        sensorENC[10] = sensorENC[10] + self.artifical_angle_offset
-        sensorENC[11] = np.radians(sensorENC[10])
-        sensorENC[12] = self.RADIUS * -np.cos(sensorENC[11] + self.PHASE)
-        sensorENC[13] = self.RADIUS * -np.sin(sensorENC[11] + self.PHASE)
+        sensorHALL['enc_err'] = self.enc_per_circle(sensorENC)                                                     # [-]
+        sensorPPS['time_corrected'] = (sensorPPS['PPStime'] - sensorPPSuFixTime) / 1e6 + fixtimesec                # [s]
 
         sensorENC = sensorENC[1:]
 
-        armPositions = pd.DataFrame(sensorENC[['ENCnum', 6, 10, 11, 12, 13]])
-        armPositions.rename(
-            columns={'ENCnum': 'ENCnumber', 6: 'EventTime', 10: 'ENCangle', 11: 'ENCangle_rad', 12: 'Xarm', 13: 'Yarm'},
-            inplace=True)
-        armPositions['Time'] = sensorENC[6] + fixtimesec
-        sensorPPS['Time'] = (sensorPPS['PPStime'] - sensorPPSuFixTime)/1000000 + fixtimesec
+        self.arm_data = pd.DataFrame(sensorENC[['ENCnum','time_corrected','time_of_day','angle_deg','angle_rad','distance_to_x','distance_to_y']])
+        self.arm_data.rename(columns={'ENCnum':'ENCnumber',
+                                     'time_of_day':'Time',
+                                     'time_corrected':'EventTime',
+                                     'angle_deg':'ENCangle',
+                                     'angle_rad':'ENCangle_rad',
+                                     'distance_to_x':'Xarm',
+                                     'distance_to_y':'Yarm'
+                                     },
+                                     inplace=True)
 
-        colnames = armPositions.columns.tolist()
-        colnames.pop(colnames.index('Time'))
-        colnames.insert(0, 'Time')
-        armPositions = armPositions[colnames]
-
-        self._hall_times = sensorHALL[8]
-        self._arm_data = armPositions
-
-        self.arm_synced = self.downsampling(armPositions[['Time', 'ENCangle']])
-
+        self.arm_synced = self.downsampling(self.arm_data[['Time', 'ENCangle']])
         self.arm_synced['ENCangle_rad'] = np.radians(self.arm_synced['ENCangle'])
         self.arm_synced['Xarm'] = self.RADIUS * -np.cos(self.arm_synced['ENCangle_rad'] + self.PHASE)
         self.arm_synced['Yarm'] = self.RADIUS * -np.sin(self.arm_synced['ENCangle_rad'] + self.PHASE)
-
         self.arm_synced["raw_speed"] = ((self.arm_synced.Xarm.diff().pow(2) + self.arm_synced.Yarm.diff().pow(2)).pow(1/2) / self.arm_synced.Time.diff()).fillna(0) * 3.6
 
-        return sensorPPS,sensorHALL,sensorHALL_orig,sensorENC,sensorPPSuError,fixtimestring
+        self.fixtimestring = fixtimestring
+        self.sensorHALL = sensorHALL
+        self.sensorHALL_orig = sensorHALL_orig
 
     def downsampling(self,arm_asynchr):
         start_time = math.ceil(arm_asynchr.Time.min() * self.rate_hz) / self.rate_hz
@@ -311,12 +293,12 @@ def peak_detector(arm_synced):
     return pd.DataFrame(peaks,columns=['sample_index', 'utc_time', 'raw_speed_diff'])
 
 def get_halls(sensorHALL):
-    halls = pd.DataFrame(sensorHALL[["HALLnum",8,'enc_err']])
+    halls = pd.DataFrame(sensorHALL[['HALLnum','time_of_day','enc_err']])
     halls.columns = ["hall_index","utc_time","enc_err"]
     return halls
 
 def get_halls_orig(sensorHALL_orig):
-    halls = pd.DataFrame(sensorHALL_orig[["HALLnum",8]])
-    halls[7]=0
+    halls = pd.DataFrame(sensorHALL_orig[['HALLnum','time_of_day']])
+    halls[7] = 0
     halls.columns = ["hall_index","utc_time","enc_err"]
     return halls

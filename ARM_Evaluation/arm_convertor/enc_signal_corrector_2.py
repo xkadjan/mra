@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib import rcParams
 import matplotlib.patches as patches
+import ctypes
+
+def enc_num_to_signed(ENCnum):
+    for row in range(len(ENCnum)):
+        ENCnum[row] = ctypes.c_long(int(ENCnum[row])).value
+    return ENCnum
 
 def get_clusters(outsiders,enc):
     enc_len = len(enc)
@@ -79,6 +85,10 @@ def replace_times(enc):
 
     return enc
 
+
+def get_direction_of_rotation(sensorENC):
+    return sum(sensorENC.ENCnum.diff().dropna()) > 0
+
 def ENC_signal_corrector(sensorENC):
     radius = 3
     points = 2500
@@ -88,6 +98,8 @@ def ENC_signal_corrector(sensorENC):
     atol = 0.05
 
     enc = pd.DataFrame({'time': sensorENC.ENCtime,'num': sensorENC.ENCnum})
+
+    enc["num"] = enc_num_to_signed(enc.num.tolist())
 
     enc["num_original"] = enc.num
     enc["num_diff"] = enc.num.diff()
@@ -161,4 +173,5 @@ def ENC_signal_corrector(sensorENC):
     ax.set_facecolor('#f3f3f3')
 #    plt.show()
 
-    return enc_f[["time","num"]]
+    enc_f.rename({'time':'ENCtime','num':'ENCnum'},axis=1,inplace=True)
+    return enc_f[["ENCtime","ENCnum"]],get_direction_of_rotation(sensorENC)
