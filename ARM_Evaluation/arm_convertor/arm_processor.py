@@ -167,12 +167,14 @@ class Arm_Processor(object):
         enc_per_round = pd.DataFrame(sensorENC[['num_of_halls','ticks_corrected']])
         enc_per_round.rename(columns={'num_of_halls': 'hall', 'ticks_corrected': 'enc'},inplace=True)
         enc_per_round['hall_diff'] = enc_per_round.hall.diff().shift(-1)
+        enc_per_round = enc_per_round.dropna()
         enc_per_round.enc = (enc_per_round.enc % self.ENC_resolution).astype(int)
 
         first_circle = enc_per_round.enc.where(enc_per_round.hall == 0).dropna()
-        first_circle = max(abs(first_circle.drop(first_circle.index[0]) - self.ENC_resolution))
-        first_circle = pd.DataFrame({"hall":[0],"enc":[first_circle],"hall_diff":[1]})
-        enc_per_round = enc_per_round.append(first_circle).sort_index()
+        if not first_circle.dropna().empty:
+            first_circle = max(abs(first_circle.drop(first_circle.index[0]) - self.ENC_resolution))
+            first_circle = pd.DataFrame({"hall":[0],"enc":[first_circle],"hall_diff":[1]})
+            enc_per_round = enc_per_round.append(first_circle).sort_index()
 
         enc_per_round = enc_per_round.where(enc_per_round.hall_diff != 0).dropna()
         enc_per_round = enc_per_round.drop(enc_per_round.index[1])
