@@ -15,10 +15,10 @@ import os
 
 class Plotter:
 #    ax: https://matplotlib.org/api/axes_api.html
-    def __init__(self,new_preproccess,only_fix,csv_dir):
-        self.only_fix = only_fix
-        self.csv_dir = csv_dir
-        if new_preproccess:
+    def __init__(self,args):
+        self.only_fix = args.only_fix
+        self.csv_dir = args.result_dir
+        if args.new_preproccess:
             self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
             self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
             self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')

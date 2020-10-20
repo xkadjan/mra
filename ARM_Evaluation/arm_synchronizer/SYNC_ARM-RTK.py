@@ -10,43 +10,40 @@ import sync_rtk_parser as rtk_prs
 import sync_rtk_evl as rtk_evl
 import sync_plotting as plot
 
-# =============================================================================
-#  DEFINITIONS
-# =============================================================================
-dir_rtk = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RTK\TO_PROCESS"
-dir_arm = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\ARM\arm_converted_200327"
-# csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\MERENI\4xVRS_ARM_tettrack_final\RESULTS"
-csv_dir = r"C:\Users\xkadj\OneDrive\PROJEKTY\IGA\IGA19 - RTK\Computers and Electronics in Agriculture\RESULTS"
-#csv_dir = os.path.join(dir_arm,'output')
+import configargparse
+import os
 
-wgs_ref = [50.07478605085059,14.52025289904692,286.6000000000184]
-fixed_height = 235.58
+def configArgParser():
+    description = '   Measurement Robotic Arm (MRA), The MIT License (MIT), Copyright (c) 2019 CULS Prague TF\ndeveloped by: Jan Kaderabek\n'
+    parser = configargparse.ArgParser(default_config_files=['config.ini'], description=description)
+    parser.add('-da', '--dir_arm', type=str, help='path to MRA converted data')
+    parser.add('-dr', '--dir_rtk', type=str, help='path to RTK data in NMEA GPGGA format')
+    parser.add('-rr', '--result_dir', type=str, help='path to results')
+    parser.add('-ref','--wgs_ref', type=lambda x: list(map(float,(str(x).split(',')))), help='reference point in center of rotation (in WGS84)')
+    parser.add('-n','--rtk_names', type=lambda x: list(str(x).split(',')), help='names of evaluated RTK receivers')
+    parser.add('-np', '--new_preproccess', type=lambda x: (str(x).lower() == 'true'), help='proccess MRA and DEWESOFT before evaluation')
+    parser.add('-of','--only_fix', type=lambda x: (str(x).lower() == 'true'), help='evaluate only fix samples')
+    parser.add('-p','--prefix', type=str, help='evaluate only sliced time')
+    args = parser.parse()
+    return args
 
-prefix = 'all'
+print("MRA synchronizer started")
 
-if prefix == 'auto': slice_times = [57800,61500]
-if prefix == 'car': slice_times = [71800,76000]
-if prefix == 'ped': slice_times = [0,90000]
+args = configArgParser()
 
-new_preproccess = False
-only_fix = False
-
-if only_fix:
+if args.only_fix:
     measurement = 'FIX state epoch'
 else:
     measurement = 'Whole measurement'
 
-print("MRA synchronizer started")
-
-pltr = plot.Plotter(new_preproccess,only_fix,csv_dir)
+pltr = plot.Plotter(args)
 
 # =============================================================================
 # ARM:
 # =============================================================================
-if new_preproccess:
-    arm = arm_prs.ArmParser(dir_arm,prefix)
+if args.new_preproccess:
+    arm = arm_prs.ArmParser(args)
     arm.parse_slices()
-    #arm.slice_times(slice_times)
     arm.get_bad_cicles()
     arm.drop_peaks()
     arm.filter_signal()
@@ -55,64 +52,70 @@ if new_preproccess:
     arm.drop_zero_acc()
     arm.drop_limit_acc()
 
-    # #pltr.plot_arm(arm.arm_async,'arm_async','k')
-    # pltr.plot_arm(arm.arm_20hz,'arm_20hz','r')
-    # pltr.plot_marks(arm)
-
-    # pltr.fig_4.savefig(os.path.join(csv_dir, 'slice.jpg'))
-    # pltr.plot_acc_density(arm.arm_20hz)
-
 # =============================================================================
 # RTK
 # =============================================================================
-if new_preproccess:
-    rtk = rtk_prs.RtkParser(dir_rtk,wgs_ref)
-    rtk.parse_slices(prefix)
-    #rtk.slice_times(slice_times)
+if args.new_preproccess:
+    rtk = rtk_prs.RtkParser(args)
+    rtk.parse_slices()
     rtk.drop_points_wo_arm(arm.arm_20hz)
     rtk.drop_points_wo_rtk(arm.arm_20hz)
     rtk_list = rtk.concate_arm_and_rtks()
 
-    pltr.plot_rtk(rtk.novatel,'novatel',"g")
-    pltr.plot_rtk(rtk.tersus,'tersus',"y")
-    pltr.plot_rtk(rtk.ashtech,'ashtech',"b")
-    pltr.plot_rtk(rtk.ublox,'ublox',"m")
+    pltr.plot_rtk(rtk.novatel,args.rtk_names[0],"g")
+    pltr.plot_rtk(rtk.tersus,args.rtk_names[1],"y")
+    pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
+    pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
 
 # =============================================================================
 # EVL
 # =============================================================================
 evl = rtk_evl.Evaluator()
-if not new_preproccess:
-    evl.csv_load(csv_dir)
-    rtk_list = evl.csv_load(csv_dir)
+if not args.new_preproccess:
+    evl.csv_load(args.result_dir)
+    rtk_list = evl.csv_load(args.result_dir)
 evl.get_deviations(rtk_list)
-if only_fix:
+if args.only_fix:
     evl.filter_fix()
 # evl.filter_sigma()
 # evl.abs_acc()
 evl.get_make_boxes()
 # evl.adjust_status()
-evl.get_results(only_fix)
+evl.get_results(args.only_fix)
 
-evl.csv_print(csv_dir,new_preproccess)
+evl.csv_print(args.result_dir,args.new_preproccess)
 
 evl.get_correlation()
 evl.get_spearman()
 evl.get_median()
 
-rtk_names = ['Receiver A', 'Receiver B', 'Receiver C', 'Receiver D']
+# =============================================================================
+# PLOTTING
+# =============================================================================
 
-# # Print deviatiton by status
-pltr.plot_boxplot(evl.novatel,rtk_names[0],'status',measurement)
-pltr.plot_boxplot(evl.tersus,rtk_names[1],'status',measurement)
-pltr.plot_boxplot(evl.ashtech,rtk_names[2],'status',measurement)
-pltr.plot_boxplot(evl.ublox,rtk_names[3],'status',measurement)
+# Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
+pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# Print deviatiton by phase:
-pltr.plot_boxplot(evl.novatel_by_acc,rtk_names[0],'phase',measurement)
-pltr.plot_boxplot(evl.tersus_by_acc,rtk_names[1],'phase',measurement)
-pltr.plot_boxplot(evl.ashtech_by_acc,rtk_names[2],'phase',measurement)
-pltr.plot_boxplot(evl.ublox_by_acc,rtk_names[3],'phase',measurement)
+# Print density (The density of deviations)
+pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
+
+# Print deviatiton by status (The distribution of deviations during individual states)
+pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
+pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
+pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
+pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
+
+# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
+pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
+pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
+pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
 
 # # =============================================================================
 # # import numpy as np
@@ -127,18 +130,6 @@ pltr.plot_boxplot(evl.ublox_by_acc,rtk_names[3],'phase',measurement)
 # # pltr.plot_devs(evl.tersus,'tersus',"y")
 # # pltr.plot_devs(evl.ashtech,'ashtech',"b")
 # # pltr.plot_devs(evl.ublox,'ublox',"m")
-
-# # Print deviations (map,east,noth)
-# pltr.plot_hist(evl.novatel,rtk_names[0],evl.results_novatel.iloc[0],measurement)
-# pltr.plot_hist(evl.tersus,rtk_names[1],evl.results_tersus.iloc[0],measurement)
-# pltr.plot_hist(evl.ashtech,rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-# pltr.plot_hist(evl.ublox,rtk_names[3],evl.results_ublox.iloc[0],measurement)
-
-# #Print density
-# pltr.plot_hist_dev(evl.novatel.deviation,rtk_names[0],evl.results_novatel.iloc[0],measurement)
-# pltr.plot_hist_dev(evl.tersus.deviation,rtk_names[1],evl.results_tersus.iloc[0],measurement)
-# pltr.plot_hist_dev(evl.ashtech.deviation,rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-# pltr.plot_hist_dev(evl.ublox.deviation,rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
 # # pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
 # # pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')

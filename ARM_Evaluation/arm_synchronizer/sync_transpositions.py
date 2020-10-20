@@ -81,10 +81,8 @@ def wgs2enu(wgs,wgs_ref):
     xyz[:, 2] = xyz[:, 2] - xyz_ref[0, 2]
 
     R = np.array([[-np.sin(wgs_ref[0, 1]), np.cos(wgs_ref[0, 1]), 0],
-                  [-np.cos(wgs_ref[0, 1]) * np.sin(wgs_ref[0, 0]), -np.sin(wgs_ref[0, 1]) * np.sin(wgs_ref[0, 0]),
-                   np.cos(wgs_ref[0, 0])],
-                  [np.cos(wgs_ref[0, 1]) * np.cos(wgs_ref[0, 0]), np.sin(wgs_ref[0, 1]) * np.cos(wgs_ref[0, 0]),
-                   np.sin(wgs_ref[0, 0])]])
+                  [-np.cos(wgs_ref[0, 1]) * np.sin(wgs_ref[0, 0]), -np.sin(wgs_ref[0, 1]) * np.sin(wgs_ref[0, 0]),np.cos(wgs_ref[0, 0])],
+                  [np.cos(wgs_ref[0, 1]) * np.cos(wgs_ref[0, 0]), np.sin(wgs_ref[0, 1]) * np.cos(wgs_ref[0, 0]),np.sin(wgs_ref[0, 0])]])
     enu = np.dot(xyz, R.T)
 
     return enu
@@ -98,8 +96,3 @@ def bearing(wgs_1,wgs_2):
 
     bearing = np.arctan((np.sin(dlon) * np.cos(np.deg2rad(lat2))) / (np.cos(np.deg2rad(lat1)) * np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.cos(dlon)))
     return 360 + bearing * 180 / np.pi
-
-    # bearing = np.arctan((np.sin(dlon) * np.cos(np.deg2rad(lat2))) / (
-    # np.cos(np.deg2rad(lat1)) * np.sin(np.deg2rad(lat2)) - np.sin(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.cos(
-    #     dlon)))
-    # return 360 + (bearing * 180 / np.pi)

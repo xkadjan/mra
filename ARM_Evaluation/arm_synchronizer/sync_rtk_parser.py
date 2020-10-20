@@ -12,10 +12,11 @@ import sync_transpositions as transpos
 
 class RtkParser:
 
-    def __init__(self,dir_rtk,wgs_ref):
-        self.wgs_ref = wgs_ref
-        self.dir_rtk = dir_rtk
-        self.rtk_folders = os.listdir(dir_rtk)
+    def __init__(self,args):
+        self.args = args
+        self.wgs_ref = args.wgs_ref
+        self.dir_rtk = args.dir_rtk
+        self.rtk_folders = os.listdir(self.dir_rtk)
         self.novatel = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
         self.tersus = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
         self.ashtech = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
@@ -25,12 +26,12 @@ class RtkParser:
         self.ashtech_ref = pd.DataFrame()
         self.ublox_ref = pd.DataFrame()
 
-    def parse_slices(self,prefix):
+    def parse_slices(self):
 
-        if prefix == 'all':
+        if self.args.prefix == 'all':
             folders = self.rtk_folders
         else:
-            folders = [i for i in self.rtk_folders if prefix in i]
+            folders = [i for i in self.rtk_folders if self.args.prefix in i]
 
         for folder in folders:
             rtk_txts_paths = self.load_files(folder,'novatel')

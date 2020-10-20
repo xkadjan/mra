@@ -11,7 +11,8 @@ import scipy
 
 class ArmParser:
 
-    def __init__(self,dir_arm,prefix):
+    def __init__(self,args):
+        self.args = args
         self.ENC_resolution = 2500      # [-]
         self.enc_tol = 3                # [-]
         self.badhall_tol = 10           # [s]
@@ -22,11 +23,11 @@ class ArmParser:
         self.seconds_over_hall = 0.1    # [s]
         self.last_len_20hz = 0
 
-        self.arm_20hz_paths = self.get_files(dir_arm,'20hz',prefix)
-        self.arm_async_paths = self.get_files(dir_arm,'async',prefix)
-        self.arm_badhalls_paths = self.get_files(dir_arm,'badhalls',prefix)
-        self.arm_halls_paths = self.get_files(dir_arm,'halls',prefix)
-        self.arm_peaks_paths = self.get_files(dir_arm,'peaks',prefix)
+        self.arm_20hz_paths = self.get_files('20hz')
+        self.arm_async_paths = self.get_files('async')
+        self.arm_badhalls_paths = self.get_files('badhalls')
+        self.arm_halls_paths = self.get_files('halls')
+        self.arm_peaks_paths = self.get_files('peaks')
 
         self.arm_20hz = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
         self.arm_async = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
@@ -37,13 +38,13 @@ class ArmParser:
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
 
-    def get_files(self,dir,signal,prefix):
-        files = os.listdir(dir)
+    def get_files(self,signal):
+        files = os.listdir(self.args.dir_arm)
         csvs = [i for i in files if '.csv' in i]
         csvs = [i for i in csvs if not i.find(signal)]
-        csvs_paths = [os.path.join(dir, name) for name in csvs]
-        if not prefix == 'all':
-            csvs_paths = [i for i in csvs_paths if prefix in i]
+        csvs_paths = [os.path.join(self.args.dir_arm, name) for name in csvs]
+        if not self.args.prefix == 'all':
+            csvs_paths = [i for i in csvs_paths if self.args.prefix in i]
         start_times = [float(i.split('_')[-2]) for i in csvs_paths]
         # Sorting of paths:
         csvs_paths = [[start_times[meas],csvs_paths[meas]] for meas in range(len(csvs_paths))]
