@@ -50,10 +50,6 @@ class Evaluator:
         self.ublox = self.make_sigma_filter(self.ublox,3)
 
     def make_sigma_filter(self,rtk,multiplier):
-        # n = len(rtk.index)
-        # mean = self.get_accuracy(rtk.deviation)
-
-
         mean = self.get_accuracy(rtk.deviation)
         std = self.get_sigma(rtk)
         rtk = rtk[rtk.deviation < mean + multiplier * std]
@@ -246,6 +242,6 @@ class Evaluator:
         print('median: FIX=' + str(me[0]) + '; FLOAT' + str(me[1]) + '; GNSS' + str(me[2]))
 
         me = [rtk_acc[0].deviation.median(),rtk_acc[1].deviation.median(),rtk_acc[2].deviation.median()]
-        print('median: DECELERATION=' + str(me[0]) + '; CONSTANT=' + str(me[1]) + '; RAMP=' + str(me[2]))
+        print('median: ACC=' + str(me[0]) + '; UNIF=' + str(me[1]) + '; DEC=' + str(me[2]))
 
 

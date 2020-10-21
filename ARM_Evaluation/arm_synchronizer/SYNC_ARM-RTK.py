@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Aug  9 14:57:48 2019
-
 @author: xkadj
 """
 
@@ -26,6 +24,11 @@ def configArgParser():
     parser.add('-p','--prefix', type=str, help='evaluate only sliced time')
     args = parser.parse()
     return args
+
+def checkFolder(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
 
 print("MRA synchronizer started")
 
@@ -73,7 +76,7 @@ if args.new_preproccess:
 evl = rtk_evl.Evaluator()
 if not args.new_preproccess:
     evl.csv_load(args.result_dir)
-    rtk_list = evl.csv_load(args.result_dir)
+    rtk_list = evl.csv_load(checkFolder(args.result_dir))
 evl.get_deviations(rtk_list)
 if args.only_fix:
     evl.filter_fix()
@@ -83,7 +86,7 @@ evl.get_make_boxes()
 # evl.adjust_status()
 evl.get_results(args.only_fix)
 
-evl.csv_print(args.result_dir,args.new_preproccess)
+evl.csv_print(checkFolder(args.result_dir),args.new_preproccess)
 
 evl.get_correlation()
 evl.get_spearman()
