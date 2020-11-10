@@ -3,19 +3,11 @@
 #Created on Sat Aug 24 21:40:17 2019
 #
 #@author: xkadj
-#"""
-#% Programmed by Jan Sedlak @ Valeo 2019 in matlab, converting to Python by Jan Kaderabek CULS Prague
-#% vypocet vsech vzdalenosti Hall_time ~ ENC_pls_num
-
 
 import numpy as np
 import numpy.matlib as nmp
 
-# =============================================================================
-# FUNCTIONS
-# =============================================================================
-
-def find_cluster(row_col, val): #% nalezne shluky v indexech
+def find_cluster(row_col, val):
     row_col_array = np.zeros([3,np.shape(row_col)[0]])
     for row in range(np.shape(row_col)[0]):
         row_col_array[0][row] = row_col[row][0]
@@ -24,17 +16,15 @@ def find_cluster(row_col, val): #% nalezne shluky v indexech
     row_col = row_col_array
     act_gr = 1
     group = []
-    while 0 in row_col[2]:   #% dokud vsude neni prihlasena skupina
-        ind_piv = np.where(row_col[2] == 0)[0][0] #% prvni nulu ve sloupci skupina
+    while 0 in row_col[2]:
+        ind_piv = np.where(row_col[2] == 0)[0][0]
         if ind_piv.size != 0:
             group.append(row_col.T[ind_piv][0:2])
             row_col[2][ind_piv] = act_gr
         else:
             break
         for i in range(np.shape(row_col)[0]):
-#            print (i)
             if np.where(group[act_gr-1] == row_col[0][i])[0].size != 0 or np.where(group[act_gr-1] == row_col[1][i])[0].size != 0:
-#                x = [group[act_gr-1], row_col.T[i][0:2]]
                 if np.asarray(group[act_gr-1]).shape == (2,):
                     last = [group[act_gr-1]]
                 else:
@@ -44,13 +34,10 @@ def find_cluster(row_col, val): #% nalezne shluky v indexech
                 if len(np.unique(x, axis=0)) > 1:
                     np.unique(x, axis=0)
                 else:
-                    x = np.reshape(np.unique(x, axis=0), (2,)) #np.unique(x, axis=0) #<-reshape
-                group[act_gr-1] = x #np.reshape(x[0],(2,))
+                    x = np.reshape(np.unique(x, axis=0), (2,))
+                group[act_gr-1] = x
                 row_col[2][i] = act_gr;
         act_gr = act_gr + 1
-#    # =============================================================================
-#    #% najdi nejlepsi skupinu
-#    # =============================================================================
     row_col = np.insert(row_col, 3, val, axis=0)
     gr_val = np.zeros([int(max(row_col[2])),2])
     for i in range(int(max(row_col[2]))):
@@ -60,13 +47,12 @@ def find_cluster(row_col, val): #% nalezne shluky v indexech
             a.append(val[ind_pom[ii]])
         gr_val[i,0] = int(np.sum(a))
         gr_val[i,1] = len(group[i])
-    ind_max = np.where(gr_val.T[1] == np.max(gr_val.T[1]))[0] #% podle nejvetsi skupiny, chyba asi neni signifikantni protoze neni minimalni(pro minimalni propojeni celnu skupiny)
+    ind_max = np.where(gr_val.T[1] == np.max(gr_val.T[1]))[0]
     groups = []
     for gr in ind_max:
         groups.append(group[int(gr)])
     cls_members = np.unique(groups)
     return cls_members
-# =============================================================================
 
 def get_pls_num(HALL_time,sensorENC):
     diference = abs(sensorENC.ENCtime - HALL_time)
@@ -76,7 +62,6 @@ def get_pls_num(HALL_time,sensorENC):
         print('Warning: Big ambiguity in HALL filter matching ... ')
     pls_num = sensorENC.ENCnum[ind]
     return pls_num
-# =============================================================================
 
 def filter_HALL_artifacts(ENC_resolution,sensorHALL,sensorENC,enc_tol):
     invalid_HALL = np.zeros((1,len(sensorHALL)))
@@ -100,8 +85,6 @@ def filter_HALL_artifacts(ENC_resolution,sensorHALL,sensorENC,enc_tol):
     pom = np.where(pom==0, pom, np.nan)
     R = R + pom
     row_col = []
-    ##        %% nejcastejsi hodnota R, tj. hlavni shluk
-    ##        %R_modus = mode(R(:));
     for x in range(np.shape(eval_f)[0]):
         for y in range(np.shape(eval_f)[1]):
             if not np.isnan(R[x][y]) and R[x][y] >= 0 and R[x][y] <= enc_tol:
@@ -111,23 +94,17 @@ def filter_HALL_artifacts(ENC_resolution,sensorHALL,sensorENC,enc_tol):
         values.append(R[row_col[i][0]][row_col[i][1]])
 
     ind_ok = find_cluster(row_col,values)
-    #    [ind_ok] = find_cluster([r,c],values);
-    ##        %{
-    ##        [r,c,values']
-    ##        %}
     invalid_HALL = np.ones([len(sensorHALL),1],dtype=bool)
     for ok in ind_ok:
         invalid_HALL[int(ok)] = 0
     return invalid_HALL
 
-# =============================================================================
-# MAIN
-# =============================================================================
 def hall_filter(ENC_resolution,sensorHALL,sensorENC,enc_tol):
     invalid_HALL = filter_HALL_artifacts(ENC_resolution,sensorHALL,sensorENC,enc_tol)
     invalid_HALL = np.where(invalid_HALL == True)[0]
     print(" - hall filter result: ", invalid_HALL)
-    sensorHALL_orig = sensorHALL    #% filter out HALL artifacts
+    sensorHALL_orig = sensorHALL
     sensorHALL = sensorHALL.drop(invalid_HALL)
+    sensorHALL = sensorHALL.reset_index()
     return sensorHALL,sensorHALL_orig
 

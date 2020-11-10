@@ -10,6 +10,12 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from matplotlib import rcParams
 import matplotlib.patches as patches
+import ctypes
+
+def enc_num_to_signed(ENCnum):
+    for row in range(len(ENCnum)):
+        ENCnum[row] = ctypes.c_long(int(ENCnum[row])).value
+    return ENCnum
 
 def get_clusters(outsiders,enc):
     enc_len = len(enc)
@@ -79,24 +85,21 @@ def replace_times(enc):
 
     return enc
 
-# =============================================================================
-# INIT
-# =============================================================================
-def ENC_signal_corrector(sensorENC):
 
+def get_direction_of_rotation(sensorENC):
+    return sum(sensorENC.ENCnum.diff().dropna()) > 0
+
+def ENC_signal_corrector(sensorENC):
     radius = 3
     points = 2500
     circle = 2 * np.pi * radius
     distance = circle / points
-
     kernel_size = 15
     atol = 0.05
 
-# =============================================================================
-# MAIN
-# =============================================================================
-#    enc_copy = enc.copy(deep=True)
     enc = pd.DataFrame({'time': sensorENC.ENCtime,'num': sensorENC.ENCnum})
+
+    enc["num"] = enc_num_to_signed(enc.num.tolist())
 
     enc["num_original"] = enc.num
     enc["num_diff"] = enc.num.diff()
@@ -142,10 +145,6 @@ def ENC_signal_corrector(sensorENC):
     outsiders["time"] = outsiders.time * 1000000
     bound_points["time"] = bound_points.time * 1000000
 
-    # =============================================================================
-    # speed plot
-    # =============================================================================
-
     fig, ax = plt.subplots(figsize=[12.2, 3])
     rcParams["font.family"] = "Arial"
 
@@ -172,9 +171,7 @@ def ENC_signal_corrector(sensorENC):
 
     plt.tight_layout()
     ax.set_facecolor('#f3f3f3')
-
-    #rect = patches.Rectangle((50,100),40,30,linewidth=20,edgecolor='r')#,facecolor='none')
-    #ax.add_patch(rect)
 #    plt.show()
 
-    return enc_f[["time","num"]]
+    enc_f.rename({'time':'ENCtime','num':'ENCnum'},axis=1,inplace=True)
+    return enc_f[["ENCtime","ENCnum"]],get_direction_of_rotation(sensorENC)

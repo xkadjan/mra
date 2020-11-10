@@ -8,12 +8,14 @@ Created on Mon May 11 11:02:34 2020
 import os
 import pandas as pd
 import numpy as np
+from scipy.stats import spearmanr
 
 class Evaluator:
 
     def __init__(self):
         self.bounds_speed = [0,1,2.5,4,5.5,7,8.5,10]
-        self.bounds_acc = [-4,-3,-2,-1,0,1,2]
+        # self.bounds_acc = [-4,-3,-2,-1,0,1,2]
+        self.bounds_acc = [-4,-0.2,0.4,2]
         self.labels_speed = self.get_labels(self.bounds_speed,'m/s')
         self.labels_acc = self.get_labels(self.bounds_acc,'m/s²')
         self.labels_rtk = ['novatel', 'tersus', 'ashtech', 'ublox']
@@ -29,6 +31,12 @@ class Evaluator:
         self.ashtech = self.calculate_deviations(rtk_list[2])
         self.ublox = self.calculate_deviations(rtk_list[3])
 
+        # Make backup
+        self.novatel_unsliced = self.novatel
+        self.tersus_unsliced = self.tersus
+        self.ashtech_unsliced = self.ashtech
+        self.ublox_unsliced = self.ublox
+
     def filter_fix(self):
         self.novatel = self.novatel[self.novatel.status == 4]
         self.tersus = self.tersus[self.tersus.status == 4]
@@ -36,10 +44,17 @@ class Evaluator:
         self.ublox = self.ublox[self.ublox.status == 4]
 
     def filter_sigma(self):
-        self.novatel = self.novatel[self.novatel.deviation < (2 * self.get_precision(self.novatel))]
-        self.tersus = self.tersus[self.tersus.deviation < (2 * self.get_precision(self.tersus))]
-        self.ashtech = self.ashtech[self.ashtech.deviation < (2 * self.get_precision(self.ashtech))]
-        self.ublox = self.ublox[self.ublox.deviation < (2 * self.get_precision(self.ublox))]
+        self.novatel = self.make_sigma_filter(self.novatel,3)
+        self.tersus = self.make_sigma_filter(self.tersus,3)
+        self.ashtech = self.make_sigma_filter(self.ashtech,3)
+        self.ublox = self.make_sigma_filter(self.ublox,3)
+
+    def make_sigma_filter(self,rtk,multiplier):
+        mean = self.get_accuracy(rtk.deviation)
+        std = self.get_sigma(rtk)
+        rtk = rtk[rtk.deviation < mean + multiplier * std]
+        rtk = rtk[rtk.deviation > mean - multiplier * std]
+        return rtk
 
     def get_make_boxes(self):
         self.novatel_by_speed = self.get_boxes(self.novatel,'cvl_speed',self.bounds_speed,'novatel')
@@ -51,6 +66,23 @@ class Evaluator:
         self.tersus_by_acc = self.get_boxes(self.tersus,'cvl_acc',self.bounds_acc,'tersus')
         self.ashtech_by_acc = self.get_boxes(self.ashtech,'cvl_acc',self.bounds_acc,'ashtech')
         self.ublox_by_acc = self.get_boxes(self.ublox,'cvl_acc',self.bounds_acc,'ublox')
+
+    def adjust_status(self):
+        self.novatel['status'] = self.make_status_adjust(self.novatel['status'].values.astype(int).tolist())
+        self.tersus['status'] = self.make_status_adjust(self.tersus['status'].values.astype(int).tolist())
+        self.ashtech['status'] = self.make_status_adjust(self.ashtech['status'].values.astype(int).tolist())
+        self.ublox['status'] = self.make_status_adjust(self.ublox['status'].values.astype(int).tolist())
+
+    def make_status_adjust(self,old_status_list):
+        status_list = []
+        for status in old_status_list:
+            if status == 4:
+                status_list.append(2)
+            elif status == 5:
+                status_list.append(1)
+            else:
+                status_list.append(0)
+        return status_list
 
     def calculate_deviations(self,df):
         df['diff_east'] = df.rtk_east - df.arm_east
@@ -75,10 +107,11 @@ class Evaluator:
 
     def csv_print(self,csv_dir,new_preproccess):
         if new_preproccess:
-            self.novatel.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
-            self.tersus.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
-            self.ashtech.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
-            self.ublox.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
+            self.novatel_unsliced.to_csv(os.path.join(csv_dir, 'novatel_whole.csv'))
+            self.tersus_unsliced.to_csv(os.path.join(csv_dir, 'tersus_whole.csv'))
+            self.ashtech_unsliced.to_csv(os.path.join(csv_dir, 'ashtech_whole.csv'))
+            self.ublox_unsliced.to_csv(os.path.join(csv_dir, 'ublox_whole.csv'))
+
         self.results_novatel.to_csv(os.path.join(csv_dir, 'results_novatel.csv'))
         self.results_tersus.to_csv(os.path.join(csv_dir, 'results_tersus.csv'))
         self.results_ashtech.to_csv(os.path.join(csv_dir, 'results_ashtech.csv'))
@@ -107,13 +140,13 @@ class Evaluator:
 
     def evaluate(self,rtks,label,only_fix):
         results = pd.DataFrame(index=self.labels_rtk)
-        samples,µ_err,µ_err_east,µ_err_north,σ_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[],[],[],[]
+        samples,µ_err,µ_err_east,µ_err_north,s_err,RMS_err,CEP_err,SSR_err = [],[],[],[],[],[],[],[]
 
         for rtk in rtks: samples.append(self.get_samples(rtk))
         for rtk in rtks: µ_err.append(self.get_accuracy(rtk.deviation))
         for rtk in rtks: µ_err_east.append(self.get_accuracy(rtk.diff_east))
         for rtk in rtks: µ_err_north.append(self.get_accuracy(rtk.diff_north))
-        for rtk in rtks: σ_err.append(self.get_precision(rtk))
+        for rtk in rtks: s_err.append(self.get_precision(rtk))
         for rtk in rtks: RMS_err.append(self.get_rms(rtk))
         for rtk in rtks: CEP_err.append(self.get_cep(rtk))
         if not only_fix:
@@ -124,7 +157,7 @@ class Evaluator:
         results.insert(results.columns.size,'µ_err',µ_err)
         results.insert(results.columns.size,'µ_err_east',µ_err)
         results.insert(results.columns.size,'µ_err_north',µ_err)
-        results.insert(results.columns.size,'σ_err',σ_err)
+        results.insert(results.columns.size,'s_err',s_err)
         results.insert(results.columns.size,'RMS_err',RMS_err)
 #        results.insert(results.columns.size,'CEP_err',CEP_err)
         if not only_fix:
@@ -142,8 +175,13 @@ class Evaluator:
         return float(rtk.mean())
 
     def get_precision(self,rtk):
-        # Precision (σerr) – standard deviation of error (stability of positioning)
+        # Precision (serr) – standard deviation of error (stability of positioning)
         return float(np.sqrt(rtk.deviation.std()))
+        # return float(rtk.deviation.std() / np.sqrt(len(rtk.deviation)))
+
+    def get_sigma(self,rtk):
+        # -
+        return float(rtk.deviation.std())
 
     def get_rms(self,rtk):
         # RMS error (RMSerr) – value specified by the manufacturer (metric emphasizing large errors)
@@ -178,3 +216,32 @@ class Evaluator:
         self.tersus["cvl_acc"] = self.tersus["cvl_acc"].abs()
         self.ashtech["cvl_acc"] = self.novatel["cvl_acc"].abs()
         self.ublox["cvl_acc"] = self.ublox["cvl_acc"].abs()
+
+    def get_spearman(self):
+        self.print_spearman(self.novatel,'novatel')
+        self.print_spearman(self.tersus,'tersus')
+        self.print_spearman(self.ashtech,'ashtech')
+        self.print_spearman(self.ublox,'ublox')
+
+    def print_spearman(self,rtk,label):
+        print(label + ':')
+        corr, p_value = spearmanr(rtk.cvl_speed, rtk.deviation)
+        print('cvl_speed/deviation: coor=' + str(corr) + '; p-value=' + str(p_value))
+        corr, p_value = spearmanr(rtk.cvl_acc, rtk.deviation)
+        print('cvl_acc/deviation: coor=' + str(corr) + '; p-value=' + str(p_value))
+
+    def get_median(self):
+        self.print_median(self.novatel,self.novatel_by_acc,'novatel')
+        self.print_median(self.tersus,self.tersus_by_acc,'tersus')
+        self.print_median(self.ashtech,self.ashtech_by_acc,'ashtech')
+        self.print_median(self.ublox,self.ublox_by_acc,'ublox')
+
+    def print_median(self,rtk,rtk_acc,label):
+        print('\n*******************' + label + ':')
+        me = [rtk.deviation[rtk.status == 4].median(),rtk.deviation[rtk.status == 5].median(),rtk.deviation[rtk.status == 2].median()]
+        print('median: FIX=' + str(me[0]) + '; FLOAT' + str(me[1]) + '; GNSS' + str(me[2]))
+
+        me = [rtk_acc[0].deviation.median(),rtk_acc[1].deviation.median(),rtk_acc[2].deviation.median()]
+        print('median: ACC=' + str(me[0]) + '; UNIF=' + str(me[1]) + '; DEC=' + str(me[2]))
+
+
