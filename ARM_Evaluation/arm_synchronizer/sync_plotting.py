@@ -294,7 +294,7 @@ class Plotter:
         ax_histx.set_title(label + ' - ' + measurement, size=20, loc='left')
         plt.title('Samples\n[-]', size=18, loc='left')
 
-        fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.png'))
         # plt.show()
 
     def plot_hist_dev(self,dev,label,results,measurement):
@@ -342,7 +342,7 @@ class Plotter:
                         Line2D([0], [0], color='b')]
         ax.legend(custom_lines, [r'$density$', r'$µ_{err}$', r'$s_{err}$', r'$RMS_{err}$'], prop={'weight':'bold'}, loc=1)
         fig.show()
-        fig.savefig(os.path.join(self.csv_dir, 'deviation_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'deviation_onlyfix-' + str(self.only_fix) + '_' + label + '.png'))
 
     def plot_correlation(self,x_value,dev,label,x_value_name):
         fig, ax = plt.subplots(figsize=[10, 10], dpi=100, facecolor='w', edgecolor='r')
@@ -367,7 +367,7 @@ class Plotter:
             square=False)
         ax.set_title(label + ' - pearsons correlations', size=10, loc='left')
         fig.tight_layout()
-        fig.savefig(os.path.join(self.csv_dir, 'pearson_onlyfix-' + str(self.only_fix) + '_' + label + '.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'pearson_onlyfix-' + str(self.only_fix) + '_' + label + '.png'))
 
     def plot_lmplot(self,data,label,x_value):
         g = sb.lmplot('cvl_' + x_value.split(' ')[0],'deviation',data,scatter_kws={"s": 2, "alpha": 0.3},legend=True)
@@ -427,7 +427,7 @@ class Plotter:
 
         # show plot
         # plt.show(bp)
-        fig.savefig(os.path.join(self.csv_dir, 'deviations-state_' + (measurement) + '_' + mode + '_' + label + '.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'deviations-state_' + (measurement) + '_' + mode + '_' + label + '.png'))
 
     def plot_acc_density(self,arm_20hz):
         fig, ax = plt.subplots(figsize=[5,5], dpi=100, facecolor='w', edgecolor='r')
@@ -447,5 +447,5 @@ class Plotter:
         ax.grid(True)
         fig.tight_layout()
 
-        fig.savefig(os.path.join(self.csv_dir, 'density-acc+speed.jpg'))
+        fig.savefig(os.path.join(self.csv_dir, 'density-acc+speed.png'))
 
