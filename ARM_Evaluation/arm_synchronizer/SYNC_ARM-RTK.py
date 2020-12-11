@@ -22,6 +22,7 @@ def configArgParser():
     parser.add('-np', '--new_preproccess', type=lambda x: (str(x).lower() == 'true'), help='proccess MRA and DEWESOFT before evaluation')
     parser.add('-of','--only_fix', type=lambda x: (str(x).lower() == 'true'), help='evaluate only fix samples')
     parser.add('-p','--prefix', type=str, help='evaluate only sliced time')
+    parser.add('-r','--rate', type=int, help='MRA rate in Hz (for static measurement)')
     args = parser.parse()
     return args
 
@@ -39,7 +40,7 @@ if args.only_fix:
 else:
     measurement = 'Whole measurement'
 
-pltr = plot.Plotter(args)
+# pltr = plot.Plotter(args)
 
 # =============================================================================
 # ARM:
@@ -49,110 +50,117 @@ if args.new_preproccess:
     arm.parse_slices()
     arm.get_bad_cicles()
     arm.drop_peaks()
-    arm.filter_signal()
-    arm.drop_bad_circles()
-    arm.drop_zero_speed()
-    arm.drop_zero_acc()
-    arm.drop_limit_acc()
-
-# =============================================================================
-# RTK
-# =============================================================================
-if args.new_preproccess:
-    rtk = rtk_prs.RtkParser(args)
-    rtk.parse_slices()
-    rtk.drop_points_wo_arm(arm.arm_20hz)
-    rtk.drop_points_wo_rtk(arm.arm_20hz)
-    rtk_list = rtk.concate_arm_and_rtks()
-
-    pltr.plot_rtk(rtk.novatel,args.rtk_names[0],"g")
-    pltr.plot_rtk(rtk.tersus,args.rtk_names[1],"y")
-    pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
-    pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
-
-# =============================================================================
-# EVL
-# =============================================================================
-evl = rtk_evl.Evaluator()
-if not args.new_preproccess:
-    evl.csv_load(args.result_dir)
-    rtk_list = evl.csv_load(checkFolder(args.result_dir))
-evl.get_deviations(rtk_list)
-if args.only_fix:
-    evl.filter_fix()
-# evl.filter_sigma()
-# evl.abs_acc()
-evl.get_make_boxes()
-# evl.adjust_status()
-evl.get_results(args.only_fix)
-
-evl.csv_print(checkFolder(args.result_dir),args.new_preproccess)
-
-evl.get_correlation()
-evl.get_spearman()
-evl.get_median()
-
-# =============================================================================
-# PLOTTING
-# =============================================================================
-
-# Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
-pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
-pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
-pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
-
-# Print density (The density of deviations)
-pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
-pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
-pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
-
-# Print deviatiton by status (The distribution of deviations during individual states)
-pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
-pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
-pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
-pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
-
-# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
-pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
-pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
-pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
-pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
+    arm.create_static_reference()
+    
+    static = arm.static
+    
+   
+    
+    
+    # arm.filter_signal()
+    # arm.drop_bad_circles()
+    # arm.drop_zero_speed()
+    # arm.drop_zero_acc()
+    # arm.drop_limit_acc()
 
 # # =============================================================================
-# # import numpy as np
-# # import matplotlib.pyplot as plt
-# # plt.scatter(evl.ashtech.status,evl.ashtech.deviation,marker ="_")
-# # plt.scatter(evl.ashtech.status,evl.ashtech.cvl_speed,marker ="_")
-# # plt.show()
+# # RTK
+# # =============================================================================
+# if args.new_preproccess:
+#     rtk = rtk_prs.RtkParser(args)
+#     rtk.parse_slices()
+#     rtk.drop_points_wo_arm(arm.arm_20hz)
+#     rtk.drop_points_wo_rtk(arm.arm_20hz)
+#     rtk_list = rtk.concate_arm_and_rtks()
+
+#     pltr.plot_rtk(rtk.novatel,args.rtk_names[0],"g")
+#     pltr.plot_rtk(rtk.tersus,args.rtk_names[1],"y")
+#     pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
+#     pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
+
+# # =============================================================================
+# # EVL
+# # =============================================================================
+# evl = rtk_evl.Evaluator()
+# if not args.new_preproccess:
+#     evl.csv_load(args.result_dir)
+#     rtk_list = evl.csv_load(checkFolder(args.result_dir))
+# evl.get_deviations(rtk_list)
+# if args.only_fix:
+#     evl.filter_fix()
+# # evl.filter_sigma()
+# # evl.abs_acc()
+# evl.get_make_boxes()
+# # evl.adjust_status()
+# evl.get_results(args.only_fix)
+
+# evl.csv_print(checkFolder(args.result_dir),args.new_preproccess)
+
+# evl.get_correlation()
+# evl.get_spearman()
+# evl.get_median()
+
+# # =============================================================================
+# # PLOTTING
 # # =============================================================================
 
-# # Print deviations (map,east,noth)
-# # pltr.plot_devs(evl.novatel,'novatel',"g")
-# # pltr.plot_devs(evl.tersus,'tersus',"y")
-# # pltr.plot_devs(evl.ashtech,'ashtech',"b")
-# # pltr.plot_devs(evl.ublox,'ublox',"m")
+# # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
+# pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+# pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+# pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+# pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# # pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
-# # pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')
-# # pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','speed [m/s]')
-# # pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','speed [m/s]')
-# # pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','acc [m/s]')
-# # pltr.plot_lmplot(evl.tersus,'Tersus BX305','acc [m/s]')
-# # pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','acc [m/s]')
-# # pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','acc [m/s]')
+# # Print density (The density of deviations)
+# pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+# pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+# pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+# pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# # pltr.plot_correlation(evl.novatel.cvl_speed,evl.novatel.deviation,'Novatel PwrPak7','speed [m/s]')
-# # pltr.plot_correlation(evl.tersus.cvl_speed,evl.tersus.deviation,'Tersus BX305','speed [m/s]')
-# # pltr.plot_correlation(evl.ashtech.cvl_speed,evl.ashtech.deviation,'Ashtech MB800','speed [m/s]')
-# # pltr.plot_correlation(evl.ublox.cvl_speed,evl.ublox.deviation,'u-blox C94-M8P','speed [m/s]')
-# # pltr.plot_correlation(evl.novatel.cvl_acc,evl.novatel.deviation,'Novatel PwrPak7','acceleration [m/s²]')
-# # pltr.plot_correlation(evl.tersus.cvl_acc,evl.tersus.deviation,'Tersus BX305','acceleration [m/s²]')
-# # pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
-# # pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')
+# # Print deviatiton by status (The distribution of deviations during individual states)
+# pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
+# pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
+# pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
+# pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
 
-# # pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
-# # pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
-# # pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
-# # pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')
+# # Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+# pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
+# pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
+# pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
+# pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
+
+# # # =============================================================================
+# # # import numpy as np
+# # # import matplotlib.pyplot as plt
+# # # plt.scatter(evl.ashtech.status,evl.ashtech.deviation,marker ="_")
+# # # plt.scatter(evl.ashtech.status,evl.ashtech.cvl_speed,marker ="_")
+# # # plt.show()
+# # # =============================================================================
+
+# # # Print deviations (map,east,noth)
+# # # pltr.plot_devs(evl.novatel,'novatel',"g")
+# # # pltr.plot_devs(evl.tersus,'tersus',"y")
+# # # pltr.plot_devs(evl.ashtech,'ashtech',"b")
+# # # pltr.plot_devs(evl.ublox,'ublox',"m")
+
+# # # pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','speed [m/s]')
+# # # pltr.plot_lmplot(evl.tersus,'Tersus BX305','speed [m/s]')
+# # # pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','speed [m/s]')
+# # # pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','speed [m/s]')
+# # # pltr.plot_lmplot(evl.novatel,'Novatel PwrPak7','acc [m/s]')
+# # # pltr.plot_lmplot(evl.tersus,'Tersus BX305','acc [m/s]')
+# # # pltr.plot_lmplot(evl.ashtech,'Ashtech MB800','acc [m/s]')
+# # # pltr.plot_lmplot(evl.ublox,'u-blox C94-M8P','acc [m/s]')
+
+# # # pltr.plot_correlation(evl.novatel.cvl_speed,evl.novatel.deviation,'Novatel PwrPak7','speed [m/s]')
+# # # pltr.plot_correlation(evl.tersus.cvl_speed,evl.tersus.deviation,'Tersus BX305','speed [m/s]')
+# # # pltr.plot_correlation(evl.ashtech.cvl_speed,evl.ashtech.deviation,'Ashtech MB800','speed [m/s]')
+# # # pltr.plot_correlation(evl.ublox.cvl_speed,evl.ublox.deviation,'u-blox C94-M8P','speed [m/s]')
+# # # pltr.plot_correlation(evl.novatel.cvl_acc,evl.novatel.deviation,'Novatel PwrPak7','acceleration [m/s²]')
+# # # pltr.plot_correlation(evl.tersus.cvl_acc,evl.tersus.deviation,'Tersus BX305','acceleration [m/s²]')
+# # # pltr.plot_correlation(evl.ashtech.cvl_acc,evl.ashtech.deviation,'Ashtech MB800','acceleration [m/s²]')
+# # # pltr.plot_correlation(evl.ublox.cvl_acc,evl.ublox.deviation,'u-blox C94-M8P','acceleration [m/s²]')
+
+# # # pltr.plot_pearsoncorr(evl.pearsoncorr_novatel,'Novatel PwrPak7')
+# # # pltr.plot_pearsoncorr(evl.pearsoncorr_tersus,'Tersus BX305')
+# # # pltr.plot_pearsoncorr(evl.pearsoncorr_ashtech,'Ashtech MB800')
+# # # pltr.plot_pearsoncorr(evl.pearsoncorr_ublox,'u-blox C94-M8P')
