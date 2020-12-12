@@ -236,8 +236,8 @@ class Plotter:
         if self.only_fix:
             bins = 1000
             max_hist = 7500
-            lim = 0.59
-            lim_xy = 0.59
+            lim = 0.19 #0.59
+            lim_xy = 0.19 #0.59
         else:
             if ('Receiver A' in label) or ('Receiver B' in label):
                 bins = 1500

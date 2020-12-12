@@ -22,6 +22,7 @@ class ArmParser:
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
         self.last_len_20hz = 0
+        self.static_measurement_time = 5 #[s]
 
         self.arm_20hz_paths = self.get_files('20hz')
         self.arm_async_paths = self.get_files('async')
@@ -53,8 +54,9 @@ class ArmParser:
         return csvs_paths
 
     def parse_slices(self):
-#        for file in self.arm_async_paths:
-#            self.parse_async(file)
+        for file in self.arm_async_paths:
+            self.parse_async(file)
+
         for file in self.arm_20hz_paths:
             self.parse_20hz(file)
 
@@ -71,7 +73,7 @@ class ArmParser:
             self.parse_peaks(file)
 
     def parse_async(self,file):
-        arm = pd.read_csv(file, sep=',', engine='python')
+        arm = pd.read_csv(file, sep=',', engine='python',nrows=2)
         arm = arm[["Time","Xarm","Yarm"]]
         arm = arm.rename(columns={"Time": "utc_time", "Xarm": "east", "Yarm": "north"})
         arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0)
@@ -206,3 +208,24 @@ class ArmParser:
         self.arm_badhalls = self.arm_badhalls[(self.arm_badhalls.utc_time > slice_times[0]) & (self.arm_badhalls.utc_time < slice_times[1])]
         self.arm_halls = self.arm_halls[(self.arm_halls.utc_time > slice_times[0]) & (self.arm_halls.utc_time < slice_times[1])]
         self.arm_peaks = self.arm_peaks[(self.arm_peaks.utc_time > slice_times[0]) & (self.arm_peaks.utc_time < slice_times[1])]
+        
+    def create_static_reference(self):
+        last_static_samples = pd.DataFrame([list(self.arm_20hz.iloc[0])],columns=list(self.arm_20hz.iloc[0].index))
+        last_static_samples = last_static_samples.append(self.arm_20hz[self.arm_20hz['index'].diff() < 1]).reset_index(drop=True)
+        first_async_speeds = self.arm_async[self.arm_async.index == 1].reset_index(drop=True)
+        self.static = pd.DataFrame(columns=last_static_samples.columns)
+        for i,last_static in last_static_samples.iterrows():
+            if first_async_speeds.iloc[i].raw_speed > self.speed_drop_tol: continue             
+            pre_turn = pd.DataFrame(columns=last_static_samples.columns)
+            static_period = [(last_static.utc_time - self.args.static_period),last_static.utc_time]
+            pre_turn.utc_time = np.linspace(static_period[0],static_period[1],num=(self.args.static_period*self.args.rate + 1))
+            pre_turn.east = last_static.east
+            pre_turn.north = last_static.north
+            pre_turn.up = last_static.up
+            pre_turn.raw_speed = first_async_speeds.iloc[i].raw_speed
+            pre_turn.raw_acc = first_async_speeds.iloc[i].raw_acc
+            pre_turn['cvl_speed'] = 0
+            pre_turn['cvl_acc'] = 0
+            pre_turn['status'] = 0
+            self.static = self.static.append(pre_turn)     
+            
