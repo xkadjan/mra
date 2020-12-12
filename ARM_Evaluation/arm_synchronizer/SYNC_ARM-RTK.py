@@ -46,79 +46,96 @@ pltr = plot.Plotter(args)
 # =============================================================================
 if args.new_preproccess:
     arm = arm_prs.ArmParser(args)
-    arm.parse_slices()
-    arm.get_bad_cicles()
-    arm.drop_peaks()
-    arm.filter_signal()
-    arm.drop_bad_circles()
-    arm.drop_zero_speed()
-    arm.drop_zero_acc()
-    arm.drop_limit_acc()
+    # arm.parse_slices()
+    # arm.get_bad_cicles()
+    # arm.drop_peaks()
+    # arm.filter_signal()
+    # arm.drop_bad_circles()
+    # arm.drop_zero_speed()
+    # arm.drop_zero_acc()
+    # arm.drop_limit_acc()
 
 # =============================================================================
 # RTK
 # =============================================================================
-if args.new_preproccess:
+if args.new_preproccess:       
     rtk = rtk_prs.RtkParser(args)
-    rtk.parse_slices()
-    rtk.drop_points_wo_arm(arm.arm_20hz)
-    rtk.drop_points_wo_rtk(arm.arm_20hz)
-    rtk_list = rtk.concate_arm_and_rtks()
+    
+    import numpy as np
+    import pandas as pd
+    static = True
+    rate = 20
+    
+    arm_20hz = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
+    if static:
+        folders = [i for i in rtk.rtk_folders if 'static' in i]
+        for folder in folders:
+            source = rtk.parse_rtk(rtk.load_files(folder,'novatel'))
+            utc_bounds = [source.utc_time.min(),source.utc_time.max()]
+            utc = list(np.linspace(utc_bounds[0],utc_bounds[1],int((utc_bounds[1] - utc_bounds[0])*rate) + 1))
+            print(utc)
+            arm_20hz['utc_time'] = [28038.849991655818, 28038.899993324652, 28038.94999499349, 28038.999996662325, 28039.049998331164, 28039.1]
+            # arm_20hz['east'] = source[source.status == 4].east.mean()
+            # arm_20hz['north'] = source[source.status == 4].north.mean()
+    # rtk.parse_slices()
+    # rtk.drop_points_wo_arm(arm.arm_20hz)
+    # rtk.drop_points_wo_rtk(arm.arm_20hz)
+    # rtk_list = rtk.concate_arm_and_rtks()
 
-    pltr.plot_rtk(rtk.novatel,args.rtk_names[0],"g")
-    pltr.plot_rtk(rtk.tersus,args.rtk_names[1],"y")
-    pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
-    pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
+    # pltr.plot_rtk(rtk.novatel,args.rtk_names[0],"g")
+    # pltr.plot_rtk(rtk.tersus,args.rtk_names[1],"y")
+    # pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
+    # pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
 
-# =============================================================================
-# EVL
-# =============================================================================
-evl = rtk_evl.Evaluator()
-if not args.new_preproccess:
-    evl.csv_load(args.result_dir)
-    rtk_list = evl.csv_load(checkFolder(args.result_dir))
-evl.get_deviations(rtk_list)
-if args.only_fix:
-    evl.filter_fix()
-# evl.filter_sigma()
-# evl.abs_acc()
-evl.get_make_boxes()
-# evl.adjust_status()
-evl.get_results(args.only_fix)
+# # =============================================================================
+# # EVL
+# # =============================================================================
+# evl = rtk_evl.Evaluator()
+# if not args.new_preproccess:
+#     evl.csv_load(args.result_dir)
+#     rtk_list = evl.csv_load(checkFolder(args.result_dir))
+# evl.get_deviations(rtk_list)
+# if args.only_fix:
+#     evl.filter_fix()
+# # evl.filter_sigma()
+# # evl.abs_acc()
+# evl.get_make_boxes()
+# # evl.adjust_status()
+# evl.get_results(args.only_fix)
 
-evl.csv_print(checkFolder(args.result_dir),args.new_preproccess)
+# evl.csv_print(checkFolder(args.result_dir),args.new_preproccess)
 
-evl.get_correlation()
-evl.get_spearman()
-evl.get_median()
+# evl.get_correlation()
+# evl.get_spearman()
+# evl.get_median()
 
-# =============================================================================
-# PLOTTING
-# =============================================================================
+# # =============================================================================
+# # PLOTTING
+# # =============================================================================
 
-# Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
-pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
-pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
-pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
+# # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
+# pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+# pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+# pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+# pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# Print density (The density of deviations)
-pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
-pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
-pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
+# # Print density (The density of deviations)
+# pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+# pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+# pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+# pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# Print deviatiton by status (The distribution of deviations during individual states)
-pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
-pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
-pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
-pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
+# # Print deviatiton by status (The distribution of deviations during individual states)
+# pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
+# pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
+# pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
+# pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
 
-# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
-pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
-pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
-pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
-pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
+# # Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+# pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
+# pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
+# pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
+# pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
 
 # # =============================================================================
 # # import numpy as np
