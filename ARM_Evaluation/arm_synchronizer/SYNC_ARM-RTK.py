@@ -52,8 +52,8 @@ if args.new_preproccess:
     arm.parse_slices()
     arm.get_bad_cicles()
     arm.drop_peaks()
-    arm.create_static_reference()
     arm.filter_signal()
+    arm.create_static_reference()
     arm.drop_bad_circles()
     arm.drop_zero_speed()
     arm.drop_zero_acc()
@@ -97,9 +97,9 @@ evl.get_correlation()
 evl.get_spearman()
 evl.get_median()
 
-# # =============================================================================
-# # PLOTTING
-# # =============================================================================
+# =============================================================================
+# PLOTTING
+# =============================================================================
 
 # # Print uncompensated positions
 # pltr.plot_rtk(arm.static,'MRA',"r")
@@ -108,37 +108,37 @@ evl.get_median()
 # pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
 # pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
 
-# Print deviations (map,east,noth)
-pltr.plot_devs(evl.novatel,'novatel',"g")
-pltr.plot_devs(evl.tersus,'tersus',"y")
-pltr.plot_devs(evl.ashtech,'ashtech',"b")
-pltr.plot_devs(evl.ublox,'ublox',"m")
+# # Print deviations (map,east,noth)
+# pltr.plot_devs(evl.novatel,'novatel',"g")
+# pltr.plot_devs(evl.tersus,'tersus',"y")
+# pltr.plot_devs(evl.ashtech,'ashtech',"b")
+# pltr.plot_devs(evl.ublox,'ublox',"m")
 
 # =============================================================================
 
-# # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
-# pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
-# pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
-# pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-# pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
+# Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
+pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# # Print density (The density of deviations)
-# pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
-# pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
-# pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
-# pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
+# Print density (The density of deviations)
+pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement)
+pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement)
+pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement)
+pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement)
 
-# # Print deviatiton by status (The distribution of deviations during individual states)
-# pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
-# pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
-# pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
-# pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
+# Print deviatiton by status (The distribution of deviations during individual states)
+pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
+pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
+pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
+pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
 
-# # Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
-# pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
-# pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
-# pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
-# pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
+# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
+pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
+pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
+pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
 
 # # # =============================================================================
 # # # import numpy as np
