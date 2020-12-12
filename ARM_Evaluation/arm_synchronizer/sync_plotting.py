@@ -19,10 +19,10 @@ class Plotter:
         self.only_fix = args.only_fix
         self.csv_dir = args.result_dir
         if args.new_preproccess:
-            self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
-            self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
-            self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
-            self.fig_4, self.ax_4 = plt.subplots(num=304,figsize=[12.2, 5], dpi=100, facecolor='w', edgecolor='r')
+            self.fig_1, self.ax_1 = plt.subplots(num=301,figsize=[7, 7], dpi=200, facecolor='w', edgecolor='r')
+            self.fig_2, self.ax_2 = plt.subplots(num=302,figsize=[20, 12], dpi=200, facecolor='w', edgecolor='r')
+            self.fig_3, self.ax_3 = plt.subplots(num=303,figsize=[20, 12], dpi=200, facecolor='w', edgecolor='r')
+            self.fig_4, self.ax_4 = plt.subplots(num=304,figsize=[20, 12], dpi=200, facecolor='w', edgecolor='r')
 
         self.fig_41, self.ax_41 = plt.subplots(num=401,figsize=[7, 7], dpi=100, facecolor='w', edgecolor='r')
         self.fig_42, self.ax_42 = plt.subplots(num=402,figsize=[12.2, 3], dpi=100, facecolor='w', edgecolor='r')
@@ -35,10 +35,12 @@ class Plotter:
         self.plot_utcE(data, signal_name, color)
         self.plot_utcSpeed(data, signal_name, color)
 
-    def plot_rtk(self,rtk,signal_name,color):
+    def plot_rtk(self,rtk,signal_name,color,view_offset):
+        self.view_offset = view_offset
         self.plot_EN(rtk, signal_name, color)
         self.plot_utcE(rtk, signal_name, color)
         self.plot_utcStatus(rtk, signal_name, color)
+        self.plot_utcSpeed(rtk, signal_name, color)
 
     def plot_devs(self,rtk,signal_name,color):
         self.plot_devs_EN(rtk, signal_name, color)
@@ -85,92 +87,100 @@ class Plotter:
     def plot_EN(self,points_DF, rcv_name, rcv_color):
         self.ax_1.plot(points_DF.east, points_DF.north, rcv_color, marker=".", linewidth=0.1, alpha=0.2,label=rcv_name)
         self.ax_1.set_title('Map of positions', size=12, loc='left')
-        self.ax_1.set_xlabel('distance to North [m]',size=10)
-        self.ax_1.set_ylabel('distance to East [m]',size=10)
-        #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
-        #plt.majorticks_on()
-        self.ax_1.minorticks_on()
-        self.ax_1.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
-        self.ax_1.set_aspect('equal', 'datalim')
-    #    plt.style.use('seaborn-paper')
-        self.ax_1.grid(True)
-        self.ax_1.legend(loc=1)
-        self.fig_1.tight_layout()
-        self.fig_1.set_facecolor('whitesmoke')
-        self.fig_1.show()
+    #     self.ax_1.set_xlabel('distance to North [m]',size=10)
+    #     self.ax_1.set_ylabel('distance to East [m]',size=10)
+    #     #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
+    #     #plt.majorticks_on()
+    #     self.ax_1.minorticks_on()
+    #     self.ax_1.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
+    #     self.ax_1.set_aspect('equal', 'datalim')
+    # #    plt.style.use('seaborn-paper')
+    #     self.ax_1.grid(True)
+    #     self.ax_1.legend(loc=1)
+    #     self.fig_1.tight_layout()
+    #     self.fig_1.set_facecolor('whitesmoke')
+    #     self.fig_1.show()
 
     def plot_utcE(self,points_DF, rcv_name, rcv_color):
-        self.ax_2.plot(points_DF.utc_time, points_DF.east, rcv_color, marker=".", linewidth=1, markersize=4, alpha=0.4, label=rcv_name)
-        self.ax_2.set_title('Positions in time', size=12, loc='left')
-        self.ax_2.set_xlabel('time of day [s]',size=10)
-        self.ax_2.set_ylabel('distance to East [m]',size=10)
-        #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
-        #plt.majorticks_on()
-        self.ax_2.minorticks_on()
-        self.ax_2.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
-        #plt.axes().set_aspect('equal', 'datalim')
-        self.ax_2.grid(True)
-        self.ax_2.legend(loc=1)
-        self.fig_2.tight_layout()
-        self.fig_2.set_facecolor('whitesmoke')
-        self.fig_2.show()
-        custom_lines = [Line2D([0], [0], color='b', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
-                        Line2D([0], [0], color='r', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
-                        Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
-                        Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6),
-                        patches.Rectangle((0,0),1,1, color='r', alpha=0.2)]
-        self.ax_2.legend(custom_lines, ['dewesoft', 'arm','hall_bad','hall_correct','removed_period'],loc=1)
-
+        self.ax_2.plot(points_DF.utc_time, points_DF.east + self.view_offset, rcv_color, marker=".", linewidth=1, markersize=4, alpha=0.4, label=rcv_name)
+        # self.ax_2.set_title('Positions in time', size=12, loc='left')
+        # self.ax_2.set_xlabel('time of day [s]',size=10)
+        # self.ax_2.set_ylabel('distance to East [m]',size=10)
+        # #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
+        # #plt.majorticks_on()
+        # self.ax_2.minorticks_on()
+        # self.ax_2.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
+        # #plt.axes().set_aspect('equal', 'datalim')
+        # self.ax_2.grid(True)
+        # self.ax_2.legend(loc=1)
+        self.ax_2.set_ylim([-5,85])
+        # self.fig_2.tight_layout()
+        # self.fig_2.set_facecolor('whitesmoke')
+        # self.fig_2.show()
+        # custom_lines = [Line2D([0], [0], color='b', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
+        #                 Line2D([0], [0], color='r', marker=".", linewidth=0.3, alpha=1, markersize=1.5),
+        #                 Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+        #                 Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+        #                 patches.Rectangle((0,0),1,1, color='r', alpha=0.2)]
+        # self.ax_2.legend(custom_lines, ['dewesoft', 'arm','hall_bad','hall_correct','removed_period'],loc=1)
+        
     def plot_utcStatus(self,points_DF, rcv_name, rcv_color):
-        self.ax_3.plot(points_DF.utc_time, points_DF.status, rcv_color, marker="|", linewidth=0.2, alpha=0.4, label=rcv_name)
+        self.ax_3.plot(points_DF.utc_time, points_DF.status + self.view_offset/4, rcv_color, marker="|", linewidth=0.2, alpha=0.4, label=rcv_name)
 #        self.ax_2.plot(points_DF.utc_time, points_DF.status, rcv_color, marker="|", linewidth=0.2, alpha=0.4, label=rcv_name)
         self.ax_3.set_title('RTK correction in time', size=12, loc='left')
-        self.ax_3.set_xlabel('time of day [s]',size=10)
-        self.ax_3.set_ylabel('RTK status [-]',size=10)
-        #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
-        #plt.majorticks_on()
-        self.ax_3.minorticks_on()
-        self.ax_3.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
-        #plt.axes().set_aspect('equal', 'datalim')
-        self.ax_3.grid(True)
-        self.ax_3.legend(loc=1)
-        self.fig_3.tight_layout()
-    #    plt.axis([points_DF.utc_time.min()-100, points_DF.utc_time.max()+100, -1, 1])
-        self.fig_3.set_facecolor('whitesmoke')
-        self.fig_3.show()
+    #     self.ax_3.set_xlabel('time of day [s]',size=10)
+    #     self.ax_3.set_ylabel('RTK status [-]',size=10)
+    #     #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
+    #     #plt.majorticks_on()
+    #     self.ax_3.minorticks_on()
+    #     self.ax_3.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
+    #     #plt.axes().set_aspect('equal', 'datalim')
+    #     self.ax_3.grid(True)
+    #     self.ax_3.legend(loc=1)
+        # self.ax_3.set_ylim([0,50])
+    #     self.fig_3.tight_layout()
+    # #    plt.axis([points_DF.utc_time.min()-100, points_DF.utc_time.max()+100, -1, 1])
+    #     self.fig_3.set_facecolor('whitesmoke')
+    #     self.fig_3.show()
 
     def plot_utcSpeed(self,points_DF, rcv_name, rcv_color):
-        self.ax_4.plot(points_DF.utc_time, points_DF.raw_speed, 'darksalmon', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_speed[m/s]')
-        self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc, 'skyblue', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_acc[m/s-2]')
-        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_speed, '-r', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_speed[m/s]')
-        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_acc, '-b', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_acc[m/s-2]')
+        # self.ax_4.plot(points_DF.utc_time, points_DF.raw_speed + self.view_offset, 'darksalmon', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_speed[m/s]')
+        # self.ax_4.plot(points_DF.utc_time, points_DF.raw_acc + self.view_offset, 'skyblue', marker=".", linewidth=1, alpha=1, markersize=2, label='raw_acc[m/s-2]')
+        self.ax_4.plot(points_DF.utc_time, points_DF.cvl_speed + self.view_offset, '|r', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_speed[m/s]')
+        # self.ax_4.plot(points_DF.utc_time, points_DF.cvl_acc + self.view_offset, '-b', marker=".", linewidth=1, alpha=1, markersize=2, label='filtered_acc[m/s-2]')
         self.ax_4.set_title('Speed and acceleration in time', size=14, loc='left')
-        self.ax_4.set_xlabel('time of day [s]',size=12)
-        self.ax_4.set_ylabel('speed [mps] / acceleration [mps-2]',size=12)
-        #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
-        #plt.majorticks_on()
-        self.ax_4.minorticks_on()
-        self.ax_4.tick_params(axis='both',which='major',length=10,width=1,labelsize=12)
-        #plt.axes().set_aspect('equal', 'datalim')
-        self.ax_4.grid(True)
-        self.ax_4.legend(loc=1)
-        self.ax_4.set_ylim([-10,10])
-        self.ax_4.set_xlim([60585,60655])
+    #     self.ax_4.set_xlabel('time of day [s]',size=12)
+    #     self.ax_4.set_ylabel('speed [mps] / acceleration [mps-2]',size=12)
+    #     #plt.set_minor_formatter(FormatStrFormatter("%.2f"))
+    #     #plt.majorticks_on()
+    #     self.ax_4.minorticks_on()
+    #     self.ax_4.tick_params(axis='both',which='major',length=10,width=1,labelsize=12)
+    #     #plt.axes().set_aspect('equal', 'datalim')
+    #     self.ax_4.grid(True)
+    #     self.ax_4.legend(loc=1)
+        self.ax_4.set_ylim([-10,90])
+        # self.ax_4.set_xlim([72000,75000])
 
-        self.fig_4.tight_layout()
-    #    plt.axis([points_DF.utc_time.min()-100, points_DF.utc_time.max()+100, -6, 10])
-        self.fig_4.set_facecolor('whitesmoke')
-        self.fig_4.show()
-        custom_lines = [Line2D([0], [0], color='darksalmon', marker=".", linewidth=1, alpha=1, markersize=2),
-                        Line2D([0], [0], color='skyblue', marker=".", linewidth=1, alpha=1, markersize=2),
-                        Line2D([0], [0], color='r', marker=".", linewidth=1, alpha=1, markersize=2),
-                        Line2D([0], [0], color='b', marker=".", linewidth=1, alpha=1, markersize=2),
-                        # Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
-                        Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6)]#,
-                        # patches.Rectangle((0,0),1,1, color='r', alpha=0.4)]
-        # self.ax_4.legend(custom_lines, ['raw_speed','raw_acc', 'cvl_speed', 'cvl_acc','hall_bad','hall_correct','removed_period'],loc=1)
-        self.ax_4.legend(custom_lines, [r'$v_{r}$',r'$a_{r}$', r'$v_{f}$', r'$a_{f}$',r'$t_{h}$',],loc=1)
-
+    #     self.fig_4.tight_layout()
+    # #    plt.axis([points_DF.utc_time.min()-100, points_DF.utc_time.max()+100, -6, 10])
+    #     self.fig_4.set_facecolor('whitesmoke')
+    #     self.fig_4.show()
+    #     custom_lines = [Line2D([0], [0], color='darksalmon', marker=".", linewidth=1, alpha=1, markersize=2),
+    #                     Line2D([0], [0], color='skyblue', marker=".", linewidth=1, alpha=1, markersize=2),
+    #                     Line2D([0], [0], color='r', marker=".", linewidth=1, alpha=1, markersize=2),
+    #                     Line2D([0], [0], color='b', marker=".", linewidth=1, alpha=1, markersize=2),
+    #                     # Line2D([0], [0], color='y', marker='|', linestyle='--', linewidth=1, alpha=0.6),
+    #                     Line2D([0], [0], color='k', marker='|', linestyle='--', linewidth=1, alpha=0.6)]#,
+    #                     # patches.Rectangle((0,0),1,1, color='r', alpha=0.4)]
+    #     # self.ax_4.legend(custom_lines, ['raw_speed','raw_acc', 'cvl_speed', 'cvl_acc','hall_bad','hall_correct','removed_period'],loc=1)
+    #     self.ax_4.legend(custom_lines, [r'$v_{r}$',r'$a_{r}$', r'$v_{f}$', r'$a_{f}$',r'$t_{h}$',],loc=1)
+        
+    def print_to_file(self):
+        self.fig_1.savefig(os.path.join(self.csv_dir, 'r-EN_' + str(self.only_fix) + '.png'))
+        self.fig_2.savefig(os.path.join(self.csv_dir, 'r-TE_' + str(self.only_fix) + '.png'))
+        self.fig_3.savefig(os.path.join(self.csv_dir, 'r-TS_' + str(self.only_fix) + '.png'))
+        self.fig_4.savefig(os.path.join(self.csv_dir, 'r-speed_' + str(self.only_fix) + '.png'))
+        
     #::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     def plot_devs_EN(self,points_DF, rcv_name, rcv_color):
@@ -200,6 +210,7 @@ class Plotter:
         self.ax_42.minorticks_on()
         self.ax_42.tick_params(axis='both',which='major',length=10,width=1,labelsize=10)
         #plt.axes().set_aspect('equal', 'datalim')
+        self.ax_42.set_xlim([-4,4])
         self.ax_42.grid(True)
         self.ax_42.legend(loc=1)
         self.fig_42.tight_layout()

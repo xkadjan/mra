@@ -88,7 +88,8 @@ class ArmParser:
         arm["up"] = 0
         arm["raw_speed"] = ((arm.east.diff().pow(2) + arm.north.diff().pow(2)).pow(1/2) / arm.utc_time.diff()).fillna(0)
         arm["raw_acc"] = (arm.raw_speed.diff() / arm.utc_time.diff()).fillna(0)
-        self.arm_20hz = self.arm_20hz.append(arm[["utc_time","east","north","up","raw_speed","raw_acc"]])
+        arm['status'] = 0
+        self.arm_20hz = self.arm_20hz.append(arm[["utc_time","east","north","up","raw_speed","raw_acc","status"]])
         self.last_len_20hz = len(self.arm_20hz)
         print(' - arm 20hz loading done, ' + str(len(arm)) + ' points')
 
@@ -226,6 +227,6 @@ class ArmParser:
             pre_turn.raw_acc = first_async_speeds.iloc[i].raw_acc
             pre_turn['cvl_speed'] = 0
             pre_turn['cvl_acc'] = 0
-            pre_turn['status'] = 0
+            # pre_turn['status'] = 0
             self.static = self.static.append(pre_turn)     
             

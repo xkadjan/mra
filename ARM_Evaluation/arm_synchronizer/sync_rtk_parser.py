@@ -72,9 +72,19 @@ class RtkParser:
                 xyz = transpos.wgs2xyz(rtk[['lat_in_rad','lon_in_rad','height']].values)
                 enu = transpos.xyz2enu(xyz,self.wgs_ref)
                 rtk["east"], rtk["north"], rtk["up"] = enu.T[0], enu.T[1], enu.T[2]
-                rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status']]
+                rtk["raw_speed"] = ((rtk.east.diff().pow(2) + rtk.north.diff().pow(2)).pow(1/2) / rtk.utc_time.diff()).fillna(0)
+                rtk["raw_acc"] = (rtk.raw_speed.diff() / rtk.utc_time.diff()).fillna(0)
+                rtk["cvl_speed"] = self.convolve_filter(rtk.raw_speed,7)
+                rtk["cvl_acc"] = self.convolve_filter(rtk.raw_acc,33)
+                rtk = rtk[["utc_time","lat","lon","height","east","north","up",'status',"raw_speed","raw_acc","cvl_speed","cvl_acc"]]
                 return rtk
-
+            
+    def convolve_filter(self,signal,kernel_size):
+        kernel = (np.ones(kernel_size)/kernel_size).tolist()
+        cvl = np.zeros(len(signal))
+        cvl[int((kernel_size-kernel_size%2)/2):-int((kernel_size-kernel_size%2)/2)] = np.convolve(signal, kernel, mode='valid')
+        return cvl
+    
     def get_points(self,sentences,label):
         points = []
         error_sentence,incomplete_sentence = [],[]
