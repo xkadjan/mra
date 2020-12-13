@@ -71,21 +71,14 @@ if args.new_preproccess:
     # pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
     
     rtk_static = rtk_prs.RtkParser(args,'static')
-    arm.create_static_reference(rtk_static)
     rtk_static.parse_slices()
-    rtk_static.drop_points_wo_arm(arm.arm_static)
-    rtk_static.drop_points_wo_rtk(arm.arm_static)
-    rtk_static_list = rtk_static.concate_arm_and_rtks()
-    
+    rtk_static.create_static_reference()
+    rtk_static_list = rtk_static.concate_static_and_rtks()   
     
     pltr.plot_rtk(rtk_static.novatel,args.rtk_names[0],"g")
     pltr.plot_rtk(rtk_static.tersus,args.rtk_names[1],"y")
     pltr.plot_rtk(rtk_static.ashtech,args.rtk_names[2],"b")
     pltr.plot_rtk(rtk_static.ublox,args.rtk_names[3],"m")
-
-    
-    
-
 
 # # =============================================================================
 # # EVL

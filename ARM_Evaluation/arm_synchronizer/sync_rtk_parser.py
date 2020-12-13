@@ -128,8 +128,6 @@ class RtkParser:
                 if arm_row == len(times_of_arm)-1:
                     condition.append(True)
         condition = pd.Series(condition)
-        self.condition = condition
-        self.dropped_df = dropped_df
         drop_ratio = (len(condition[condition == True]) / len(condition) * 100)
         print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
         return dropped_df.drop(condition.index[condition == True])
@@ -142,13 +140,12 @@ class RtkParser:
         return [novatel,tersus,ashtech,ublox]
 
     def concate_dfs(self,arm_df,rtk_df):
-        # arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
+        arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
         arm_df = arm_df.rename(columns={"east": "arm_east", "north": "arm_north"})
         rtk_df = rtk_df.reset_index()[['east','north','status']]
         rtk_df = rtk_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
         arm_rtk_df = pd.concat([arm_df, rtk_df], axis=1)
-        # arm_rtk_df = arm_rtk_df[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
-        print(arm_df)
+        arm_rtk_df = arm_rtk_df[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
         return arm_rtk_df
 
     def slice_times(self,slice_times):
@@ -156,3 +153,34 @@ class RtkParser:
         self.tersus = self.tersus[(self.tersus.utc_time > slice_times[0]) & (self.tersus.utc_time < slice_times[1])]
         self.ashtech = self.ashtech[(self.ashtech.utc_time > slice_times[0]) & (self.ashtech.utc_time < slice_times[1])]
         self.ublox = self.ublox[(self.ublox.utc_time > slice_times[0]) & (self.ublox.utc_time < slice_times[1])]
+        
+    def create_static_reference(self):       
+        self.static_reference = []
+        for folder in self.rtk_folders:
+            source = self.parse_rtk(self.load_files(folder,'novatel'))
+            reference = pd.Series(index=["start","stop","east","north","up"])
+            reference.start = source.utc_time.min()
+            reference.stop = source.utc_time.max()
+            reference.east = source[source.status == 4].east.mean()
+            reference.north = source[source.status == 4].north.mean()
+            reference.up = source[source.status == 4].up.mean()
+            self.static_reference.append(reference)
+            
+    def concate_static_and_rtks(self):
+         novatel = self.concate_static_dfs(self.novatel)
+         tersus = self.concate_static_dfs(self.tersus)
+         ashtech = self.concate_static_dfs(self.ashtech)
+         ublox = self.concate_static_dfs(self.ublox)
+         return [novatel,tersus,ashtech,ublox]
+     
+    def concate_static_dfs(self,rtk_df):
+        rtk_concated = pd.DataFrame(columns=['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north'])
+        for i in range(len(self.static_reference)):
+            measurement_df = rtk_df[rtk_df.utc_time.between(self.static_reference[i].start,self.static_reference[i].stop)]
+            measurement_df['arm_east'] = self.static_reference[i].east
+            measurement_df['arm_north'] = self.static_reference[i].north
+            measurement_df['cvl_speed'] = 0
+            measurement_df['cvl_acc'] = 0
+            measurement_df = measurement_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
+            rtk_concated = rtk_concated.append(measurement_df)       
+        return rtk_concated[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
