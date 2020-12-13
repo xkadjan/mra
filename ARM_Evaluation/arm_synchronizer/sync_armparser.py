@@ -22,6 +22,7 @@ class ArmParser:
         self.seconds_to_drop = 100      # [s]
         self.seconds_over_hall = 0.1    # [s]
         self.last_len_20hz = 0
+        self.rate = 20                  # [Hz]
 
         self.arm_20hz_paths = self.get_files('20hz')
         self.arm_async_paths = self.get_files('async')
@@ -34,6 +35,7 @@ class ArmParser:
         self.arm_badhalls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
         self.arm_halls = pd.DataFrame(columns=['hall_index', 'utc_time', 'enc_err'])
         self.arm_peaks = pd.DataFrame(columns=['sample_index', 'utc_time', 'raw_speed_diff'])
+        self.arm_static = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
 
         self.circle_good = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
         self.circle_bad = pd.DataFrame(columns=["row","enc","error","time_start","time_end"])
@@ -206,3 +208,17 @@ class ArmParser:
         self.arm_badhalls = self.arm_badhalls[(self.arm_badhalls.utc_time > slice_times[0]) & (self.arm_badhalls.utc_time < slice_times[1])]
         self.arm_halls = self.arm_halls[(self.arm_halls.utc_time > slice_times[0]) & (self.arm_halls.utc_time < slice_times[1])]
         self.arm_peaks = self.arm_peaks[(self.arm_peaks.utc_time > slice_times[0]) & (self.arm_peaks.utc_time < slice_times[1])]
+        
+    def create_static_reference(self,rtk):       
+        folders = [i for i in rtk.rtk_folders if 'static' in i]
+        for folder in folders:
+            source = rtk.parse_rtk(rtk.load_files(folder,'novatel'))
+            utc_bounds = [source.utc_time.min(),source.utc_time.max()]
+            reference = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
+            reference.utc_time = np.linspace(utc_bounds[0],utc_bounds[1],num=int((utc_bounds[1] - utc_bounds[0])*self.rate) + 1)
+            reference.east = source[source.status == 4].east.mean()
+            reference.north = source[source.status == 4].north.mean()
+            reference.up = source[source.status == 4].up.mean()
+            reference.raw_speed = 0
+            reference.raw_acc = 0
+            self.arm_static = self.arm_static.append(reference)

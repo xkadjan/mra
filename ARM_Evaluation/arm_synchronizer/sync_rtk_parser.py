@@ -12,11 +12,11 @@ import sync_transpositions as transpos
 
 class RtkParser:
 
-    def __init__(self,args):
+    def __init__(self,args,prefix):
         self.args = args
         self.wgs_ref = args.wgs_ref
         self.dir_rtk = args.dir_rtk
-        self.rtk_folders = os.listdir(self.dir_rtk)
+        self.rtk_folders = [i for i in os.listdir(self.dir_rtk) if prefix in i]
         self.novatel = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
         self.tersus = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
         self.ashtech = pd.DataFrame(columns=["utc_time","lat","lon","height","east","north","up",'status'])
@@ -27,25 +27,16 @@ class RtkParser:
         self.ublox_ref = pd.DataFrame()
 
     def parse_slices(self):
-
-        if self.args.prefix == 'all':
-            folders = self.rtk_folders
-        else:
-            folders = [i for i in self.rtk_folders if self.args.prefix in i]
-
-        for folder in folders:
+        for folder in self.rtk_folders:
             rtk_txts_paths = self.load_files(folder,'novatel')
             self.novatel = self.novatel.append(self.parse_rtk(rtk_txts_paths))
-
-        for folder in folders:
+        for folder in self.rtk_folders:
             rtk_txts_paths = self.load_files(folder,'tersus')
             self.tersus = self.tersus.append(self.parse_rtk(rtk_txts_paths))
-
-        for folder in folders:
+        for folder in self.rtk_folders:
             rtk_txts_paths = self.load_files(folder,'ashtech')
             self.ashtech = self.ashtech.append(self.parse_rtk(rtk_txts_paths))
-
-        for folder in folders:
+        for folder in self.rtk_folders:
             rtk_txts_paths = self.load_files(folder,'ublox')
             self.ublox = self.ublox.append(self.parse_rtk(rtk_txts_paths))
 
@@ -137,6 +128,8 @@ class RtkParser:
                 if arm_row == len(times_of_arm)-1:
                     condition.append(True)
         condition = pd.Series(condition)
+        self.condition = condition
+        self.dropped_df = dropped_df
         drop_ratio = (len(condition[condition == True]) / len(condition) * 100)
         print(' - ' + label + ": %.3f" % drop_ratio + ' % of points were dropped')
         return dropped_df.drop(condition.index[condition == True])
@@ -149,12 +142,13 @@ class RtkParser:
         return [novatel,tersus,ashtech,ublox]
 
     def concate_dfs(self,arm_df,rtk_df):
-        arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
+        # arm_df = arm_df.drop(columns='level_0').reset_index()[['utc_time','east','north','cvl_speed','cvl_acc']]
         arm_df = arm_df.rename(columns={"east": "arm_east", "north": "arm_north"})
         rtk_df = rtk_df.reset_index()[['east','north','status']]
         rtk_df = rtk_df.rename(columns={"east": "rtk_east", "north": "rtk_north"})
         arm_rtk_df = pd.concat([arm_df, rtk_df], axis=1)
-        arm_rtk_df = arm_rtk_df[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
+        # arm_rtk_df = arm_rtk_df[['utc_time','cvl_speed','cvl_acc','status','arm_east','arm_north','rtk_east','rtk_north']]
+        print(arm_df)
         return arm_rtk_df
 
     def slice_times(self,slice_times):

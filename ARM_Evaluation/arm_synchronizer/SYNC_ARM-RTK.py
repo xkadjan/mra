@@ -59,33 +59,33 @@ if args.new_preproccess:
 # RTK
 # =============================================================================
 if args.new_preproccess:       
-    rtk = rtk_prs.RtkParser(args)
-    
-    import numpy as np
-    import pandas as pd
-    static = True
-    rate = 20
-    
-    arm_20hz = pd.DataFrame(columns=["utc_time","east","north","up","raw_speed","raw_acc"])
-    if static:
-        folders = [i for i in rtk.rtk_folders if 'static' in i]
-        for folder in folders:
-            source = rtk.parse_rtk(rtk.load_files(folder,'novatel'))
-            utc_bounds = [source.utc_time.min(),source.utc_time.max()]
-            utc = list(np.linspace(utc_bounds[0],utc_bounds[1],int((utc_bounds[1] - utc_bounds[0])*rate) + 1))
-            print(utc)
-            arm_20hz['utc_time'] = [28038.849991655818, 28038.899993324652, 28038.94999499349, 28038.999996662325, 28039.049998331164, 28039.1]
-            # arm_20hz['east'] = source[source.status == 4].east.mean()
-            # arm_20hz['north'] = source[source.status == 4].north.mean()
+    # rtk = rtk_prs.RtkParser(args,'kph')
     # rtk.parse_slices()
     # rtk.drop_points_wo_arm(arm.arm_20hz)
     # rtk.drop_points_wo_rtk(arm.arm_20hz)
     # rtk_list = rtk.concate_arm_and_rtks()
-
+    
     # pltr.plot_rtk(rtk.novatel,args.rtk_names[0],"g")
     # pltr.plot_rtk(rtk.tersus,args.rtk_names[1],"y")
     # pltr.plot_rtk(rtk.ashtech,args.rtk_names[2],"b")
     # pltr.plot_rtk(rtk.ublox,args.rtk_names[3],"m")
+    
+    rtk_static = rtk_prs.RtkParser(args,'static')
+    arm.create_static_reference(rtk_static)
+    rtk_static.parse_slices()
+    rtk_static.drop_points_wo_arm(arm.arm_static)
+    rtk_static.drop_points_wo_rtk(arm.arm_static)
+    rtk_static_list = rtk_static.concate_arm_and_rtks()
+    
+    
+    pltr.plot_rtk(rtk_static.novatel,args.rtk_names[0],"g")
+    pltr.plot_rtk(rtk_static.tersus,args.rtk_names[1],"y")
+    pltr.plot_rtk(rtk_static.ashtech,args.rtk_names[2],"b")
+    pltr.plot_rtk(rtk_static.ublox,args.rtk_names[3],"m")
+
+    
+    
+
 
 # # =============================================================================
 # # EVL
