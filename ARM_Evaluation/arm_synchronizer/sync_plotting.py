@@ -222,7 +222,7 @@ class Plotter:
         self.fig_43.set_facecolor('whitesmoke')
         self.fig_43.show()
 
-    def plot_hist(self,rtk,label,results,measurement):
+    def plot_hist(self,rtk,label,results,measurement,prefix):
         x,y = rtk.diff_east, rtk.diff_north
         left, width = 0.1, 0.75
         bottom, height = 0.1, 0.75
@@ -294,10 +294,11 @@ class Plotter:
         ax_histx.set_title(label + ' - ' + measurement, size=20, loc='left')
         plt.title('Samples\n[-]', size=18, loc='left')
 
-        fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + label + '.png'))
+        fig.savefig(os.path.join(self.csv_dir, 'position_onlyfix-' + str(self.only_fix) + '_' + prefix + '_' + label + '.png'))
+                                 
         # plt.show()
 
-    def plot_hist_dev(self,dev,label,results,measurement):
+    def plot_hist_dev(self,dev,label,results,measurement,prefix):
         if self.only_fix:
             bins = 2000
             xmax = 5
@@ -342,7 +343,7 @@ class Plotter:
                         Line2D([0], [0], color='b')]
         ax.legend(custom_lines, [r'$density$', r'$µ_{err}$', r'$s_{err}$', r'$RMS_{err}$'], prop={'weight':'bold'}, loc=1)
         fig.show()
-        fig.savefig(os.path.join(self.csv_dir, 'deviation_onlyfix-' + str(self.only_fix) + '_' + label + '.png'))
+        fig.savefig(os.path.join(self.csv_dir, 'deviation_onlyfix-' + str(self.only_fix) + '_' + prefix + '_' + label + '.png'))
 
     def plot_correlation(self,x_value,dev,label,x_value_name):
         fig, ax = plt.subplots(figsize=[10, 10], dpi=100, facecolor='w', edgecolor='r')
