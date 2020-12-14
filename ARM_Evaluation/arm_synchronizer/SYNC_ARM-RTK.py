@@ -107,34 +107,34 @@ evl_static.csv_print(checkFolder(args.result_dir),args.new_preproccess)
 # evl_static.get_spearman()
 evl_static.get_median()
 
-# =============================================================================
-# PLOTTING - deviation histograms:
-# =============================================================================
+# # =============================================================================
+# # PLOTTING - deviation histograms:
+# # =============================================================================
 
-# Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
-pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement,'dynamic')
-pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement,'dynamic')
-pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement,'dynamic')
-pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement,'dynamic')
+# # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
+# pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement,'dynamic')
+# pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement,'dynamic')
+# pltr.plot_hist(evl.ashtech,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement,'dynamic')
+# pltr.plot_hist(evl.ublox,args.rtk_names[3],evl.results_ublox.iloc[0],measurement,'dynamic')
 
-# Print density (The density of deviations)
-pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement,'dynamic')
-pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement,'dynamic')
-pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement,'dynamic')
-pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement,'dynamic')
+# # Print density (The density of deviations)
+# pltr.plot_hist_dev(evl.novatel.deviation,args.rtk_names[0],evl.results_novatel.iloc[0],measurement,'dynamic')
+# pltr.plot_hist_dev(evl.tersus.deviation,args.rtk_names[1],evl.results_tersus.iloc[0],measurement,'dynamic')
+# pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement,'dynamic')
+# pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement,'dynamic')
 
-pltr = plot.Plotter(args)
-# Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
-pltr.plot_hist(evl_static.novatel,args.rtk_names[0],evl_static.results_novatel.iloc[0],measurement,'static')
-pltr.plot_hist(evl_static.tersus,args.rtk_names[1],evl_static.results_tersus.iloc[0],measurement,'static')
-pltr.plot_hist(evl_static.ashtech,args.rtk_names[2],evl_static.results_ashtech.iloc[0],measurement,'static')
-pltr.plot_hist(evl_static.ublox,args.rtk_names[3],evl_static.results_ublox.iloc[0],measurement,'static')
+# pltr = plot.Plotter(args)
+# # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
+# pltr.plot_hist(evl_static.novatel,args.rtk_names[0],evl_static.results_novatel.iloc[0],measurement,'static')
+# pltr.plot_hist(evl_static.tersus,args.rtk_names[1],evl_static.results_tersus.iloc[0],measurement,'static')
+# pltr.plot_hist(evl_static.ashtech,args.rtk_names[2],evl_static.results_ashtech.iloc[0],measurement,'static')
+# pltr.plot_hist(evl_static.ublox,args.rtk_names[3],evl_static.results_ublox.iloc[0],measurement,'static')
 
-# Print density (The density of deviations)
-pltr.plot_hist_dev(evl_static.novatel.deviation,args.rtk_names[0],evl_static.results_novatel.iloc[0],measurement,'dynamic')
-pltr.plot_hist_dev(evl_static.tersus.deviation,args.rtk_names[1],evl_static.results_tersus.iloc[0],measurement,'dynamic')
-pltr.plot_hist_dev(evl_static.ashtech.deviation,args.rtk_names[2],evl_static.results_ashtech.iloc[0],measurement,'dynamic')
-pltr.plot_hist_dev(evl_static.ublox.deviation,args.rtk_names[3],evl_static.results_ublox.iloc[0],measurement,'dynamic')
+# # Print density (The density of deviations)
+# pltr.plot_hist_dev(evl_static.novatel.deviation,args.rtk_names[0],evl_static.results_novatel.iloc[0],measurement,'dynamic')
+# pltr.plot_hist_dev(evl_static.tersus.deviation,args.rtk_names[1],evl_static.results_tersus.iloc[0],measurement,'dynamic')
+# pltr.plot_hist_dev(evl_static.ashtech.deviation,args.rtk_names[2],evl_static.results_ashtech.iloc[0],measurement,'dynamic')
+# pltr.plot_hist_dev(evl_static.ublox.deviation,args.rtk_names[3],evl_static.results_ublox.iloc[0],measurement,'dynamic')
 
 # =============================================================================
 # PLOTTING - median boxplots:
