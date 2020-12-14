@@ -58,13 +58,15 @@ if args.new_preproccess:
 # =============================================================================
 # RTK
 # =============================================================================
-if args.new_preproccess:       
+if args.new_preproccess:     
+# ----- Dynamic measurement -----
     rtk = rtk_prs.RtkParser(args,'kph')
     rtk.parse_slices()
     rtk.drop_points_wo_arm(arm.arm_20hz)
     rtk.drop_points_wo_rtk(arm.arm_20hz)
     rtk_list = rtk.concate_arm_and_rtks()
-    
+
+# ----- Static measurement -----
     rtk_static = rtk_prs.RtkParser(args,'static')
     rtk_static.parse_slices()
     rtk_static.create_static_reference()
@@ -73,6 +75,7 @@ if args.new_preproccess:
 # =============================================================================
 # EVL
 # =============================================================================
+# ----- Dynamic measurement -----
 evl = rtk_evl.Evaluator()
 if not args.new_preproccess:
     evl.csv_load(args.result_dir)
@@ -90,6 +93,7 @@ evl.get_correlation()
 evl.get_spearman()
 evl.get_median()
 
+# ----- Static measurement -----
 evl_static = rtk_evl.Evaluator()
 if not args.new_preproccess:
     evl_static.csv_load(args.result_dir)
@@ -110,7 +114,7 @@ evl_static.get_median()
 # # =============================================================================
 # # PLOTTING - deviation histograms:
 # # =============================================================================
-
+# # ----- Dynamic measurement -----
 # # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
 # pltr.plot_hist(evl.novatel,args.rtk_names[0],evl.results_novatel.iloc[0],measurement,'dynamic')
 # pltr.plot_hist(evl.tersus,args.rtk_names[1],evl.results_tersus.iloc[0],measurement,'dynamic')
@@ -123,6 +127,7 @@ evl_static.get_median()
 # pltr.plot_hist_dev(evl.ashtech.deviation,args.rtk_names[2],evl.results_ashtech.iloc[0],measurement,'dynamic')
 # pltr.plot_hist_dev(evl.ublox.deviation,args.rtk_names[3],evl.results_ublox.iloc[0],measurement,'dynamic')
 
+# # ----- Static measurement -----
 # pltr = plot.Plotter(args)
 # # Print deviations (The density of occurrence of horizontal deviations from the reference trajectory of the MRA in the latitude and longitude directions)
 # pltr.plot_hist(evl_static.novatel,args.rtk_names[0],evl_static.results_novatel.iloc[0],measurement,'static')
@@ -139,18 +144,32 @@ evl_static.get_median()
 # =============================================================================
 # PLOTTING - median boxplots:
 # =============================================================================
+#----- Dynamic measurement -----
+# Print deviatiton by status (The distribution of deviations during individual states)
+pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
+pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
+pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
+pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
 
-# # Print deviatiton by status (The distribution of deviations during individual states)
-# pltr.plot_boxplot(evl.novatel,args.rtk_names[0],'status',measurement)
-# pltr.plot_boxplot(evl.tersus,args.rtk_names[1],'status',measurement)
-# pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
-# pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
+# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
+pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
+pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
+pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
 
-# # Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
-# pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
-# pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
-# pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
-# pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
+# ----- Static measurement -----
+pltr = plot.Plotter(args)
+# Print deviatiton by status (The distribution of deviations during individual states)
+pltr.plot_boxplot(evl_static.novatel,args.rtk_names[0],'status',measurement)
+pltr.plot_boxplot(evl_static.tersus,args.rtk_names[1],'status',measurement)
+pltr.plot_boxplot(evl_static.ashtech,args.rtk_names[2],'status',measurement)
+pltr.plot_boxplot(evl_static.ublox,args.rtk_names[3],'status',measurement)
+
+# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+pltr.plot_boxplot(evl_static.novatel_by_acc,args.rtk_names[0],'phase',measurement)
+pltr.plot_boxplot(evl_static.tersus_by_acc,args.rtk_names[1],'phase',measurement)
+pltr.plot_boxplot(evl_static.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
+pltr.plot_boxplot(evl_static.ublox_by_acc,args.rtk_names[3],'phase',measurement)
 
 # =============================================================================
 # PLOTTING - raw data:
