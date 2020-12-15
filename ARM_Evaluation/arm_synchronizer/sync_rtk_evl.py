@@ -243,5 +243,8 @@ class Evaluator:
 
         me = [rtk_acc[0].deviation.median(),rtk_acc[1].deviation.median(),rtk_acc[2].deviation.median()]
         print('median: ACC=' + str(me[0]) + '; UNIF=' + str(me[1]) + '; DEC=' + str(me[2]))
+        
+        me = [rtk.deviation.median()]
+        print('median: Wholle=' + str(me[0]))
 
 
