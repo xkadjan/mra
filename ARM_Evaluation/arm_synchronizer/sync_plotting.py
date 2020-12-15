@@ -381,13 +381,24 @@ class Plotter:
             data_1 = np.array(data.deviation[data.status == 4])
             data_2 = np.array(data.deviation[data.status == 5])
             data_3 = np.array(data.deviation[data.status == 2])
+            data = [data_1,data_2,data_3]
         elif mode == 'phase':
             data_1 = np.array(data[0].deviation)
             data_2 = np.array(data[1].deviation)
             data_3 = np.array(data[2].deviation)
-        data = [data_1, data_2, data_3]
+            data_4 = np.array(data[3].deviation)
+            data = [data_1,data_2,data_3,data_4]
+        elif mode == 'speed':
+            data_1 = np.array(data[0].deviation)
+            data_2 = np.array(data[1].deviation)
+            data_3 = np.array(data[2].deviation)
+            data_4 = np.array(data[3].deviation)
+            data_5 = np.array(data[4].deviation)
+            data_6 = np.array(data[5].deviation)
+            data_7 = np.array(data[6].deviation)
+            data = [data_1,data_2,data_3,data_4,data_5,data_6,data_7]
 
-        fig = plt.figure(figsize =(10, 2),facecolor='w', edgecolor='r',dpi=100)
+        fig = plt.figure(figsize=(10, 2),facecolor='w',edgecolor='r',dpi=100)
         ax = fig.add_subplot(111)
 
         # Creating axes instance
@@ -408,9 +419,11 @@ class Plotter:
                       alpha = 0.2)
 
         if mode == 'status':
-            ax.set_yticklabels(['FIX', 'FLOAT','GNSS'])
+            ax.set_yticklabels(['FIX','FLOAT','GNSS'])
         elif mode == 'phase':
-            ax.set_yticklabels(['ACC', 'UNIF','DEC'])
+            ax.set_yticklabels(['ACC','UNIF','DEC','STAT'])
+        elif mode == 'speed':
+            ax.set_yticklabels(['0-1 m*s-2','1-2.5 m*s-2','2.5-4 m*s-2','4-5.5 m*s-2','5.5-7 m*s-2','7-8.5 m*s-2','8.5-10 m*s-2'])
         ax.set_xlabel('deviation [m]',size=12)
         ax.grid(True)
 

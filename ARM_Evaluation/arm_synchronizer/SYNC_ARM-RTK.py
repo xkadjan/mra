@@ -152,24 +152,26 @@ pltr.plot_boxplot(evl.ashtech,args.rtk_names[2],'status',measurement)
 pltr.plot_boxplot(evl.ublox,args.rtk_names[3],'status',measurement)
 
 # Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
+evl.novatel_by_acc.append(evl_static.novatel)
+evl.tersus_by_acc.append(evl_static.tersus)
+evl.ashtech_by_acc.append(evl_static.ashtech)
+evl.ublox_by_acc.append(evl_static.ublox)
+#
 pltr.plot_boxplot(evl.novatel_by_acc,args.rtk_names[0],'phase',measurement)
 pltr.plot_boxplot(evl.tersus_by_acc,args.rtk_names[1],'phase',measurement)
 pltr.plot_boxplot(evl.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
 pltr.plot_boxplot(evl.ublox_by_acc,args.rtk_names[3],'phase',measurement)
 
-# ----- Static measurement -----
-pltr = plot.Plotter(args)
-# Print deviatiton by status (The distribution of deviations during individual states)
-pltr.plot_boxplot(evl_static.novatel,args.rtk_names[0],'status',measurement)
-pltr.plot_boxplot(evl_static.tersus,args.rtk_names[1],'status',measurement)
-pltr.plot_boxplot(evl_static.ashtech,args.rtk_names[2],'status',measurement)
-pltr.plot_boxplot(evl_static.ublox,args.rtk_names[3],'status',measurement)
-
-# Print deviatiton by phase (The distribution of deviations during individual phases of scenario)
-pltr.plot_boxplot(evl_static.novatel_by_acc,args.rtk_names[0],'phase',measurement)
-pltr.plot_boxplot(evl_static.tersus_by_acc,args.rtk_names[1],'phase',measurement)
-pltr.plot_boxplot(evl_static.ashtech_by_acc,args.rtk_names[2],'phase',measurement)
-pltr.plot_boxplot(evl_static.ublox_by_acc,args.rtk_names[3],'phase',measurement)
+# Print deviatiton by speed (The distribution of deviations during individual instant speeds)
+evl.novatel_by_speed[0] = evl.novatel_by_speed[0].append(evl_static.novatel)
+evl.tersus_by_speed[0] = evl.tersus_by_speed[0].append(evl_static.tersus)
+evl.ashtech_by_speed[0] = evl.ashtech_by_speed[0].append(evl_static.ashtech)
+evl.ublox_by_speed[0] = evl.ublox_by_speed[0].append(evl_static.ublox)
+#
+pltr.plot_boxplot(evl.novatel_by_speed,args.rtk_names[0],'speed',measurement)
+pltr.plot_boxplot(evl.tersus_by_speed,args.rtk_names[1],'speed',measurement)
+pltr.plot_boxplot(evl.ashtech_by_speed,args.rtk_names[2],'speed',measurement)
+pltr.plot_boxplot(evl.ublox_by_speed,args.rtk_names[3],'speed',measurement)
 
 # =============================================================================
 # PLOTTING - raw data:
